@@ -1,0 +1,19 @@
+@use 'sass:math';
+@use 'sass:map';
+@use 'variables' as var;
+
+@function px-to-rem($px, $base: 16px) {
+  @return math.div($px, $base) * 1rem;
+}
+
+@function color($name) {
+  @return map.get(var.$colors, $name);
+}
+
+@function size($name) {
+  @return px-to-rem(map.get(var.$sizes, $name));
+}
+
+@function font-size($name) {
+  @return px-to-rem(map.get(var.$font-sizes, $name));
+}

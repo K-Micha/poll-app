@@ -1,0 +1,46 @@
+/*  $colors
+    $sizes
+    $font-sizes 
+*/
+
+$colors: (
+  primary-purple: rgba(138, 56, 245, 1),
+  primary-orange: rgba(255, 183, 112, 1),
+  secondary-orange: rgba(255, 207, 161, 1),
+  bg-card: rgba(250, 245, 254, 1),
+  bg-card-hover: rgba(244, 233, 251, 1),
+  secondary-btn: rgba(254, 233, 212, 1),
+  tertiary-btn: rgba(250, 245, 254, 0.2),
+  survey-bg: rgba(217, 217, 217, 0.08),
+  survey-hover: rgba(217, 217, 217, 0.16),
+);
+
+$sizes: (
+  xxs: 4px,
+  xs: 6px,
+  sm: 12px,
+  md: 16px,
+  lg: 24px,
+  xl: 32px,
+  xxl: 40px,
+  xxxl: 48px,
+  huge: 64px
+);
+
+$font-sizes: (
+  xs: 12px,
+  sm: 14px,
+  basic: 16px,
+  md: 18px,
+  lg: 20px,
+  xl: 24px,
+  xxl: 26px,
+  xxxl: 32px,
+
+  // d = display
+  d-sm: 54px,
+  d-md: 56px,
+  d-lg: 62px,
+  d-xl: 72px,
+  d-xxl: 100px
+);
