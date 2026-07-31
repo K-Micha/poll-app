@@ -17,3 +17,15 @@
 @function font-size($name) {
   @return px-to-rem(map.get(var.$font-sizes, $name));
 }
+
+@function breakpoint($name) {
+  @return map.get(var.$breakpoints, $name);
+}
+
+@function layout($name) {
+  @return map.get(var.$layout, $name);
+}
+
+@function font($name) {
+  @return map.get(var.$fonts, $name);
+}

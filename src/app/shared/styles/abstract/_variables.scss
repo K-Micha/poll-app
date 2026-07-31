@@ -44,3 +44,19 @@ $font-sizes: (
   d-xl: 72px,
   d-xxl: 100px
 );
+
+$fonts: (
+  mulish: 'Mulish',
+  nokora: 'Nokora'
+);
+
+$breakpoints: (
+  mobile: 480px,
+  tablet: 768px,
+  laptop: 1024px,
+  desktop: 1200px
+);
+
+$layout: (
+  content-max: 1440px
+);

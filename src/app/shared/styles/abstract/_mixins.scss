@@ -1,3 +1,5 @@
+@use 'functions' as fct;
+
 @mixin flex(
   $direction: row,
   $justify: center,
@@ -10,3 +12,10 @@
 }
 
 /*  @include mx.flex(column, .., ...,); */
+
+@mixin typo($font, $weight: 400) {
+  font-family: fct.font($font), sans-serif;
+  font-weight: $weight;
+}
+
+/* @include mx.typo(nokora, 700); */
