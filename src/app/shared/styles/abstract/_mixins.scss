@@ -19,3 +19,11 @@
 }
 
 /* @include mx.typo(nokora, 700); */
+
+@mixin transition(
+  $duration: 250ms,
+  $timing: ease-in-out
+) {
+  transition-duration: $duration;
+  transition-timing-function: $timing;
+}

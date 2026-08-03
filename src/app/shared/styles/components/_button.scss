@@ -1,0 +1,24 @@
+@use '../abstract/variables' as var;
+@use '../abstract/mixins' as mx;
+@use '../abstract/functions' as fct;
+
+.btn {
+  transition-property: background-color, padding, gap;
+  @include mx.transition();
+
+  &__icon {
+    width: 0;
+    opacity: 0;
+    transition-property: width, opacity;
+    @include mx.transition();
+  }
+
+  &:hover {
+    gap: fct.size(sm);
+
+    .btn__icon {
+      width: fct.px-to-rem(24px);
+      opacity: 1;
+    }
+  }
+}

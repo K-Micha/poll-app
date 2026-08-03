@@ -1,1 +1,61 @@
-<p>survey-detail works!</p>
+<main class="survey-detail">
+    <form class="survey-detail__form">
+        <section class="survey-detail__content">
+
+            <section class="survey-detail__information">
+                <div class="survey-detail__meta">
+                    <div class="survey-detail__meta-left">
+                        <span class="survey-detail__status">
+                            Published
+                        </span>
+
+                        <p class="survey-detail__date">
+                            Ends on 01.09.2025
+                            <!-- Ends on {{ survey.endDate }} -->
+                        </p>
+                    </div>
+
+                    <p class="survey-detail__category">
+                        Category: Team activities
+                        <!-- Category: {{ survey.category }} -->
+                    </p>
+                </div>
+
+                <h1 class="survey-detail__title">
+                    Let’s Plan the Next Team Event Together
+                    <!-- {{ survey.title }} -->
+                </h1>
+
+                <p class="survey-detail__description">
+                    We want to create team activities that everyone will enjoy – share
+                    your preferences and ideas in our survey to help us plan better
+                    experiences together.
+                    <!-- {{ survey.description }} -->
+                </p>
+            </section>
+
+            <section class="survey-detail__questions" aria-label="Survey questions">
+                <!--
+        @for (
+          question of survey.questions;
+          track question.id;
+          let questionIndex = $index
+        ) {
+          ...
+        }
+        -->
+            </section>
+
+            <footer class="survey-detail__footer">
+                <button class="btn btn--primary" type="submit">
+                    <span class="btn__text">Complete survey</span>
+                </button>
+            </footer>
+
+        </section>
+
+        <aside class="survey-detail__results">
+            <app-survey-results></app-survey-results>
+        </aside>
+    </form>
+</main>

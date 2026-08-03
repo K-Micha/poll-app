@@ -1,0 +1,41 @@
+<section
+  class="survey-results"
+  aria-labelledby="survey-results-title"
+>
+  <div class="survey-results__heading">
+    <h3
+      class="survey-results__title"
+      id="survey-results-title"
+    >
+      Survey results
+    </h3>
+
+    <span class="survey-results__live">
+      LIVE
+    </span>
+  </div>
+
+  @if (hasResults) {
+    <div class="survey-results__content">
+      <!--
+      @for (
+        question of results;
+        track question.id;
+        let questionIndex = $index
+      ) {
+        ...
+      }
+      -->
+    </div>
+  } @else {
+    <div class="survey-results__empty">
+      <p class="survey-results__empty-description">
+        Results will be shown here after participants complete the survey.
+      </p>
+
+      <p class="survey-results__empty-message">
+        There are no answers yet.
+      </p>
+    </div>
+  }
+</section>

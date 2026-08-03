@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Dropdown } from '../dropdown/dropdown';
 
 @Component({
   selector: 'app-survey-card',
-  imports: [],
+  imports: [Dropdown],
   templateUrl: './survey-card.html',
   styleUrl: './survey-card.scss',
 })

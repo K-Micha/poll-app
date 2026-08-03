@@ -1,0 +1,15 @@
+@use '../../styles/abstract/variables' as var;
+@use '../../styles/abstract/mixins' as mx;
+@use '../../styles/abstract/functions' as fct;
+
+.dropdown__icon {
+  width: 20px;
+  height: 20px;
+  transition: transform .15s ease;
+}
+
+/* Closed + Hover → orange down */
+.dropdown__trigger:hover:not(.dropdown__trigger--open) .dropdown__icon {
+  content: url('/icons/drop_down.svg');
+}
+

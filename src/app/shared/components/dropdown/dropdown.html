@@ -1,0 +1,26 @@
+<div class="dropdown" [class.dropdown--open]="isOpen">
+
+  <button
+    class="dropdown__trigger"
+    [class.dropdown__trigger--open]="isOpen"
+    type="button"
+    (click)="toggleDropdown()"
+  >
+    <span class="dropdown__label">Choose category</span>
+
+    <img
+      class="dropdown__icon"
+      [src]="isOpen
+        ? '/icons/drop_up.svg'
+        : '/icons/drop_down_white.svg'"
+      alt=""
+      aria-hidden="true"
+    >
+  </button>
+
+  @if (isOpen) {
+    <div class="dropdown__menu">
+      <span>test</span>
+    </div>
+  }
+</div>
