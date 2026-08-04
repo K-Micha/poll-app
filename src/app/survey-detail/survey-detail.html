@@ -1,61 +1,103 @@
 <main class="survey-detail">
-    <form class="survey-detail__form">
-        <section class="survey-detail__content">
+  <form class="survey-detail__form">
+    <section class="survey-detail__content">
 
-            <section class="survey-detail__information">
-                <div class="survey-detail__meta">
-                    <div class="survey-detail__meta-left">
-                        <span class="survey-detail__status">
-                            Published
-                        </span>
+      <section class="survey-detail__information">
+        <div class="survey-detail__meta">
+          <div class="survey-detail__meta-left">
+            <span class="survey-detail__status">
+              {{ survey.status }}
+            </span>
 
-                        <p class="survey-detail__date">
-                            Ends on 01.09.2025
-                            <!-- Ends on {{ survey.endDate }} -->
-                        </p>
-                    </div>
+            <p class="survey-detail__date">
+              Ends on {{ getEndDate(survey.id, survey.end_date) }}
+            </p>
+          </div>
 
-                    <p class="survey-detail__category">
-                        Category: Team activities
-                        <!-- Category: {{ survey.category }} -->
-                    </p>
-                </div>
+          <p class="survey-detail__category">
+            Category: {{ survey.category }}
+          </p>
+        </div>
 
-                <h1 class="survey-detail__title">
-                    Let’s Plan the Next Team Event Together
-                    <!-- {{ survey.title }} -->
-                </h1>
+        <h1 class="survey-detail__title">
+          {{ survey.title }}
+        </h1>
 
-                <p class="survey-detail__description">
-                    We want to create team activities that everyone will enjoy – share
-                    your preferences and ideas in our survey to help us plan better
-                    experiences together.
-                    <!-- {{ survey.description }} -->
-                </p>
-            </section>
+        <p class="survey-detail__description">
+          {{ survey.description }}
+        </p>
+      </section>
 
-            <section class="survey-detail__questions" aria-label="Survey questions">
-                <!--
+      <section
+        class="survey-detail__questions"
+        aria-label="Survey questions"
+      >
         @for (
           question of survey.questions;
           track question.id;
           let questionIndex = $index
         ) {
-          ...
+          <article class="survey-question">
+            <h2 class="survey-question__title">
+              {{ questionIndex + 1 }}. {{ question.question_text }}
+            </h2>
+
+            @if (question.allow_multiple) {
+              <p class="survey-question__hint">
+                More than one answer is possible.
+              </p>
+            }
+
+            <div class="survey-question__answers">
+              @for (
+                answer of question.answers;
+                track answer.id;
+                let answerIndex = $index
+              ) {
+                <label class="survey-answer">
+                  <input
+                    class="survey-answer__input"
+                    [type]="question.allow_multiple
+                      ? 'checkbox'
+                      : 'radio'"
+                    [name]="'question-' + question.id"
+                    [value]="answer.id"
+                  >
+
+                  <span
+                    class="survey-answer__control"
+                    aria-hidden="true"
+                  ></span>
+
+                  <span class="survey-answer__letter">
+                    {{ answerIndex + 1 }}.
+                  </span>
+
+                  <span class="survey-answer__text">
+                    {{ answer.answer_text }}
+                  </span>
+                </label>
+              }
+            </div>
+          </article>
         }
-        -->
-            </section>
+      </section>
 
-            <footer class="survey-detail__footer">
-                <button class="btn btn--primary" type="submit">
-                    <span class="btn__text">Complete survey</span>
-                </button>
-            </footer>
+      <footer class="survey-detail__footer">
+        <button
+          class="btn btn--primary"
+          type="submit"
+        >
+          <span class="btn__text">
+            Complete survey
+          </span>
+        </button>
+      </footer>
 
-        </section>
+    </section>
 
-        <aside class="survey-detail__results">
-            <app-survey-results></app-survey-results>
-        </aside>
-    </form>
+    <aside class="survey-detail__results">
+      <app-survey-results></app-survey-results>
+    </aside>
+  </form>
 </main>

@@ -1,15 +1,16 @@
-<app-dropdown></app-dropdown>
+<div>
+  <app-dropdown></app-dropdown>
+</div>
 <router-outlet />
 
-<button class="btn btn--primary btn--with-icon" type="button">
-  <span class="btn__text">Publish</span>
+<div>
+  <button class="btn btn--primary btn--with-icon" type="button">
+    <span class="btn__text">Publish</span>
 
-  <img
-    class="btn__icon"
-    src="/icons/check.svg"
-    alt=""
-    aria-hidden="true"
-  >
-</button>
+    <img class="btn__icon" src="/icons/check.svg" alt="" aria-hidden="true">
+  </button>
+</div>
 
-<app-survey-detail></app-survey-detail>
+
+
+<!-- <p>Surveys: {{ supabaseService.surveys().length }}</p> -->

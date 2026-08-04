@@ -1,26 +1,59 @@
 <div class="dropdown" [class.dropdown--open]="isOpen">
-
-  <button
-    class="dropdown__trigger"
-    [class.dropdown__trigger--open]="isOpen"
-    type="button"
-    (click)="toggleDropdown()"
-  >
+  <button class="dropdown__trigger" [class.dropdown__trigger--open]="isOpen" type="button" (click)="toggleDropdown()">
     <span class="dropdown__label">Choose category</span>
 
-    <img
-      class="dropdown__icon"
-      [src]="isOpen
+    <img class="dropdown__icon" [src]="isOpen
         ? '/icons/drop_up.svg'
-        : '/icons/drop_down_white.svg'"
-      alt=""
-      aria-hidden="true"
-    >
+        : '/icons/drop_down_white.svg'" alt="" aria-hidden="true">
   </button>
 
   @if (isOpen) {
-    <div class="dropdown__menu">
-      <span>test</span>
+  <div class="dropdown__menu">
+    <div class="dropdown__options">
+
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option dropdown__option--active" type="button">
+          All Surveys
+        </button>
+      </div>
+
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option" type="button">
+          Team Activities
+        </button>
+      </div>
+
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option" type="button">
+          Health &amp; Wellness
+        </button>
+      </div>
+
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option" type="button">
+          Gaming &amp; Entertainment
+        </button>
+      </div>
+
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option" type="button">
+          Education &amp; Learning
+        </button>
+      </div>
+
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option" type="button">
+          Lifestyle &amp; Preferences
+        </button>
+      </div>
+
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option" type="button">
+          Technology &amp; Innovation
+        </button>
+      </div>
+
     </div>
+  </div>
   }
 </div>

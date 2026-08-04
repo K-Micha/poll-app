@@ -1,20 +1,24 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Dropdown } from './shared/components/dropdown/dropdown';
-import { SurveyResults } from './shared/components/survey-results/survey-results';
-import { SurveyDetail } from "./survey-detail/survey-detail";
+import { Supabase } from './supabase';
 
 @Component({
   selector: 'app-root',
   imports: [
-    SurveyDetail,
     RouterOutlet,
     Dropdown,
-    SurveyDetail
 ],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('poll-app');
+
+  supabaseService = inject(Supabase);
+
+  async ngOnInit(): Promise<void> {
+    await this.supabaseService.getSurveys();
+    this.supabaseService.subscribeToSurveys();
+  }
 }
