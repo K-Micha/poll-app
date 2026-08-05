@@ -1,239 +1,137 @@
 <main class="create-survey">
-  <form class="create-survey__form">
+  <div class="content-wrapper">
+    <form class="create-survey__form">
 
-    <header class="create-survey__header">
-      <div class="create-survey__heading">
-        <span class="create-survey__status">Draft</span>
-        <h1 class="create-survey__title">Create new survey</h1>
-      </div>
-
-      <button
-        class="btn btn--cancel"
-        type="button"
-      >
-        <span class="btn__text">Cancel</span>
-        <span class="btn__icon" aria-hidden="true"></span>
-      </button>
-    </header>
-
-    <section
-      class="create-survey__details"
-      aria-labelledby="survey-details-title"
-    >
-      <h2
-        class="create-survey__section-title"
-        id="survey-details-title"
-      >
-        Survey details
-      </h2>
-
-      <div class="create-survey__details-left">
-        <div class="form-field">
-          <label
-            class="form-field__label"
-            for="survey-name"
-          >
-            Survey name
-          </label>
-
-          <div class="form-field__control">
-            <input
-              class="form-field__input"
-              id="survey-name"
-              name="surveyName"
-              type="text"
-            >
-
-            <button
-              class="form-field__delete"
-              type="button"
-              aria-label="Delete survey name"
-            ></button>
-          </div>
+      <header class="create-survey__header">
+        <div class="create-survey__heading">
+          <span class="create-survey__status">Draft</span>
+          <h1 class="create-survey__title">Create new survey</h1>
         </div>
 
-        <div class="create-survey__details-row">
+        <button class="btn btn--cancel" type="button">
+          <span class="btn__text">Cancel</span>
+          <span class="btn__icon" aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <section class="create-survey__details" aria-labelledby="survey-details-title">
+        <h2 class="create-survey__section-title" id="survey-details-title">
+          Survey details
+        </h2>
+
+        <div class="create-survey__details-left">
           <div class="form-field">
-            <label
-              class="form-field__label"
-              for="survey-end-date"
-            >
-              Set end date
-              <span class="form-field__optional">(optional)</span>
+            <label class="form-field__label" for="survey-name">
+              Survey name
             </label>
 
             <div class="form-field__control">
-              <input
-                class="form-field__input"
-                id="survey-end-date"
-                name="surveyEndDate"
-                type="date"
-              >
+              <input class="form-field__input" id="survey-name" name="surveyName" type="text">
 
-              <button
-                class="form-field__delete"
-                type="button"
-                aria-label="Delete end date"
-              ></button>
+              <button class="form-field__delete" type="button" aria-label="Delete survey name"></button>
             </div>
           </div>
 
-        </div>
-      </div>
+          <div class="create-survey__details-row">
+            <div class="form-field">
+              <label class="form-field__label" for="survey-end-date">
+                Set end date
+                <span class="form-field__optional">(optional)</span>
+              </label>
 
-      <div class="form-field form-field--description">
-        <label
-          class="form-field__label"
-          for="survey-description"
-        >
-          Describing text
-          <span class="form-field__optional">(optional)</span>
-        </label>
+              <div class="form-field__control">
+                <input class="form-field__input" id="survey-end-date" name="surveyEndDate" type="date">
 
-        <div class="form-field__control">
-          <textarea
-            class="form-field__textarea"
-            id="survey-description"
-            name="surveyDescription"
-          ></textarea>
+                <button class="form-field__delete" type="button" aria-label="Delete end date"></button>
+              </div>
+            </div>
 
-          <button
-            class="form-field__delete"
-            type="button"
-            aria-label="Delete description"
-          ></button>
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="create-survey__questions"
-      aria-labelledby="survey-questions-title"
-    >
-      <h2
-        class="create-survey__section-title"
-        id="survey-questions-title"
-      >
-        Survey questions
-      </h2>
-
-      <article class="question">
-        <div class="question__header">
-          <label
-            class="question__label"
-            for="question-1"
-          >
-            1. Question
-          </label>
-
-          <button
-            class="question__delete"
-            type="button"
-            aria-label="Delete question 1"
-          ></button>
-        </div>
-
-        <input
-          class="question__input"
-          id="question-1"
-          name="question-1"
-          type="text"
-          value="Which date would work best for you?"
-        >
-
-        <div class="question__answers-header">
-          <h3 class="question__answers-title">Answers</h3>
-
-          <label class="checkbox">
-            <input
-              class="checkbox__input"
-              name="multipleAnswers-1"
-              type="checkbox"
-            >
-
-            <span class="checkbox__control"></span>
-            <span class="checkbox__label">Allow multiple answers.</span>
-          </label>
-        </div>
-
-        <div class="question__answers">
-          <div class="answer">
-            <label
-              class="answer__label"
-              for="answer-1-a"
-            >
-              A.
-            </label>
-
-            <input
-              class="answer__input"
-              id="answer-1-a"
-              name="answer-1-a"
-              type="text"
-            >
-
-            <button
-              class="answer__delete"
-              type="button"
-              aria-label="Delete answer A"
-            ></button>
-          </div>
-
-          <div class="answer">
-            <label
-              class="answer__label"
-              for="answer-1-b"
-            >
-              B.
-            </label>
-
-            <input
-              class="answer__input"
-              id="answer-1-b"
-              name="answer-1-b"
-              type="text"
-            >
-
-            <button
-              class="answer__delete"
-              type="button"
-              aria-label="Delete answer B"
-            ></button>
           </div>
         </div>
 
-        <button
-          class="btn btn--text question__add-answer"
-          type="button"
-        >
-          <span class="btn__text">Add answer</span>
+        <div class="form-field form-field--description">
+          <label class="form-field__label" for="survey-description">
+            Describing text
+            <span class="form-field__optional">(optional)</span>
+          </label>
+
+          <div class="form-field__control">
+            <textarea class="form-field__textarea" id="survey-description" name="surveyDescription"></textarea>
+
+            <button class="form-field__delete" type="button" aria-label="Delete description"></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="create-survey__questions" aria-labelledby="survey-questions-title">
+        <h2 class="create-survey__section-title" id="survey-questions-title">
+          Survey questions
+        </h2>
+
+        <article class="question">
+          <div class="question__header">
+            <label class="question__label" for="question-1">
+              1. Question
+            </label>
+
+            <button class="question__delete" type="button" aria-label="Delete question 1"></button>
+          </div>
+
+          <input class="question__input" id="question-1" name="question-1" type="text"
+            value="Which date would work best for you?">
+
+          <div class="question__answers-header">
+            <h3 class="question__answers-title">Answers</h3>
+
+            <label class="checkbox">
+              <input class="checkbox__input" name="multipleAnswers-1" type="checkbox">
+
+              <span class="checkbox__control"></span>
+              <span class="checkbox__label">Allow multiple answers.</span>
+            </label>
+          </div>
+
+          <div class="question__answers">
+            <div class="answer">
+              <label class="answer__label" for="answer-1-a">
+                A.
+              </label>
+
+              <input class="answer__input" id="answer-1-a" name="answer-1-a" type="text">
+
+              <button class="answer__delete" type="button" aria-label="Delete answer A"></button>
+            </div>
+
+            <div class="answer">
+              <label class="answer__label" for="answer-1-b">
+                B.
+              </label>
+
+              <input class="answer__input" id="answer-1-b" name="answer-1-b" type="text">
+
+              <button class="answer__delete" type="button" aria-label="Delete answer B"></button>
+            </div>
+          </div>
+
+          <button class="btn btn--text question__add-answer" type="button">
+            <span class="btn__text">Add answer</span>
+            <span class="btn__icon" aria-hidden="true"></span>
+          </button>
+        </article>
+
+        <button class="btn btn--secondary create-survey__add-question" type="button">
+          <span class="btn__text">Add next question</span>
           <span class="btn__icon" aria-hidden="true"></span>
         </button>
-      </article>
+      </section>
 
-      <button
-        class="btn btn--secondary create-survey__add-question"
-        type="button"
-      >
-        <span class="btn__text">Add next question</span>
-        <span class="btn__icon" aria-hidden="true"></span>
-      </button>
-    </section>
+      <footer class="create-survey__footer">
+        <button class="btn btn--primary btn--with-icon" type="submit">
+          <span class="btn__text">Publish</span>
+          <img class="btn__icon" src="/icons/check.svg" alt="" aria-hidden="true">
+        </button>
+      </footer>
 
-    <footer class="create-survey__footer">
-      <button
-        class="btn btn--primary btn--with-icon"
-        type="submit"
-      >
-        <span class="btn__text">Publish</span>
-        <img
-          class="btn__icon"
-          src="/icons/check.svg"
-          alt=""
-          aria-hidden="true"
-        >
-      </button>
-    </footer>
-
-  </form>
+    </form>
+  </div>
 </main>

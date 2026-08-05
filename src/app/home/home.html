@@ -1,51 +1,41 @@
+<app-header></app-header>
 <main class="home">
-  <section class="home__hero">
-    <div class="home__hero-content">
-      <h1 class="home__title">
-        Collect Feedback,<br>
-        Unlock Ideas
-      </h1>
+  <div class="content-wrapper">
+    <section class="home__hero">
+      <div class="home__hero-content">
+        <h1 class="home__title">
+          Collect Feedback,<br>
+          Unlock Ideas
+        </h1>
 
-      <p class="home__description">
-        Create and share surveys in minutes – from team events to workplace
-        culture. Collect opinions, engage your audience, and turn feedback
-        into action.
+        <p class="home__description">
+          Create and share surveys in minutes – from team events to workplace
+          culture. Collect opinions, engage your audience, and turn feedback
+          into action.
+        </p>
+
+        <button class="btn btn--primary home__create-button" type="button">
+          <span class="btn__text">New survey</span>
+        </button>
+      </div>
+
+      <div class="home__hero-image-wrapper">
+        <img class="home__hero-image" src="/img/home-hero.svg" alt="Illustration of a digital survey">
+      </div>
+    </section>
+
+    <section class="home__surveys" aria-labelledby="surveys-title">
+      <h2 class="home__surveys-title" id="surveys-title">
+        Your surveys
+      </h2>
+
+      <p class="home__surveys-subtitle">
+        Ending soon surveys
       </p>
 
-      <button
-        class="btn btn--primary home__create-button"
-        type="button"
-      >
-        <span class="btn__text">New survey</span>
-      </button>
-    </div>
-
-    <div class="home__hero-image-wrapper">
-      <img
-        class="home__hero-image"
-        src="/img/home-hero.svg"
-        alt="Illustration of a digital survey"
-      >
-    </div>
-  </section>
-
-  <section
-    class="home__surveys"
-    aria-labelledby="surveys-title"
-  >
-    <h2
-      class="home__surveys-title"
-      id="surveys-title"
-    >
-      Your surveys
-    </h2>
-
-    <p class="home__surveys-subtitle">
-      Ending soon surveys
-    </p>
-
-    <app-survey-card></app-survey-card>
-  </section>
+      <app-survey-card></app-survey-card>
+    </section>
+  </div>
 </main>
 
 <!-- 

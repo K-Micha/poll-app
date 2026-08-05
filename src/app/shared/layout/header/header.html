@@ -1,1 +1,13 @@
-<p>header works!</p>
+<header class="header">
+    <div class="content-wrapper">
+        <a class="header__logo-link" href="/">
+            <img class="header__logo" [src]="logoSrc" alt="PollApp Logo" />
+        </a>
+
+        @if (showButton) {
+        <button class="btn btn--primary header__create-button" type="button">
+            <span class="btn__text">Create survey</span>
+        </button>
+        }
+    </div>
+</header>

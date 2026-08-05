@@ -1,13 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Dropdown } from './shared/components/dropdown/dropdown';
 import { Supabase } from './supabase';
+import { Header } from "./shared/layout/header/header";
 
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet,
-    Dropdown,
+    Header
 ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

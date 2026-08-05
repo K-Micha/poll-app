@@ -1,11 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Supabase } from '../supabase';
 import { SurveyResults } from '../shared/components/survey-results/survey-results';
+import { Header } from '../shared/layout/header/header';
 
 @Component({
   selector: 'app-survey-detail',
   imports: [
-    SurveyResults
+    SurveyResults,
+    Header,
   ],
   templateUrl: './survey-detail.html',
   styleUrl: './survey-detail.scss',
@@ -13,7 +15,7 @@ import { SurveyResults } from '../shared/components/survey-results/survey-result
 export class SurveyDetail implements OnInit {
   private readonly supabaseService = inject(Supabase);
 
-  survey: any = null;
+  survey = signal<any | null>(null);
 
   async ngOnInit(): Promise<void> {
     const { data, error } = await this.supabaseService.supabase
@@ -29,26 +31,21 @@ export class SurveyDetail implements OnInit {
       .single();
 
     if (error) {
-      console.error(error);
+      console.error('Could not load survey:', error);
       return;
     }
 
-    this.survey = data;
+    this.survey.set(data);
   }
 
-  getEndDate(
-    surveyId: number,
+  getEndLabel(
+    isDemo: boolean,
     endDate: string | null
-  ): string | null {
-    return surveyId === 999999
-      ? this.getTomorrowDate()
-      : endDate;
-  }
+  ): string {
+    if (isDemo) {
+      return 'Ends in 1 Day';
+    }
 
-  private getTomorrowDate(): string {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    return tomorrow.toISOString().split('T')[0];
+    return endDate ?? 'N/A';
   }
 }
