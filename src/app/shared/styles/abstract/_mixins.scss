@@ -14,8 +14,8 @@
 /*  @include mx.flex(column, .., ...,); */
 
 @mixin typo($font, $weight: 400) {
-  font-family: fct.font($font), sans-serif;
-  font-weight: $weight;
+    font-family: fct.font($font);
+    font-weight: $weight;
 }
 
 /* @include mx.typo(nokora, 700); */

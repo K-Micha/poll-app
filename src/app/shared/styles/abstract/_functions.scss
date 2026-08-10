@@ -23,7 +23,7 @@
 }
 
 @function layout($name) {
-  @return map.get(var.$layout, $name);
+    @return px-to-rem(map.get(var.$layout, $name));
 }
 
 @function font($name) {

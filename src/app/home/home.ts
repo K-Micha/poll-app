@@ -1,11 +1,21 @@
-import { Component } from '@angular/core';
-import { SurveyCard } from '../shared/components/survey-card/survey-card';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Header } from '../shared/layout/header/header';
 
 @Component({
   selector: 'app-home',
-  imports: [ SurveyCard, Header],
+  imports: [ Header],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {}
+
+export class Home implements OnInit, OnDestroy {
+    constructor(private renderer: Renderer2) {}
+
+    ngOnInit(): void {
+        this.renderer.addClass(document.body, 'body--home');
+    }
+
+    ngOnDestroy(): void {
+        this.renderer.removeClass(document.body, 'body--home');
+    }
+}

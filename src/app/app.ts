@@ -1,11 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Supabase } from './supabase';
-import { Header } from "./shared/layout/header/header";
+import { Home } from "./home/home";
 
 @Component({
   selector: 'app-root',
   imports: [
-    Header
+    Home
 ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

@@ -1,3 +1,67 @@
 @use '../shared/styles/abstract/variables' as var;
 @use '../shared/styles/abstract/mixins' as mx;
 @use '../shared/styles/abstract/functions' as fct;
+
+
+.home {
+    margin-top: fct.px-to-rem(100px);
+
+    &__wrapper {
+        max-width: fct.layout(content-inner);
+        margin-inline: auto;
+        padding-inline: fct.px-to-rem(55px);
+    }
+
+    &__hero {
+        @include mx.flex(row, space-between, flex-start);
+    }
+
+    &__hero-content {
+        width: calc(100% - fct.px-to-rem(400px));
+    }
+
+    &__hero-image {
+        height: fct.px-to-rem(420px);
+        width: fct.px-to-rem(420px);
+
+        content: url('/img/animation1.svg');
+
+        &:hover {
+            content: url('/img/animation2.svg');
+        }
+    }
+
+    &__title {
+        @include mx.typo(nerko-one, 400);
+
+        font-size: fct.font-size(d-xxl);
+        line-height: fct.px-to-rem(89px);
+        color: fct.color(primary-orange);
+
+        white-space: nowrap;
+    }
+
+    &__description-wrapper {
+        width: 100%;
+        max-width: fct.px-to-rem(666px);
+    }
+
+    &__description {
+        @include mx.typo(mulish, 600);
+
+        font-size: fct.font-size(xl);
+        line-height: 1;
+        color: white;
+    }
+
+    &__create-button {
+        margin-top: fct.size(xxxl);
+    }
+}
+
+.surveys {
+    width: 100%;
+    max-width: fct.px-to-rem(1042px);
+    margin-inline: auto;
+    padding-inline: fct.size(lg);
+}

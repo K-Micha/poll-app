@@ -1,6 +1,7 @@
-<app-header></app-header>
+<app-header logoSrc="/icons/logo-orange.svg" [showButton]="false"></app-header>
+
 <main class="home">
-  <div class="content-wrapper">
+  <div class="content-wrapper home__wrapper">
     <section class="home__hero">
       <div class="home__hero-content">
         <h1 class="home__title">
@@ -8,11 +9,13 @@
           Unlock Ideas
         </h1>
 
-        <p class="home__description">
-          Create and share surveys in minutes – from team events to workplace
-          culture. Collect opinions, engage your audience, and turn feedback
-          into action.
-        </p>
+        <div class="home__description-wrapper">
+          <p class="home__description">
+            Create and share surveys in minutes – from team events to workplace
+            culture. Collect opinions, engage your audience, and turn feedback
+            into action.
+          </p>
+        </div>
 
         <button class="btn btn--primary home__create-button" type="button">
           <span class="btn__text">New survey</span>
@@ -20,20 +23,22 @@
       </div>
 
       <div class="home__hero-image-wrapper">
-        <img class="home__hero-image" src="/img/home-hero.svg" alt="Illustration of a digital survey">
+        <img class="home__hero-image" src="/img/animation1.svg" alt="Illustration of a digital survey">
       </div>
     </section>
 
-    <section class="home__surveys" aria-labelledby="surveys-title">
-      <h2 class="home__surveys-title" id="surveys-title">
-        Your surveys
-      </h2>
+    <section class="surveys" aria-labelledby="surveys-title">
+      <div class="surveys__title-wrapper">
+        <h2 class="surveys__title" id="surveys-title">
+          Your surveys
+        </h2>
 
-      <p class="home__surveys-subtitle">
-        Ending soon surveys
-      </p>
+        <p class="surveys__subtitle">
+          Ending soon surveys
+        </p>
+      </div>
 
-      <app-survey-card></app-survey-card>
+      <!-- <app-survey-card></app-survey-card> -->
     </section>
   </div>
 </main>

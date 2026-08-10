@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './header.scss',
 })
 export class Header {
+  @Input() variant: 'orange' | 'purple' = 'purple';
   @Input() logoSrc = '/icons/logo-orange.svg';
   @Input() showButton = false;
 }

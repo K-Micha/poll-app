@@ -4,7 +4,7 @@
 */
 
 $colors: (
-  primary-purple: rgba(138, 56, 245, 1),
+  primary-purple: rgba(53, 39, 58, 1),
   primary-orange: rgba(255, 183, 112, 1),
   secondary-orange: rgba(255, 207, 161, 1),
   bg-card: rgba(250, 245, 254, 1),
@@ -24,6 +24,7 @@ $sizes: (
   xl: 32px,
   xxl: 40px,
   xxxl: 48px,
+  logo: 46px,
   huge: 64px
 );
 
@@ -47,7 +48,8 @@ $font-sizes: (
 
 $fonts: (
   mulish: 'Mulish',
-  nokora: 'Nokora'
+  nokora: 'Nokora',
+  nerko-one: 'Nerko One',
 );
 
 $breakpoints: (
@@ -58,5 +60,7 @@ $breakpoints: (
 );
 
 $layout: (
-  content-max: 1440px
+  content-max: 1440px,
+  content-inner: 1200px,
+  surveys: 1042px
 );
