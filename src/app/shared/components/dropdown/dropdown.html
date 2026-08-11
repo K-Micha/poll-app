@@ -7,53 +7,21 @@
         : '/icons/drop_down_white.svg'" alt="" aria-hidden="true">
   </button>
 
-  @if (isOpen) {
+ @if (isOpen) {
   <div class="dropdown__menu">
     <div class="dropdown__options">
-
-      <div class="dropdown__option-wrapper">
-        <button class="dropdown__option dropdown__option--active" type="button">
-          All Surveys
-        </button>
-      </div>
-
-      <div class="dropdown__option-wrapper">
-        <button class="dropdown__option" type="button">
-          Team Activities
-        </button>
-      </div>
-
-      <div class="dropdown__option-wrapper">
-        <button class="dropdown__option" type="button">
-          Health &amp; Wellness
-        </button>
-      </div>
-
-      <div class="dropdown__option-wrapper">
-        <button class="dropdown__option" type="button">
-          Gaming &amp; Entertainment
-        </button>
-      </div>
-
-      <div class="dropdown__option-wrapper">
-        <button class="dropdown__option" type="button">
-          Education &amp; Learning
-        </button>
-      </div>
-
-      <div class="dropdown__option-wrapper">
-        <button class="dropdown__option" type="button">
-          Lifestyle &amp; Preferences
-        </button>
-      </div>
-
-      <div class="dropdown__option-wrapper">
-        <button class="dropdown__option" type="button">
-          Technology &amp; Innovation
-        </button>
-      </div>
-
+      @for (category of surveyCategories; track category) {
+        <div class="dropdown__option-wrapper">
+          <button
+            class="dropdown__option"
+            [class.dropdown__option--active]="selectedCategory === category"
+            type="button"
+            (click)="selectCategory(category)"
+          >
+            {{ category }}
+          </button>
+        </div>
+      }
     </div>
   </div>
-  }
-</div>
+}

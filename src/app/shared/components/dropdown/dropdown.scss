@@ -2,40 +2,74 @@
 @use '../../styles/abstract/mixins' as mx;
 @use '../../styles/abstract/functions' as fct;
 
-.dropdown__icon {
-  width: 20px;
-  height: 20px;
-  transition: transform .15s ease;
-}
-
-/* Closed + Hover → orange down */
-.dropdown__trigger:hover:not(.dropdown__trigger--open) .dropdown__icon {
-  content: url('/icons/drop_down.svg');
-}
-
-.dropdown__option {
-  appearance: none;
-  border: none;
-  padding: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
 .dropdown {
   position: relative;
-  width: 310px;
+  width: fct.px-to-rem(206px);
 
-  &__trigger,
-  &__menu {
+  &__trigger {
+    @include mx.flex(row, space-between, center);
     width: 100%;
+    gap: fct.px-to-rem(6px);
+    padding: fct.px-to-rem(4px) fct.px-to-rem(6px) fct.px-to-rem(4px) fct.px-to-rem(10px);
+
+    border: none;
+    border-radius: fct.px-to-rem(6px);
+    background-color: transparent;
+    color: inherit;
+    cursor: pointer;
+
+    @include mx.typo(mulish, 700);
+    font-size: fct.px-to-rem(18px);
+    transition: background-color 300ms ease-out;
+
+    &:hover:not(&--open) {
+      background-color: fct.color(filter-hover);
+    }
+
+    &--open {
+      background-color: fct.color(filter-hover);
+    }
+  }
+
+  &__icon {
+    width: fct.px-to-rem(20px);
+    height: fct.px-to-rem(20px);
+    transition: transform 150ms ease;
+  }
+
+  &__trigger:hover:not(&__trigger--open) &__icon {
+    content: url('/icons/drop_down.svg');
   }
 
   &__menu {
+    @include mx.flex(column, flex-start, flex-start);
     position: absolute;
-    top: 100%;
+    top: calc(100% + fct.px-to-rem(4px));
     left: 0;
+    z-index: 10;
+
+    width: 100%;
+    gap: fct.px-to-rem(4px);
+    padding: fct.px-to-rem(10px);
+
+    border-radius: fct.px-to-rem(6px);
+    background-color: white;
+  }
+
+  &__option {
+    margin-block: fct.px-to-rem(10px);
+    width: 100%;
+    padding: 0;
+    border: none;
+    appearance: none;
+    background: none;
+    color: fct.color(dark-purple);
+    text-align: left;
+    cursor: pointer;
+
+    @include mx.typo(mulish, 400);
+    font-size: fct.px-to-rem(14px);
+    line-height: 1;
+    letter-spacing: 0.02em;
   }
 }

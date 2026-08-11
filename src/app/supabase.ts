@@ -1,8 +1,5 @@
-import { Injectable, signal } from '@angular/core';
-import {
-  createClient,
-  RealtimeChannel,
-} from '@supabase/supabase-js';
+import { Injectable, OnDestroy, signal, } from '@angular/core';
+import { createClient, RealtimeChannel, } from '@supabase/supabase-js';
 
 type Survey = {
   id: number;
@@ -13,34 +10,34 @@ type Survey = {
   category: string;
   end_date: string | null;
   status: string;
+  is_demo: boolean;
 };
 
 @Injectable({
   providedIn: 'root',
 })
-export class Supabase {
-  supabaseUrl = 'https://rnwpzflsvaqgzoznhshb.supabase.co';
 
-  supabaseKey =
+export class Supabase implements OnDestroy {
+  private readonly supabaseUrl =
+    'https://rnwpzflsvaqgzoznhshb.supabase.co';
+
+  private readonly supabaseKey =
     'sb_publishable_YRXsZrOvr6dAMaKGOYdXkg_TFenbD8L';
 
-  supabase = createClient(
+  readonly supabase = createClient(
     this.supabaseUrl,
     this.supabaseKey
   );
 
-  surveys = signal<Survey[]>([]);
+  readonly surveys = signal<Survey[]>([]);
 
-  channel: RealtimeChannel | undefined;
+  private channel?: RealtimeChannel;
 
   async getSurveys(): Promise<void> {
     const { data, error } = await this.supabase
       .from('surveys')
       .select('*')
       .order('created_at', { ascending: false });
-
-    console.log('Surveys data:', data);
-    console.log('Surveys error:', error);
 
     if (error) {
       console.error('Could not load surveys:', error);
@@ -51,7 +48,15 @@ export class Supabase {
   }
 
   subscribeToSurveys(): void {
-    this.channel = this.supabase
+    if (this.channel) {
+      return;
+    }
+
+    this.channel = this.createSurveysChannel();
+  }
+
+  private createSurveysChannel(): RealtimeChannel {
+    return this.supabase
       .channel('surveys-channel')
       .on(
         'postgres_changes',
@@ -60,16 +65,14 @@ export class Supabase {
           schema: 'public',
           table: 'surveys',
         },
-        () => {
-          this.getSurveys();
-        }
+        () => void this.getSurveys()
       )
       .subscribe();
   }
 
   ngOnDestroy(): void {
     if (this.channel) {
-      this.supabase.removeChannel(this.channel);
+      void this.supabase.removeChannel(this.channel);
     }
   }
 }

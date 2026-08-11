@@ -22,3 +22,31 @@
     }
   }
 }
+
+.filters {
+  &__button {
+    width: fit-content;
+    padding: fct.px-to-rem(2px) fct.px-to-rem(10px);
+
+    border: none;
+    border-radius: fct.px-to-rem(20px);
+    background-color: fct.color(filter-basic);
+    color: fct.color(dark-purple);
+    cursor: pointer;
+
+    @include mx.typo(mulish, 500);
+    font-size: fct.px-to-rem(14px);
+
+    transition: background-color 300ms ease-out;
+
+    &:hover,
+    &--active {
+      background-color: fct.color(primary-orange);
+    }
+  }
+
+  &__status {
+    @include mx.flex(row, flex-start, center);
+    gap: fct.px-to-rem(25px);
+  }
+}

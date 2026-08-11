@@ -15,8 +15,9 @@
               <p class="survey-detail__date">
                 Ends on
                 {{ getEndLabel(
-                currentSurvey.id,
-                currentSurvey.end_date
+                survey().id,
+                survey().is_demo,
+                survey().end_date
                 ) }}
               </p>
             </div>

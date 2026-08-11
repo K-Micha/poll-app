@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Header } from '../shared/layout/header/header';
+import { SurveyCard } from '../shared/components/survey-card/survey-card';
 
 @Component({
   selector: 'app-home',
-  imports: [ Header],
+  imports: [ Header, SurveyCard],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

@@ -1,118 +1,71 @@
-<!-- <article class="survey-card survey-card--ending-soon"></article>
-<article class="survey-card survey-card--list"></article> 
--->
-<section class="survey-cards">
-  <section class="survey-cards__ending-soon">
-    <article class="survey-card survey-card--ending-soon">
-      <p class="survey-card__category">Team activities</p>
+<div class="survey-cards">
+  <section class="soon-cards">
+    <div class="soon-cards__list">
+      @for (survey of endingSoonSurveys; track survey.id) {
+      <article class="soon-cards__card">
+        <header class="soon-cards__header">
+          <p class="soon-cards__category">
+            {{ survey.category }}
+          </p>
 
-      <h3 class="survey-card__title">
-        Let’s Plan the Next Team Event Together
-      </h3>
+          <h3 class="soon-cards__title">
+            {{ survey.title }}
+          </h3>
+        </header>
 
-      <p class="survey-card__ending">Ends in 1 Day</p>
-    </article>
-
-    <article class="survey-card survey-card--ending-soon">
-      <p class="survey-card__category">Health &amp; Wellness</p>
-
-      <h3 class="survey-card__title">
-        Fit &amp; wellness survey!
-      </h3>
-
-      <p class="survey-card__ending">Ends in 2 Days</p>
-    </article>
-
-    <article class="survey-card survey-card--ending-soon">
-      <p class="survey-card__category">Gaming &amp; Entertainment</p>
-
-      <h3 class="survey-card__title">
-        Gaming habits and favorite games!
-      </h3>
-
-      <p class="survey-card__ending">Ends in 3 Days</p>
-    </article>
+        <footer class="soon-cards__footer">
+          <p class="soon-cards__ending">
+            @if (survey.daysLeft === 0) {
+            Survey expired
+            } @else {
+            Ends in {{ survey.daysLeft }}
+            {{ survey.daysLeft === 1 ? 'Day' : 'Days' }}
+            }
+          </p>
+        </footer>
+      </article>
+      }
+    </div>
   </section>
 
-  <div class="survey-cards__filters">
-    <div class="survey-cards__status-filter">
-      <button
-        class="survey-cards__filter survey-cards__filter--active"
-        type="button"
-      >
+  <div class="filters">
+    <div class="filters__status">
+      <button class="filters__button" [class.filters__button--active]="selectedStatus === 'active'" type="button"
+        (click)="selectStatus('active')">
         Active survey
       </button>
 
-      <button
-        class="survey-cards__filter"
-        type="button"
-      >
+      <button class="filters__button" [class.filters__button--active]="selectedStatus === 'past'" type="button"
+        (click)="selectStatus('past')">
         Past survey
       </button>
     </div>
 
-    <app-dropdown></app-dropdown>
+    <app-dropdown (categoryChange)="selectCategory($event)"></app-dropdown>
   </div>
 
-  <section class="survey-cards__list">
-    <article class="survey-card">
-      <p class="survey-card__category">Team activities</p>
+  <section class="cards">
+    <div class="cards__list">
+      @for (survey of filteredSurveys; track survey.id) {
+      <article class="cards__card">
+        <header class="cards__header">
+          <p class="cards__category">
+            {{ survey.category }}
+          </p>
 
-      <h3 class="survey-card__title">
-        Let’s Plan the Next Team Event Together
-      </h3>
+          <h3 class="cards__title">
+            {{ survey.title }}
+          </h3>
+        </header>
 
-      <p class="survey-card__ending">Ends in 1 Day</p>
-    </article>
-
-    <article class="survey-card">
-      <p class="survey-card__category">Gaming</p>
-
-      <h3 class="survey-card__title">
-        Gaming habits and favorite games!
-      </h3>
-
-      <p class="survey-card__ending">Ends in 3 Days</p>
-    </article>
-
-    <article class="survey-card">
-      <p class="survey-card__category">Gaming</p>
-
-      <h3 class="survey-card__title">
-        Gaming habits and favorite games!
-      </h3>
-
-      <p class="survey-card__ending">Ends in 3 Days</p>
-    </article>
-
-    <article class="survey-card">
-      <p class="survey-card__category">Healthy Lifestyle</p>
-
-      <h3 class="survey-card__title">
-        Healthier future: Fit &amp; wellness survey!
-      </h3>
-
-      <p class="survey-card__ending">Ends in 2 Days</p>
-    </article>
-
-    <article class="survey-card">
-      <p class="survey-card__category">Healthy Lifestyle</p>
-
-      <h3 class="survey-card__title">
-        Healthier future: Fit &amp; wellness survey!
-      </h3>
-
-      <p class="survey-card__ending">Ends in 2 Days</p>
-    </article>
-
-    <article class="survey-card">
-      <p class="survey-card__category">Team activities</p>
-
-      <h3 class="survey-card__title">
-        Let’s Plan the Next Team Event Together
-      </h3>
-
-      <p class="survey-card__ending">Ends in 1 Day</p>
-    </article>
+        <footer class="cards__footer">
+          <p class="cards__ending">
+            Ends in {{ survey.daysLeft }}
+            {{ survey.daysLeft === 1 ? 'Day' : 'Days' }}
+          </p>
+        </footer>
+      </article>
+      }
+    </div>
   </section>
-</section>
+</div>

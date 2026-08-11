@@ -61,7 +61,30 @@
 
 .surveys {
     width: 100%;
-    max-width: fct.px-to-rem(1042px);
+    max-width: fct.layout(surveys);
     margin-inline: auto;
     padding-inline: fct.size(lg);
+
+    &__title-wrapper {
+        @include mx.flex(column, flex-start, stretch);
+        gap: fct.px-to-rem(42px);
+    }
+
+    &__title {
+        @include mx.typo(nerko-one, 400);
+
+        margin-top: fct.px-to-rem(82px);
+        font-size: fct.font-size(d-xl);
+        line-height: 1;
+        text-align: center;
+        color: fct.color(primary-orange);
+    }
+
+    &__subtitle {
+        @include mx.typo(mulish, 500);
+
+        font-size: fct.font-size(xl);
+        line-height: 1;
+        color: rgba(255, 255, 255, 1);
+    }
 }

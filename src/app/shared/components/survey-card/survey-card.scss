@@ -1,3 +1,91 @@
 @use '../../styles/abstract/variables' as var;
 @use '../../styles/abstract/mixins' as mx;
 @use '../../styles/abstract/functions' as fct;
+
+.survey-cards {
+    max-height: 100%;
+    width: 100%;
+    max-width: fct.layout(surveys);
+    margin-inline: auto;
+    padding-inline: fct.size(lg);
+}
+
+.soon-cards {
+    margin-top: fct.size(xl);
+
+    &__list {
+        display: flex;
+        gap: fct.size(xl);
+    }
+
+    &__card {
+        @include mx.flex(column, space-between, stretch);
+        width: fct.px-to-rem(321px);
+        height: fct.px-to-rem(310px);
+        padding: fct.size(xxl) fct.px-to-rem(18px);
+
+        background-color: fct.color(bg-card);
+        border-radius: 0 fct.px-to-rem(80px) 0 0;
+        cursor: pointer;
+    }
+
+    &__header {
+        @include mx.flex(column, flex-start, stretch);
+        gap: fct.px-to-rem(10px);
+    }
+
+    &__category {
+        @include mx.typo(mulish, 600);
+        font-size: fct.px-to-rem(14px);
+        line-height: 1;
+        letter-spacing: 0;
+        color: fct.color(primary-purple);
+    }
+
+    &__title {
+        @include mx.typo(mulish, 700);
+        font-size: fct.px-to-rem(26px);
+        line-height: 1;
+        letter-spacing: 0;
+        color: fct.color(primary-purple);
+    }
+
+    &__ending {
+        @include mx.typo(mulish, 500);
+        color: fct.color(dark-purple);
+        font-size: fct.px-to-rem(12px);
+        line-height: 1;
+    }
+
+
+    &__footer {
+        display: flex;
+        width: fit-content;
+        padding: fct.px-to-rem(3px) fct.px-to-rem(6px);
+
+        background-color: fct.color(secondary-orange);
+        border-radius: 0 fct.px-to-rem(14px) 0 0;
+    }
+}
+
+.filters {
+    @include mx.flex(row, space-between, center);
+    width: 100%;
+    max-width: fct.px-to-rem(1042px);
+    min-height: fct.px-to-rem(25px);
+    margin-block: fct.px-to-rem(25px);
+}
+
+.cards {
+    &__list {
+        height: fct.px-to-rem(478px);
+    }
+
+    &__card {}
+
+    &__category {}
+
+    &__title {}
+
+    &__ending {}
+}
