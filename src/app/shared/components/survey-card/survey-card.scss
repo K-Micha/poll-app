@@ -3,7 +3,6 @@
 @use '../../styles/abstract/functions' as fct;
 
 .survey-cards {
-    max-height: 100%;
     width: 100%;
     max-width: fct.layout(surveys);
     margin-inline: auto;
@@ -36,7 +35,7 @@
 
     &__category {
         @include mx.typo(mulish, 600);
-        font-size: fct.px-to-rem(14px);
+        font-size: fct.font-size(sm);
         line-height: 1;
         letter-spacing: 0;
         color: fct.color(primary-purple);
@@ -44,7 +43,7 @@
 
     &__title {
         @include mx.typo(mulish, 700);
-        font-size: fct.px-to-rem(26px);
+        font-size: fct.font-size(xxl);
         line-height: 1;
         letter-spacing: 0;
         color: fct.color(primary-purple);
@@ -53,7 +52,7 @@
     &__ending {
         @include mx.typo(mulish, 500);
         color: fct.color(dark-purple);
-        font-size: fct.px-to-rem(12px);
+        font-size: fct.font-size(xs);
         line-height: 1;
     }
 
@@ -61,7 +60,7 @@
     &__footer {
         display: flex;
         width: fit-content;
-        padding: fct.px-to-rem(3px) fct.px-to-rem(6px);
+        padding: fct.px-to-rem(3px) fct.size(xs);
 
         background-color: fct.color(secondary-orange);
         border-radius: 0 fct.px-to-rem(14px) 0 0;
@@ -71,21 +70,103 @@
 .filters {
     @include mx.flex(row, space-between, center);
     width: 100%;
-    max-width: fct.px-to-rem(1042px);
+    max-width: fct.px-to-rem(fct.layout(surveys));
     min-height: fct.px-to-rem(25px);
     margin-block: fct.px-to-rem(25px);
 }
 
+:host {
+    display: block;
+}
+
 .cards {
+    margin-bottom: fct.px-to-rem(100px);
+    height: auto;
+
     &__list {
-        height: fct.px-to-rem(478px);
+        display: grid;
+        align-content: start;
+        gap: fct.size(md);
+        height: auto;
+        overflow: visible;
+
+        @media (min-width: fct.breakpoint(tablet)) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 
-    &__card {}
+    @media (min-width: fct.breakpoint(surveys)) {
+        max-height: fct.px-to-rem(413px);
+        overflow-x: hidden;
+        overflow-y: auto;
 
-    &__category {}
+        &::-webkit-scrollbar {
+            width: fct.px-to-rem(8px);
+        }
 
-    &__title {}
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
-    &__ending {}
+        &::-webkit-scrollbar-thumb {
+            border-radius: fct.px-to-rem(10px);
+            background-color: fct.color(primary-orange);
+            box-shadow:
+                fct.px-to-rem(3px) fct.px-to-rem(3px) fct.px-to-rem(3.2px) rgba(0, 0, 0, 0.25);
+        }
+    }
+
+    &__card {
+        @include mx.flex(column, flex-start, stretch);
+
+        cursor: pointer;
+        height: fct.px-to-rem(127px);
+        gap: fct.size(lg);
+        padding: fct.px-to-rem(12px) fct.px-to-rem(20px);
+        background-color: fct.color(survey-bg);
+        border-radius:
+            fct.px-to-rem(5px) fct.px-to-rem(50px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+    }
+
+    &__header {
+        @include mx.flex(column, flex-start, stretch);
+        gap: fct.px-to-rem(8px);
+    }
+
+    &__category {
+        @include mx.typo(mulish, 500);
+
+        font-size: fct.font-size(basic);
+        line-height: 1;
+        letter-spacing: 0;
+        color: fct.color(secondary-orange);
+    }
+
+    &__title {
+        @include mx.typo(mulish, 700);
+
+        font-size: fct.px-to-rem(24px);
+        line-height: 1;
+        letter-spacing: 0;
+        color: fct.color(wht);
+
+
+        @media (min-width: fct.breakpoint(tablet)) {
+            white-space: nowrap;
+        }
+    }
+
+    &__footer {
+        @include mx.flex(row, flex-end, center);
+    }
+
+    &__ending {
+        @include mx.flex(row, center, center);
+
+        gap: fct.px-to-rem(10px);
+        padding: fct.px-to-rem(3px) fct.size(xs);
+
+        background-color: fct.color(secondary-orange);
+        border-radius: 0 fct.px-to-rem(14px) 0 0;
+    }
 }

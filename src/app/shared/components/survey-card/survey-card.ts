@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import {  Dropdown,  type SurveyCategory,} from '../dropdown/dropdown';
 import { Supabase } from '../../../supabase';
+import { RouterLink } from '@angular/router';
 
 type Survey = ReturnType<Supabase['surveys']>[number];
 
@@ -11,13 +12,14 @@ type SurveyCardItem = Survey & {
 type SurveyStatus = 'active' | 'past';
 
 @Component({
-  selector: 'app-survey-card',
-  imports: [Dropdown],
-  templateUrl: './survey-card.html',
-  styleUrl: './survey-card.scss',
+    selector: 'app-survey-card',
+    imports: [Dropdown, RouterLink],
+    templateUrl: './survey-card.html',
+    styleUrl: './survey-card.scss',
 })
 
 export class SurveyCard {
+  
   selectedStatus: SurveyStatus = 'active';
   selectedCategory: SurveyCategory = 'All Surveys';
 

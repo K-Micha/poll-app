@@ -8,6 +8,16 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: auto !important;
+   
+}
+
+app-root {
+    display: block;
+    height: auto !important;
+}
+
 .content-wrapper {
     width: 100%;
     max-width: fct.layout(content-max);

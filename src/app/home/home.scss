@@ -2,6 +2,9 @@
 @use '../shared/styles/abstract/mixins' as mx;
 @use '../shared/styles/abstract/functions' as fct;
 
+:host {
+    display: block;
+}
 
 .home {
     margin-top: fct.px-to-rem(100px);
