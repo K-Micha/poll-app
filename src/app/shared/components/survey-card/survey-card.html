@@ -2,7 +2,7 @@
   <section class="soon-cards">
     <div class="soon-cards__list">
       @for (survey of endingSoonSurveys; track survey.id) {
-      <article class="soon-cards__card">
+      <article class="soon-cards__card" [routerLink]="['/survey-detail', survey.id]" tabindex="0" role="link">
         <header class="soon-cards__header">
           <p class="soon-cards__category">
             {{ survey.category }}
@@ -41,19 +41,14 @@
       </button>
     </div>
 
-    <app-dropdown (categoryChange)="selectCategory($event)"></app-dropdown>
+    <app-dropdown label="Sort by categories" (categoryChange)="selectCategory($event)"></app-dropdown>
   </div>
 
   <section class="cards">
     <div class="cards__list">
       @for (survey of filteredSurveys; track survey.id) {
 
-                <article
-                class="cards__card"
-                [routerLink]="['./survey-detail', survey.id]"
-                tabindex="0"
-                role="link"
-            >
+      <article class="cards__card" [routerLink]="['./survey-detail', survey.id]" tabindex="0" role="link">
         <header class="cards__header">
           <p class="cards__category">
             {{ survey.category }}

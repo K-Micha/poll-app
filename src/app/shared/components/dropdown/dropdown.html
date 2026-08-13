@@ -1,6 +1,8 @@
 <div class="dropdown" [class.dropdown--open]="isOpen">
   <button class="dropdown__trigger" [class.dropdown__trigger--open]="isOpen" type="button" (click)="toggleDropdown()">
-    <span class="dropdown__label">Choose category</span>
+    @if (label) {
+    <span class="dropdown__label">{{ label }}</span>
+    }
 
     <img class="dropdown__icon" [src]="isOpen
         ? '/icons/drop_up.svg'

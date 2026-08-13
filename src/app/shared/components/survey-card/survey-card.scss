@@ -26,6 +26,14 @@
         background-color: fct.color(bg-card);
         border-radius: 0 fct.px-to-rem(80px) 0 0;
         cursor: pointer;
+
+        &:hover {
+            background-color: fct.color(bg-card-hover);
+
+            .soon-cards__footer {
+                background-color: fct.color(primary-orange);
+            }
+        }
     }
 
     &__header {
@@ -126,6 +134,10 @@
         background-color: fct.color(survey-bg);
         border-radius:
             fct.px-to-rem(5px) fct.px-to-rem(50px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+
+        &:hover {
+            background-color: fct.color(survey-hover);
+        }
     }
 
     &__header {

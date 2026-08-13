@@ -10,4 +10,5 @@ export class Header {
   @Input() variant: 'orange' | 'purple' = 'purple';
   @Input() logoSrc = '/icons/logo-orange.svg';
   @Input() showButton = false;
+  
 }

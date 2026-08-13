@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Header } from '../shared/layout/header/header';
 import { SurveyCard } from '../shared/components/survey-card/survey-card';
+import { NewSurvey } from '../shared/components/new-survey/new-survey';
 
 @Component({
   selector: 'app-home',
-  imports: [ Header, SurveyCard],
+  imports: [ Header, SurveyCard, NewSurvey],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

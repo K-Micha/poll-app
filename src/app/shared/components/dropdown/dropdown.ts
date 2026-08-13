@@ -1,4 +1,4 @@
-import { Component, output, } from '@angular/core';
+import { Component, Input, output, } from '@angular/core';
 
 export const surveyCategories = [
   'All Surveys',
@@ -18,6 +18,8 @@ export type SurveyCategory = (typeof surveyCategories)[number];
   styleUrl: './dropdown.scss',
 })
 export class Dropdown {
+  @Input() label = '';
+
   readonly surveyCategories = surveyCategories;
   readonly categoryChange = output<SurveyCategory>();
 

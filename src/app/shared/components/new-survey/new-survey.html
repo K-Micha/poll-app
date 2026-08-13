@@ -1,0 +1,12 @@
+<button class="new-survey" [class.new-survey--success]="isSuccess" type="button" [disabled]="isAnimating"
+    (click)="handleClick()">
+    <span class="new-survey__text">
+        New survey
+    </span>
+
+    @if (isSuccess) {
+    <img class="new-survey__icon new-survey__icon--check" src="/icons/check.svg" alt="" aria-hidden="true">
+    } @else {
+    <img class="new-survey__icon new-survey__icon--add" src="/icons/add_circle.svg" alt="" aria-hidden="true">
+    }
+</button>

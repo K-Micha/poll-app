@@ -1,0 +1,87 @@
+@use '../../styles/abstract/variables' as var;
+@use '../../styles/abstract/mixins' as mx;
+@use '../../styles/abstract/functions' as fct;
+
+.new-survey {
+    @include mx.flex(row, flex-start, center);
+
+    width: fct.px-to-rem(138px);
+    height: fct.size(xxxl);
+    gap: 0;
+    padding: fct.size(sm) fct.size(md);
+
+    overflow: hidden;
+    background-color: fct.color(secondary-orange);
+    border: none;
+    border-radius: fct.px-to-rem(10px);
+
+    transition:
+        width 300ms ease-out,
+        gap 300ms ease-out,
+        background-color 300ms ease-out;
+
+    &__text {
+        @include mx.typo(nokora, 700);
+
+        flex: 0 0 fct.px-to-rem(106px);
+
+        font-size: fct.font-size(md);
+        line-height: 1;
+        letter-spacing: 0;
+        white-space: nowrap;
+        color: fct.color(primary-purple);
+    }
+
+    &__icon {
+        display: block;
+        flex: 0 0 auto;
+
+        width: 0;
+        overflow: hidden;
+        opacity: 0;
+
+        transition:
+            width 300ms ease-out,
+            opacity 300ms ease-out;
+    }
+
+    &__icon--add {
+        height: fct.size(lg);
+    }
+
+    &__icon--check {
+        height: fct.size(md);
+    }
+
+    &:hover:not(.new-survey--success) {
+        width: fct.px-to-rem(172px);
+        gap: fct.px-to-rem(10px);
+        background-color: fct.color(primary-orange);
+
+        .new-survey__icon--add {
+            width: fct.size(lg);
+            opacity: 1;
+        }
+    }
+
+    &--success {
+        width: fct.px-to-rem(166px);
+        gap: fct.px-to-rem(10px);
+        background-color: fct.color(primary-orange);
+
+        .new-survey__icon--check {
+            width: fct.px-to-rem(18px);
+            opacity: 1;
+        }
+    }
+
+    &:disabled {
+        opacity: 1;
+        cursor: default;
+
+        .new-survey__text {
+            color: fct.color(primary-purple);
+            opacity: 1;
+        }
+    }
+}

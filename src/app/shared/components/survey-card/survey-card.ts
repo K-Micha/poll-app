@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import {  Dropdown,  type SurveyCategory,} from '../dropdown/dropdown';
 import { Supabase } from '../../../supabase';
 import { RouterLink } from '@angular/router';
@@ -19,7 +19,8 @@ type SurveyStatus = 'active' | 'past';
 })
 
 export class SurveyCard {
-  
+  @Input() label = '';
+
   selectedStatus: SurveyStatus = 'active';
   selectedCategory: SurveyCategory = 'All Surveys';
 
