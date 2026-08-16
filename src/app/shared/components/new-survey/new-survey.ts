@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrl: './new-survey.scss',
 })
 export class NewSurvey {
-  @Input() variant: 'home' | 'create' = 'home';
+  @Input() variant: 'home' | 'header-create' = 'home';
 
   private readonly router = inject(Router);
 

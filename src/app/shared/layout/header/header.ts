@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { NewSurvey } from '../../components/new-survey/new-survey';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [NewSurvey],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

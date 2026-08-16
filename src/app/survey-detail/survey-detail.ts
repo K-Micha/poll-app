@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, Renderer2, signal, } from '@angular/core';
+import {  Component,  inject,  OnDestroy,  OnInit,  Renderer2,  signal,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../supabase';
 import { SurveyResults } from '../shared/components/survey-results/survey-results';
@@ -10,7 +10,6 @@ import { Header } from '../shared/layout/header/header';
   templateUrl: './survey-detail.html',
   styleUrl: './survey-detail.scss',
 })
-
 export class SurveyDetail implements OnInit, OnDestroy {
   private readonly supabaseService = inject(Supabase);
   private readonly renderer = inject(Renderer2);
@@ -49,35 +48,41 @@ export class SurveyDetail implements OnInit, OnDestroy {
       .single();
   }
 
-  private getDemoDays(surveyId: number): number | null {
-    const demoDays: Record<number, number> = {
-      999999: 1,
-      999998: 2,
-      999997: 3,
-    };
+  getEndDate(
+    isDemo: boolean,
+    endDate: string | null
+  ): string {
+    if (isDemo) {
+      return this.getTomorrowDate();
+    }
 
-    return demoDays[surveyId] ?? null;
+    return this.formatDate(endDate);
   }
 
-getEndLabel( surveyId: number, isDemo: boolean, endDate: string | null): string {
-  if (!isDemo) {
-    return endDate ?? 'N/A';
+  private getTomorrowDate(): string {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    return tomorrow.toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
   }
-  return this.getDemoEndLabel(surveyId);
-}
 
-private getDemoEndLabel(surveyId: number): string {
-  const days = this.getDemoDays(surveyId);
-
-  if (days === null) {
-    return 'N/A';
+  getAnswerLetter(index: number): string {
+    return String.fromCharCode(65 + index);
   }
-  return `Ends in ${days} ${this.getDayLabel(days)}`;
-}
 
-private getDayLabel(days: number): string {
-  return days === 1 ? 'Day' : 'Days';
-}
+  private formatDate(date: string | null): string {
+    if (!date) return '';
+
+    const [year, month, day] = date
+      .slice(0, 10)
+      .split('-');
+
+    return `${day}.${month}.${year}`;
+  }
 
   ngOnDestroy(): void {
     this.renderer.removeClass(

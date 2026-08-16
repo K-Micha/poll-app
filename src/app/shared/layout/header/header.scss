@@ -7,10 +7,10 @@
     margin-top: fct.px-to-rem(39px);
 
     &__wrapper {
-        width: 100%;
+        @include mx.flex(row, space-between, center);
+        width: fct.content-width(55px);
         max-width: fct.layout(content-inner);
         margin-inline: auto;
-        padding-inline: fct.px-to-rem(55px);
         box-sizing: border-box;
     }
 

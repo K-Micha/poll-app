@@ -1,0 +1,40 @@
+@use '../abstract/variables' as var;
+@use '../abstract/mixins' as mx;
+@use '../abstract/functions' as fct;
+
+.input {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: 0 0 auto;
+
+    width: fct.px-to-rem(15px);
+    height: fct.px-to-rem(15px);
+    margin: 0;
+
+    background-color: transparent;
+    border: fct.px-to-rem(1.5px) solid
+        fct.color(primary-purple);
+    border-radius: fct.px-to-rem(3px);
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:hover:not(:checked) {
+        background-color: rgba(255, 207, 161, 0.6);
+    }
+
+    &:checked {
+        background-color: fct.color(primary-orange);
+        background-image: url('/icons/check.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: fct.px-to-rem(9px);
+
+        border-color: fct.color(primary-orange);
+    }
+
+    &:focus-visible {
+        outline: fct.px-to-rem(2px) solid
+            fct.color(primary-purple);
+        outline-offset: fct.px-to-rem(2px);
+    }
+}

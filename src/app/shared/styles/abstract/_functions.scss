@@ -23,9 +23,13 @@
 }
 
 @function layout($name) {
-    @return px-to-rem(map.get(var.$layout, $name));
+  @return px-to-rem(map.get(var.$layout, $name));
 }
 
 @function font($name) {
   @return map.get(var.$fonts, $name);
+}
+
+@function content-width($inline) {
+  @return calc(100% - (px-to-rem($inline) * 2));
 }

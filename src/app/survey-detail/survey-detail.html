@@ -1,40 +1,43 @@
-<app-header variant="orange" [showButton]="true" />
+<app-header logoSrc="/icons/logo-purple.svg" [showButton]="true"></app-header>
+
 @if (survey(); as currentSurvey) {
 <main class="survey-detail">
   <div class="content-wrapper">
     <form class="survey-detail__form">
-      <section class="survey-detail__content">
+      <div class="survey-detail__content">
+        <header class="survey-detail__information">
+          <div class="survey-detail__header">
+            <span class="survey-detail__status">
+              {{ currentSurvey.status }}
+            </span>
 
-        <section class="survey-detail__information">
-          <div class="survey-detail__meta">
-            <div class="survey-detail__meta-left">
-              <span class="survey-detail__status">
-                {{ currentSurvey.status }}
-              </span>
-
+            <div class="survey-detail__meta">
               <p class="survey-detail__date">
                 Ends on
-                {{ getEndLabel(
-                survey().id,
-                survey().is_demo,
-                survey().end_date
-                ) }}
+                {{
+                getEndDate(
+                currentSurvey.is_demo,
+                currentSurvey.end_date
+                )
+                }}
+              </p>
+
+              <p class="survey-detail__category">
+                Category: {{ currentSurvey.category }}
               </p>
             </div>
-
-            <p class="survey-detail__category">
-              Category: {{ currentSurvey.category }}
-            </p>
           </div>
 
-          <h1 class="survey-detail__title">
-            {{ currentSurvey.title }}
-          </h1>
+          <div class="survey-detail__intro">
+            <h1 class="survey-detail__title">
+              {{ currentSurvey.title }}
+            </h1>
 
-          <p class="survey-detail__description">
-            {{ currentSurvey.description }}
-          </p>
-        </section>
+            <p class="survey-detail__description">
+              {{ currentSurvey.description }}
+            </p>
+          </div>
+        </header>
 
         <section class="survey-detail__questions" aria-label="Survey questions">
           @for (
@@ -60,19 +63,25 @@
               track answer.id;
               let answerIndex = $index
               ) {
+              @let answerLines = answer.answer_text.split('\n');
+
               <label class="survey-answer">
-                <input class="survey-answer__input" [type]="question.allow_multiple
-                        ? 'checkbox'
-                        : 'radio'" [name]="'question-' + question.id" [value]="answer.id">
+                <input class="input survey-answer__input" [type]="question.allow_multiple ? 'checkbox' : 'radio'"
+                  [name]="'question-' + question.id" [value]="answer.id">
 
-                <span class="survey-answer__control" aria-hidden="true"></span>
+                <span class="survey-answer__content">
+                  <span class="survey-answer__letter">
+                    {{ getAnswerLetter(answerIndex) }}.
+                  </span>
 
-                <span class="survey-answer__letter">
-                  {{ answerIndex + 1 }}.
-                </span>
+                  <span class="survey-answer__text">
+                    {{ answerLines[0] }}
 
-                <span class="survey-answer__text">
-                  {{ answer.answer_text }}
+                    @if (answerLines[1]) {
+                    <br>
+                    {{ answerLines[1] }}
+                    }
+                  </span>
                 </span>
               </label>
               }
@@ -88,8 +97,7 @@
             </span>
           </button>
         </footer>
-
-      </section>
+      </div>
 
       <aside class="survey-detail__results">
         <app-survey-results></app-survey-results>

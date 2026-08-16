@@ -1,7 +1,7 @@
 <button class="new-survey" [class.new-survey--success]="isSuccess" type="button" [disabled]="isAnimating"
     (click)="handleClick()">
     <span class="new-survey__text">
-        New survey
+         {{ variant === 'header-create' ? 'Create survey' : 'New survey' }}
     </span>
 
     @if (isSuccess) {

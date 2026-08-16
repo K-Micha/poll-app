@@ -1,3 +1,208 @@
 @use '../shared/styles/abstract/variables' as var;
 @use '../shared/styles/abstract/mixins' as mx;
 @use '../shared/styles/abstract/functions' as fct;
+
+.header__wrapper {
+    padding-inline: 0;
+}
+
+.survey-detail {
+    @include mx.flex(row, space-between, center);
+    color: fct.color(primary-purple);
+
+    width: 100%;
+    max-width: fct.layout(content-inner);
+    margin-top: fct.px-to-rem(42px);
+    margin-inline: auto;
+    width: fct.content-width(55px);
+
+    &__form {
+        display: grid;
+        grid-template-columns:
+            fct.px-to-rem(702px) fct.px-to-rem(315px);
+        column-gap: fct.px-to-rem(40px);
+        align-items: start;
+        width: 100%;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: fct.size(xxl);
+
+        width: fct.px-to-rem(702px);
+        height: fct.px-to-rem(855px);
+        padding-block: fct.size(md);
+        padding-inline: fct.px-to-rem(40px);
+
+        background-color: rgba(142, 112, 153, 0.1);
+        border: fct.px-to-rem(1px) solid transparent;
+        border-radius:
+            fct.size(md) fct.px-to-rem(160px) fct.size(md) fct.size(md);
+        margin-bottom: 50px;
+    }
+
+    &__header {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: fct.content-width(40px);
+    }
+
+    &__information {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__status {
+        align-self: flex-start;
+    }
+
+    &__meta {
+        @include mx.flex(row, space-between, center);
+        max-width: fct.px-to-rem(608px);
+        width: 100%;
+        margin-bottom: 6px;
+    }
+
+    &__status {
+        @include mx.flex(row, center, center);
+        @include mx.typo(mulish, 600);
+
+        font-size: fct.font-size(basic);
+        line-height: 1;
+        text-transform: capitalize;
+
+        width: fct.px-to-rem(94px);
+        height: fct.px-to-rem(26px);
+        padding:
+            fct.px-to-rem(3px) fct.size(sm) fct.px-to-rem(3px) fct.px-to-rem(8px);
+
+        background-color: fct.color(primary-orange);
+        border-radius: 0 fct.px-to-rem(14px) 0 0;
+    }
+
+    &__title {
+        @include mx.typo(nerko-one, 400);
+
+        width: 100%;
+        max-width: fct.px-to-rem(622px);
+
+        font-size: fct.font-size(d-md);
+        line-height: fct.px-to-rem(50px);
+        letter-spacing: 0;
+        color: rgba(238, 146, 54, 1);
+    }
+
+    &__description {
+        @include mx.typo(mulish, 500);
+
+        margin-top: 8px;
+        width: 100%;
+        max-width: fct.px-to-rem(622px);
+
+        font-size: fct.font-size(basic);
+        line-height: 1;
+        letter-spacing: 0;
+    }
+
+    &__questions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: fct.size(xl);
+
+        width: 100%;
+    }
+
+
+    .survey-question {
+        min-width: 0;
+
+        &__title {
+            @include mx.typo(mulish, 700);
+
+            width: 100%;
+
+            font-size: fct.font-size(md);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        &__hint {
+            @include mx.typo(mulish, 400);
+
+            margin:
+                fct.px-to-rem(10px) 0 fct.px-to-rem(10px) fct.px-to-rem(26px);
+
+            font-size: fct.font-size(xs);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        &__answers {
+            display: flex;
+            flex-direction: column;
+            gap: fct.size(sm);
+
+            width: 100%;
+            margin-top: fct.px-to-rem(24px);
+        }
+    }
+
+    &__results {
+        width: fct.px-to-rem(315px);
+        height: fct.px-to-rem(713px);
+        margin-top: fct.px-to-rem(142px);
+    }
+}
+
+.survey-answer {
+    @include mx.flex(row, flex-start, flex-start);
+    gap: fct.size(md);
+    width: fct.px-to-rem(281px);
+    padding-inline: fct.size(xxs);
+    border-radius: fct.px-to-rem(3px);
+    box-sizing: border-box;
+
+    &__input {
+        margin-top: 4px;
+        flex: 0 0 fct.px-to-rem(15px);
+        align-self: flex-start;
+    }
+
+    &__content {
+        @include mx.flex(row, flex-start, flex-start);
+        flex: 1 1 auto;
+        gap: 4px;
+        cursor: pointer;
+    }
+
+    &__letter-wrapper {
+        @include mx.flex(row, flex-start, flex-start);
+        flex: 0 0 fct.px-to-rem(21px);
+    }
+
+    &__text-wrapper {
+        flex: 1 1 auto;
+        line-height: 1.3;
+    }
+
+    &:hover {
+        background-color: rgba(255, 207, 161, 0.4);
+    }
+
+    &__text {
+        @include mx.typo(mulish, 400);
+    }
+
+    &__letter {
+        @include mx.typo(mulish, 700);
+
+        flex: 0 0 auto;
+        font-size: fct.font-size(basic);
+        line-height: 1;
+        margin-top: 2px;
+        letter-spacing: 0;
+    }
+}
