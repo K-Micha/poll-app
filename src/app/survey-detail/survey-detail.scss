@@ -16,6 +16,11 @@
     margin-inline: auto;
     width: fct.content-width(55px);
 
+    &__category{
+        @include mx.typo(mulish, 500);
+        font-size: fct.font-size(sm);
+    }
+
     &__form {
         display: grid;
         grid-template-columns:
@@ -31,7 +36,7 @@
         gap: fct.size(xxl);
 
         width: fct.px-to-rem(702px);
-        height: fct.px-to-rem(855px);
+        min-height: fct.px-to-rem(855px);
         padding-block: fct.size(md);
         padding-inline: fct.px-to-rem(40px);
 
@@ -115,6 +120,9 @@
         width: 100%;
     }
 
+    &__footer {
+        @include mx.flex(row, flex-end);
+    }
 
     .survey-question {
         min-width: 0;
@@ -154,6 +162,31 @@
         width: fct.px-to-rem(315px);
         height: fct.px-to-rem(713px);
         margin-top: fct.px-to-rem(142px);
+    }
+
+    .btn {
+        @include mx.flex(row, center, center);
+
+        gap: fct.px-to-rem(10px);
+        padding: fct.px-to-rem(8px) fct.size(sm);
+
+        border: none;
+        border-radius: fct.px-to-rem(10px);
+        cursor: pointer;
+
+        &--primary {
+            background-color: rgba(fct.color(primary-orange), 0.3);
+            margin-bottom: 10px;
+        }
+
+        &__text {
+            @include mx.typo(nokora, 700);
+
+            color: fct.color(primary-purple);
+            font-size: fct.font-size(basic);
+            line-height: 100%;
+            letter-spacing: 0;
+        }
     }
 }
 

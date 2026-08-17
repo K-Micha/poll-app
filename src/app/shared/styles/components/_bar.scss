@@ -1,0 +1,35 @@
+@use '../abstract/variables' as var;
+@use '../abstract/mixins' as mx;
+@use '../abstract/functions' as fct;
+
+
+.bar {
+    display: block;
+    position: relative;
+    overflow: hidden;
+
+    width: fct.px-to-rem(255px);
+    height: fct.px-to-rem(14px);
+
+    background-color: fct.color(bar-background);
+    border-radius:
+        0
+        fct.px-to-rem(20px)
+        fct.px-to-rem(20px)
+        0;
+
+    &::before {
+        content: '';
+
+        display: block;
+        width: var(--percentage);
+        height: 100%;
+
+        background-color: fct.color(primary-orange);
+        border-radius:
+            0
+            fct.px-to-rem(20px)
+            fct.px-to-rem(20px)
+            0;
+    }
+}

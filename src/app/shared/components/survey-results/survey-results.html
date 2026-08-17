@@ -1,41 +1,68 @@
-<section
-  class="survey-results"
-  aria-labelledby="survey-results-title"
->
+<section class="survey-results" [class.survey-results--unloaded]="!hasResults()"
+  [class.survey-results--loaded]="hasResults()" aria-labelledby="survey-results-title">
+
   <div class="survey-results__heading">
-    <h3
-      class="survey-results__title"
-      id="survey-results-title"
-    >
+    <h3 class="survey-results__title survey-results__title--title" id="survey-results-title">
       Survey results
     </h3>
 
-    <span class="survey-results__live">
+    <span class="survey-results__title survey-results__title--live">
       LIVE
     </span>
   </div>
 
-  @if (hasResults) {
-    <div class="survey-results__content">
-      <!--
-      @for (
-        question of results;
-        track question.id;
-        let questionIndex = $index
-      ) {
-        ...
-      }
-      -->
-    </div>
-  } @else {
-    <div class="survey-results__empty">
-      <p class="survey-results__empty-description">
-        Results will be shown here after participants complete the survey.
-      </p>
+  @if (hasResults()) {
+  <div class="survey-results__content">
+    @for (
+    question of results();
+    track question.id;
+    let questionIndex = $index
+    ) {
+    <section class="question-result">
+      <h4 class="question-result__title">
+        {{ questionIndex + 1 }}.
+        {{ question.questionText }}
+      </h4>
 
-      <p class="survey-results__empty-message">
-        There are no answers yet.
-      </p>
-    </div>
+      @for (
+      answer of question.answers;
+      track answer.id;
+      let answerIndex = $index
+      ) {
+      <div class="question-result__answer">
+        <span class="question-result__letter">
+          {{ getAnswerLetter(answerIndex) }}
+        </span>
+
+        <span class="question-result__bar bar" [style.--percentage]="
+                getPercentage(
+                  question.answers,
+                  answer.votes
+                ) + '%'
+              "></span>
+
+        <span class="question-result__percentage">
+          {{
+          getPercentage(
+          question.answers,
+          answer.votes
+          )
+          }}%
+        </span>
+      </div>
+      }
+    </section>
+    }
+  </div>
+  } @else {
+  <div class="empty-state">
+    <p class="empty-state__description">
+      Results will be shown here after participants complete the survey.
+    </p>
+
+    <p class="empty-state__message">
+      There are no answers yet.
+    </p>
+  </div>
   }
 </section>

@@ -3,7 +3,7 @@
 @if (survey(); as currentSurvey) {
 <main class="survey-detail">
   <div class="content-wrapper">
-    <form class="survey-detail__form">
+    <form class="survey-detail__form" (submit)="submitSurvey($event)">
       <div class="survey-detail__content">
         <header class="survey-detail__information">
           <div class="survey-detail__header">
@@ -67,7 +67,8 @@
 
               <label class="survey-answer">
                 <input class="input survey-answer__input" [type]="question.allow_multiple ? 'checkbox' : 'radio'"
-                  [name]="'question-' + question.id" [value]="answer.id">
+                  [name]="'question-' + question.id" [value]="answer.id"
+                  (change)="selectAnswer(    question.id,    answer.id,    question.allow_multiple,    $event  )">
 
                 <span class="survey-answer__content">
                   <span class="survey-answer__letter">
@@ -91,7 +92,7 @@
         </section>
 
         <footer class="survey-detail__footer">
-          <button class="btn btn--primary" type="submit">
+          <button class="btn btn--primary" type="submit" [disabled]="!isSurveyComplete() || isSubmitting()">
             <span class="btn__text">
               Complete survey
             </span>
@@ -100,7 +101,7 @@
       </div>
 
       <aside class="survey-detail__results">
-        <app-survey-results></app-survey-results>
+        <app-survey-results [surveyId]="currentSurvey.id"></app-survey-results>
       </aside>
     </form>
   </div>
