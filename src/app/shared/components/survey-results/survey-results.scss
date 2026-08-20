@@ -21,7 +21,6 @@
         @include mx.typo(nerko-one, 400);
 
         margin: 0;
-
         font-size: fct.font-size(xxxl);
         line-height: 100%;
         letter-spacing: 0;
@@ -64,7 +63,6 @@
         @include mx.typo(mulish, 700);
 
         margin: 0;
-
         color: fct.color(primary-purple);
         font-size: fct.font-size(md);
         line-height: 100%;

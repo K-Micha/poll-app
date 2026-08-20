@@ -12,8 +12,7 @@
     margin: 0;
 
     background-color: transparent;
-    border: fct.px-to-rem(1.5px) solid
-        fct.color(primary-purple);
+    border: fct.px-to-rem(1.5px) solid fct.color(primary-purple);
     border-radius: fct.px-to-rem(3px);
     box-sizing: border-box;
     cursor: pointer;
@@ -33,8 +32,7 @@
     }
 
     &:focus-visible {
-        outline: fct.px-to-rem(2px) solid
-            fct.color(primary-purple);
+        outline: fct.px-to-rem(2px) solid fct.color(primary-purple);
         outline-offset: fct.px-to-rem(2px);
     }
 }

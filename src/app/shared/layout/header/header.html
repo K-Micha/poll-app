@@ -5,7 +5,7 @@
         </a>
 
         @if (showButton) {
-        <app-new-survey variant="header-create" />
+        <app-new-survey variant="header-create" (createSurvey)="createSurvey.emit()" />
         }
     </div>
 </header>

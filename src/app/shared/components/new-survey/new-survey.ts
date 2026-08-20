@@ -1,4 +1,9 @@
-import { Component, inject, Input } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  output,
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,28 +14,22 @@ import { Router } from '@angular/router';
 })
 export class NewSurvey {
   @Input() variant: 'home' | 'header-create' = 'home';
+  @Input() route = '/create-survey';
 
   private readonly router = inject(Router);
 
+  createSurvey = output<void>();
   isSuccess = false;
   isAnimating = false;
 
   handleClick(): void {
-    if (this.isAnimating) {
-      return;
-    }
+    if (this.isAnimating) return;
 
     this.isAnimating = true;
     this.isSuccess = true;
 
     setTimeout(() => {
-      void this.router.navigate([this.targetRoute]);
+      void this.router.navigateByUrl(this.route);
     }, 600);
-  }
-
-  private get targetRoute(): string {
-    return this.variant === 'home'
-      ? '/create-survey'
-      : '/';
   }
 }

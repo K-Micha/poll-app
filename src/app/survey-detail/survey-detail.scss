@@ -16,15 +16,14 @@
     margin-inline: auto;
     width: fct.content-width(55px);
 
-    &__category{
+    &__category {
         @include mx.typo(mulish, 500);
         font-size: fct.font-size(sm);
     }
 
     &__form {
         display: grid;
-        grid-template-columns:
-            fct.px-to-rem(702px) fct.px-to-rem(315px);
+        grid-template-columns: fct.px-to-rem(702px) fct.px-to-rem(315px);
         column-gap: fct.px-to-rem(40px);
         align-items: start;
         width: 100%;
@@ -42,8 +41,7 @@
 
         background-color: rgba(142, 112, 153, 0.1);
         border: fct.px-to-rem(1px) solid transparent;
-        border-radius:
-            fct.size(md) fct.px-to-rem(160px) fct.size(md) fct.size(md);
+        border-radius: fct.size(md) fct.px-to-rem(160px) fct.size(md) fct.size(md);
         margin-bottom: 50px;
     }
 
@@ -106,7 +104,6 @@
         margin-top: 8px;
         width: 100%;
         max-width: fct.px-to-rem(622px);
-
         font-size: fct.font-size(basic);
         line-height: 1;
         letter-spacing: 0;
@@ -116,7 +113,6 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: fct.size(xl);
-
         width: 100%;
     }
 
@@ -131,7 +127,6 @@
             @include mx.typo(mulish, 700);
 
             width: 100%;
-
             font-size: fct.font-size(md);
             line-height: 1;
             letter-spacing: 0;
@@ -140,8 +135,7 @@
         &__hint {
             @include mx.typo(mulish, 400);
 
-            margin:
-                fct.px-to-rem(10px) 0 fct.px-to-rem(10px) fct.px-to-rem(26px);
+            margin: fct.px-to-rem(10px) 0 fct.px-to-rem(10px) fct.px-to-rem(26px);
 
             font-size: fct.font-size(xs);
             line-height: 1;

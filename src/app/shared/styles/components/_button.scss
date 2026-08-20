@@ -36,7 +36,6 @@
 
     @include mx.typo(mulish, 500);
     font-size: fct.px-to-rem(14px);
-
     transition: background-color 300ms ease-out;
 
     &:hover,
@@ -48,5 +47,58 @@
   &__status {
     @include mx.flex(row, flex-start, center);
     gap: fct.px-to-rem(25px);
+  }
+}
+
+.btn-cancel {
+  @include mx.flex();
+  padding: fct.px-to-rem(8px) fct.size(sm);
+  gap: fct.px-to-rem(10px);
+
+  color: fct.color(wht);
+  background-color: fct.color(cancel-btn);
+  border: none;
+  border-radius: fct.px-to-rem(10px);
+  cursor: pointer;
+
+  @include mx.transition();
+
+  &:hover {
+    color: fct.color(primary-purple);
+    background-color: fct.color(secondary-orange);
+  }
+
+  &__text {
+    @include mx.typo(nokora, 700);
+    font-size: fct.font-size(basic);
+    line-height: 1;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: fct.px-to-rem(13.15px);
+    height: fct.px-to-rem(13.15px);
+
+    background-color: currentColor;
+    mask: url('/icons/close.svg') center / contain no-repeat;
+  }
+}
+
+.btn-delete {
+  @include mx.flex(row, center, center);
+  width: fct.px-to-rem(26px);
+  height: fct.px-to-rem(26px);
+  padding: 0;
+  border: 0;
+  border-radius: fct.px-to-rem(3px);
+  background-color: transparent;
+  flex-shrink: 0;
+  cursor: pointer;
+
+  &__icon {
+    display: block;
+    width: fct.px-to-rem(16px);
+    height: fct.px-to-rem(16px);
+    background: url('/icons/delete-w.svg') center / contain no-repeat;
   }
 }
