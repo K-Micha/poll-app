@@ -1,0 +1,119 @@
+@use '../abstract/mixins' as mx;
+@use '../abstract/functions' as fct;
+
+.overlay {
+  @include mx.flex(row, space-between, flex-start);
+  position: absolute;
+  right: fct.px-to-rem(18px);
+  bottom: 0;
+  z-index: 10;
+
+  box-sizing: border-box;
+  width: fct.px-to-rem(339px);
+  min-height: fct.px-to-rem(82px);
+  padding: fct.px-to-rem(12px) fct.px-to-rem(26px);
+  gap: fct.px-to-rem(3px);
+
+  background-color: fct.color(secondary-btn);
+  border-radius: fct.px-to-rem(5px) fct.size(xxl) fct.px-to-rem(5px) fct.px-to-rem(5px);
+
+  animation: overlay-slide-in 300ms ease-out both;
+
+  &__text {
+    width: fct.px-to-rem(268px);
+
+    @include mx.typo(nerko-one, 400);
+    font-size: fct.font-size(xl);
+    line-height: 100%;
+    letter-spacing: 0.02em;
+
+    color: fct.color(primary-purple);
+  }
+
+  &__close {
+    @include mx.flex();
+    width: fct.px-to-rem(24px);
+    height: fct.px-to-rem(24px);
+    padding: 0;
+
+    color: fct.color(primary-purple);
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  &__close-icon {
+    width: 14px;
+    height: 14px;
+
+    background-color: currentColor;
+    mask: url('/icons/close.svg') center / contain no-repeat;
+    -webkit-mask: url('/icons/close.svg') center / contain no-repeat;
+  }
+   &__close {
+    &--highlight {
+      animation: overlay-close-highlight 300ms ease-in-out 2;
+    }
+  }
+}
+
+@keyframes overlay-close-highlight {
+  0%,
+  100% {
+    color: fct.color(primary-purple);
+    background-color: transparent;
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  50% {
+    color: rgba(54, 111, 149, 1);
+    background-color: rgba(160, 215, 231, 1);
+    box-shadow: 0 0 0 fct.px-to-rem(1px) rgba(70, 196, 250, 1);
+  }
+}
+
+@keyframes overlay-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(100% + fct.px-to-rem(54px)));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.overlay-filter {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  background-color: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+
+  animation: overlay-filter-in 300ms ease-out both;
+}
+
+.overlay-blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+
+  background-color: transparent;
+  pointer-events: auto;
+}
+
+.overlay {
+  z-index: 1002;
+}
+
+@keyframes overlay-filter-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

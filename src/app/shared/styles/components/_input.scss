@@ -36,3 +36,106 @@
         outline-offset: fct.px-to-rem(2px);
     }
 }
+
+.form-field {
+    &__description {
+        width: fct.px-to-rem(418px);
+        height: fct.px-to-rem(108px);
+        padding: fct.px-to-rem(7px) fct.px-to-rem(13px);
+        border: 0;
+        border-radius: fct.px-to-rem(5px) fct.px-to-rem(20px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+        color: fct.color(primary-purple);
+        background-color: fct.color(wht);
+        font: inherit;
+        resize: none;
+        overflow-y: auto;
+    }
+
+    &__input {
+        display: block;
+        box-sizing: border-box;
+        font: inherit;
+
+        &--name {
+            width: fct.px-to-rem(429px);
+            height: fct.px-to-rem(37px);
+            padding: fct.px-to-rem(7px) fct.px-to-rem(13px);
+            border: 0;
+            border-radius: fct.px-to-rem(5px) fct.px-to-rem(20px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+            color: fct.color(primary-purple);
+            background-color: fct.color(wht);
+        }
+
+        &--end-date {
+            width: fct.px-to-rem(222px);
+            height: fct.px-to-rem(37px);
+            padding: fct.px-to-rem(7px) fct.px-to-rem(13px);
+            border: 0;
+            border-radius: fct.px-to-rem(5px) fct.px-to-rem(20px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+            color: fct.color(primary-purple);
+            background-color: fct.color(wht);
+            color-scheme: light;
+        }
+    }
+
+    &__textarea {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        font: inherit;
+        resize: none;
+    }
+}
+
+.question {
+    &__input {
+        display: block;
+        box-sizing: border-box;
+        width: fct.px-to-rem(429px);
+        height: fct.px-to-rem(37px);
+        padding: fct.px-to-rem(7px) fct.px-to-rem(13px);
+        border: 0;
+        border-radius: fct.px-to-rem(5px) fct.px-to-rem(20px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+
+        @include mx.typo(mulish, 400);
+        font-size: fct.font-size(basic);
+        line-height: 100%;
+        letter-spacing: 0;
+
+        color: fct.color(primary-purple);
+        background-color: fct.color(wht);
+    }
+}
+
+.answer {
+    &__input {
+        display: block;
+        box-sizing: border-box;
+        width: fct.px-to-rem(363px);
+        height: fct.px-to-rem(37px);
+        padding: fct.px-to-rem(7px) fct.px-to-rem(13px);
+        border: 0;
+        border-radius: fct.px-to-rem(5px) fct.px-to-rem(20px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+
+        @include mx.typo(mulish, 400);
+        font-size: fct.font-size(basic);
+
+        color: fct.color(primary-purple);
+        background-color: fct.color(wht);
+    }
+}
+
+.input-inline {
+    border: 0;
+    outline: 0;
+    background-color: fct.color(wht);
+    cursor: pointer;
+
+    &:focus {
+        background-color: fct.color(secondary-btn);
+    }
+
+    &:not(:focus) {
+        background-color: fct.color(wht);
+    }
+}

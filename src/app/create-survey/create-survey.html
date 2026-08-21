@@ -8,7 +8,7 @@
         <div class="header__wrapper">
           <h1 class="header__title">Create new survey</h1>
 
-          <button class=" btn-cancel header__btn" type="button">
+          <button class="btn-cancel header__btn" type="button" tabindex="-1">
             <span class="btn-cancel__text">Cancel</span>
             <span class="btn-cancel__icon" aria-hidden="true"></span>
           </button>
@@ -23,8 +23,12 @@
                 <label class="form-field__label" for="survey-name">Survey name</label>
 
                 <div class="form-field__control">
-                  <input class="form-field__input" id="survey-name" name="surveyName" type="text">
-                  <button class="btn-delete form-field__delete" type="button" aria-label="Delete survey name">
+                  <input class="input-inline form-field__input form-field__input--name" id="survey-name"
+                    name="surveyName" type="text" [value]="surveyName" (input)="updateSurveyName($event)"
+                    (keydown.enter)="$event.preventDefault()">
+
+                  <button class="btn-delete form-field__delete" type="button" tabindex="-1"
+                    aria-label="Delete survey name">
                     <span class="btn-delete__icon" aria-hidden="true"></span>
                   </button>
                 </div>
@@ -37,9 +41,14 @@
                     <span class="form-field__label--optional">(optional)</span>
                   </label>
 
-                  <div class="form-field__control">
-                    <input class="form-field__input" id="survey-end-date" name="surveyEndDate" type="date">
-                    <button class="btn-delete form-field__delete" type="button" aria-label="Delete end date">
+                  <div class="form-field__wrapper form-field--end-date">
+                    <input class="input-inline form-field__input form-field__input--end-date" id="survey-end-date"
+                      name="surveyEndDate" type="text" inputmode="numeric" maxlength="10" autocomplete="off"
+                      [value]="surveyEndDate" (input)="formatEndDate($event)" (keydown.enter)="completeEndDate($event)"
+                      (blur)="validateEndDate($event)">
+
+                    <button class="btn-delete form-field__delete" type="button" tabindex="-1"
+                      aria-label="Delete end date">
                       <span class="btn-delete__icon" aria-hidden="true"></span>
                     </button>
                   </div>
@@ -57,9 +66,12 @@
                 <span class="form-field__label--optional">(optional)</span>
               </label>
 
-              <div class="form-field__control">
-                <textarea class="form-field__textarea" id="survey-description" name="surveyDescription"></textarea>
-                <button class="btn-delete form-field__delete" type="button" aria-label="Delete description">
+              <div class="form-field__control--flex-start">
+                <textarea class="input-inline form-field__description" id="survey-description" name="surveyDescription"
+                  [value]="surveyDescription" (input)="updateDescription($event)"></textarea>
+
+                <button class="btn-delete form-field__delete" type="button" tabindex="-1"
+                  aria-label="Delete description">
                   <span class="btn-delete__icon" aria-hidden="true"></span>
                 </button>
               </div>
@@ -77,21 +89,23 @@
                   {{ questionIndex + 1 }}. Question
                 </label>
 
-                <button class="btn-delete form-field__delete" type="button"
+                <button class="btn-delete form-field__delete" type="button" tabindex="-1"
                   [attr.aria-label]="'Delete question ' + (questionIndex + 1)">
                   <span class="btn-delete__icon" aria-hidden="true"></span>
                 </button>
               </div>
 
-              <input class="question__input" [id]="'question-' + (questionIndex + 1)"
-                [name]="'question-' + (questionIndex + 1)" type="text" [value]="question.text">
+              <input class="input-inline question__input" [id]="'question-' + (questionIndex + 1)"
+                [name]="'question-' + (questionIndex + 1)" type="text" [value]="question.text"
+                (input)="updateQuestion(questionIndex, $event)" (keydown.enter)="$event.preventDefault()">
 
               <div class="question__answers-header">
                 <span class="form-field__label">Answers</span>
 
                 <label class="checkbox">
-                  <input class="checkbox__input" [name]="'multipleAnswers-' + (questionIndex + 1)" type="checkbox">
-                  <span class="checkbox__control" aria-hidden="true"></span>
+                  <input class="checkbox__input" [name]="'multipleAnswers-' + (questionIndex + 1)" type="checkbox"
+                    [checked]="question.multipleAnswers" (change)="updateMultipleAnswers(questionIndex, $event)">
+
                   <span class="checkbox__label">Allow multiple answers.</span>
                 </label>
               </div>
@@ -103,29 +117,41 @@
                     {{ getAnswerLetter(answerIndex) }}.
                   </label>
 
-                  <input class="answer__input" [id]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)"
-                    [name]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)" type="text"
-                    [value]="answer.text">
+                  <input class="input-inline answer__input"
+                    [id]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)"
+                    [name]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)" type="text" [value]="answer.text"
+                    (input)="updateAnswer(questionIndex, answerIndex, $event)"
+                    (keydown.enter)="$event.preventDefault()">
 
-                  <button class="btn-delete form-field__delete" type="button"
+                  <button class="btn-delete form-field__delete" type="button" tabindex="-1"
                     [attr.aria-label]="'Delete answer ' + getAnswerLetter(answerIndex)">
                     <span class="btn-delete__icon" aria-hidden="true"></span>
                   </button>
                 </div>
                 }
-              </div>
 
-              <button class="btn btn--text question__add-answer" type="button" (click)="addAnswer(questionIndex)">
-                <span class="btn__text">Add answer</span>
-                <span class="btn__icon" aria-hidden="true"></span>
-              </button>
+                <div class="add-wrapper">
+                  <button class="add-btn question__add-answer" type="button" tabindex="-1"
+                    (click)="addAnswer(questionIndex)">
+                    <span class="add-btn__content">
+                      <span class="add-btn__text">Add answer</span>
+                      <img class="add-btn__icon" src="/icons/circle.svg" alt="" aria-hidden="true">
+                    </span>
+
+                    <span class="add-btn__line" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </div>
             </article>
             }
 
-            <button class="btn btn--secondary survey-questions__add" type="button" (click)="addQuestion()">
-              <span class="btn__text">Add next question</span>
-              <span class="btn__icon" aria-hidden="true"></span>
-            </button>
+            <div class="question question--add">
+              <button class="btn btn--secondary survey-questions__add" type="button" tabindex="-1"
+                (click)="addQuestion()">
+                <span class="btn__text">Add next question</span>
+                <span class="btn__icon" aria-hidden="true"></span>
+              </button>
+            </div>
 
           </div>
         </section>
@@ -133,14 +159,29 @@
 
       <footer class="footer">
         <div class="footer__wrapper">
-          <button class="btn btn--primary footer__btn" type="submit">
+          <button class="btn btn--primary footer__btn" type="button"
+            [class.footer__btn--active]="isPublishOverlayOpen()" (click)="publishSurvey()">
             <span class="btn__text">Publish</span>
-
             <img class="btn__icon" src="/icons/check.svg" alt="" aria-hidden="true">
           </button>
+
+          @if (isPublishOverlayOpen()) {
+          <div class="overlay-filter" aria-hidden="true"></div>
+          <div class="overlay-blocker" aria-hidden="true" (click)="highlightCloseButton()"></div>
+
+          <div class="overlay">
+            <span class="overlay__text">Your survey is now published</span>
+
+            <button class="overlay__close" type="button" aria-label="Close notification"
+              [class.overlay__close--highlight]="isCloseHighlighted()" (animationend)="resetCloseHighlight()"
+              (click)="closePublishOverlay()">
+              <span class="overlay__close-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          }
         </div>
       </footer>
-
     </form>
   </div>
+
 </main>
