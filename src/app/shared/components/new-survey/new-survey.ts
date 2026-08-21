@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  Input,
-  output,
-} from '@angular/core';
+import {  Component,  inject,  Input,  output,} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({

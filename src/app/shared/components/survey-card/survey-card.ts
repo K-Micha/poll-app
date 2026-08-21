@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import {  Dropdown,  type SurveyCategory,} from '../dropdown/dropdown';
+import { Dropdown, type SurveyCategory, } from '../dropdown/dropdown';
 import { Supabase } from '../../../supabase';
 import { RouterLink } from '@angular/router';
 
@@ -12,10 +12,10 @@ type SurveyCardItem = Survey & {
 type SurveyStatus = 'active' | 'past';
 
 @Component({
-    selector: 'app-survey-card',
-    imports: [Dropdown, RouterLink],
-    templateUrl: './survey-card.html',
-    styleUrl: './survey-card.scss',
+  selector: 'app-survey-card',
+  imports: [Dropdown, RouterLink],
+  templateUrl: './survey-card.html',
+  styleUrl: './survey-card.scss',
 })
 
 export class SurveyCard {
@@ -51,10 +51,23 @@ export class SurveyCard {
   }
 
   get filteredSurveys(): SurveyCardItem[] {
-    return this.surveys.filter((survey) =>
-      this.matchesSelectedStatus(survey) &&
-      this.matchesSelectedCategory(survey)
-    );
+    return this.surveys
+      .filter((survey) =>
+        this.matchesSelectedStatus(survey) &&
+        this.matchesSelectedCategory(survey)
+      )
+      .sort((a, b) =>
+        (a.daysLeft ?? Number.POSITIVE_INFINITY) -
+        (b.daysLeft ?? Number.POSITIVE_INFINITY)
+      );
+  }
+
+  private getEndDateTime(survey: SurveyCardItem): number {
+    if (!survey.end_date) {
+      return Number.POSITIVE_INFINITY;
+    }
+
+    return new Date(survey.end_date).getTime();
   }
 
   private matchesSelectedStatus(

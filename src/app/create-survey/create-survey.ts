@@ -1,22 +1,7 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { Dropdown } from '../shared/components/dropdown/dropdown';
-
-interface Answer {
-  text: string;
-}
-
-interface Question {
-  text: string;
-  answers: Answer[];
-  multipleAnswers: boolean;
-}
-
-interface SurveyDraft {
-  surveyName: string;
-  surveyEndDate: string;
-  surveyDescription: string;
-  questions: Question[];
-}
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { Dropdown, type SurveyCategory } from '../shared/components/dropdown/dropdown';
+import {  CreateSurveyService,  type Answer,  type Question,  type SurveyDraft} from './create-survey.service';
 
 @Component({
   selector: 'app-create-survey',
@@ -24,18 +9,24 @@ interface SurveyDraft {
   templateUrl: './create-survey.html',
   styleUrl: './create-survey.scss',
 })
+
 export class CreateSurvey implements OnInit, OnDestroy {
-  private readonly draftKey = 'create-survey-draft';
+  private readonly router = inject(Router);
+  private readonly createSurveyService =
+    inject(CreateSurveyService);
+
   readonly isPublishOverlayOpen = signal(false);
   readonly isCloseHighlighted = signal(false);
+  readonly showValidationErrors = signal(false);
 
+  selectedCategory: SurveyCategory | null = null;
   surveyName = '';
   surveyEndDate = '';
   surveyDescription = '';
 
   questions: Question[] = [
     {
-      text: 'Which date would work best for you?',
+      text: '',
       multipleAnswers: false,
       answers: [
         { text: '' },
@@ -49,7 +40,74 @@ export class CreateSurvey implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    sessionStorage.removeItem(this.draftKey);
+    this.createSurveyService.clearDraft();
+  }
+
+  clearSurveyName(): void {
+    this.surveyName = '';
+    this.saveDraft();
+  }
+
+  clearEndDate(): void {
+    this.surveyEndDate = '';
+    this.saveDraft();
+  }
+
+  clearDescription(): void {
+    this.surveyDescription = '';
+    this.saveDraft();
+  }
+
+  deleteQuestion(questionIndex: number): void {
+    if (questionIndex === 0) {
+      this.resetFirstQuestion();
+      return;
+    }
+
+    this.questions.splice(questionIndex, 1);
+    this.saveDraft();
+  }
+
+  private resetFirstQuestion(): void {
+    this.questions[0] = {
+      text: '',
+      multipleAnswers: false,
+      answers: [
+        { text: '' },
+        { text: '' }
+      ]
+    };
+
+    this.saveDraft();
+  }
+
+  deleteAnswer(questionIndex: number, answerIndex: number): void {
+    const answers = this.questions[questionIndex].answers;
+
+    this.clearOrRemoveAnswer(answers, answerIndex);
+    this.saveDraft();
+  }
+
+  private clearOrRemoveAnswer(
+    answers: Answer[],
+    answerIndex: number
+  ): void {
+    if (answerIndex < 2) {
+      answers[answerIndex].text = '';
+      return;
+    }
+
+    answers.splice(answerIndex, 1);
+  }
+
+  updateCategory(category: SurveyCategory): void {
+    this.selectedCategory = category;
+    this.saveDraft();
+  }
+
+  cancelSurvey(): void {
+    this.createSurveyService.clearDraft();
+    void this.router.navigateByUrl('/');
   }
 
   highlightCloseButton(): void {
@@ -61,11 +119,20 @@ export class CreateSurvey implements OnInit, OnDestroy {
   }
 
   publishSurvey(): void {
+    if (!this.isSurveyValid()) {
+      this.highlightInvalidFields();
+      return;
+    }
+
     this.isPublishOverlayOpen.set(true);
   }
 
   closePublishOverlay(): void {
+    this.createSurveyService.clearDraft();
     this.isPublishOverlayOpen.set(false);
+    this.isCloseHighlighted.set(false);
+
+    void this.router.navigateByUrl('/');
   }
 
   addQuestion(): void {
@@ -82,7 +149,10 @@ export class CreateSurvey implements OnInit, OnDestroy {
   }
 
   addAnswer(questionIndex: number): void {
-    this.questions[questionIndex].answers.push({ text: '' });
+    this.questions[questionIndex].answers.push({
+      text: ''
+    });
+
     this.saveDraft();
   }
 
@@ -96,20 +166,37 @@ export class CreateSurvey implements OnInit, OnDestroy {
     this.saveDraft();
   }
 
-  updateQuestion(questionIndex: number, event: Event): void {
-    this.questions[questionIndex].text = this.getFieldValue(event);
+  updateQuestion(
+    questionIndex: number,
+    event: Event
+  ): void {
+    this.questions[questionIndex].text =
+      this.getFieldValue(event);
+
     this.saveDraft();
   }
 
-  updateAnswer(questionIndex: number, answerIndex: number, event: Event): void {
-    this.questions[questionIndex].answers[answerIndex].text = this.getFieldValue(event);
+  updateAnswer(
+    questionIndex: number,
+    answerIndex: number,
+    event: Event
+  ): void {
+    this.questions[questionIndex]
+      .answers[answerIndex].text =
+      this.getFieldValue(event);
+
     this.saveDraft();
   }
 
-  updateMultipleAnswers(questionIndex: number, event: Event): void {
+  updateMultipleAnswers(
+    questionIndex: number,
+    event: Event
+  ): void {
     const input = event.target as HTMLInputElement;
 
-    this.questions[questionIndex].multipleAnswers = input.checked;
+    this.questions[questionIndex].multipleAnswers =
+      input.checked;
+
     this.saveDraft();
   }
 
@@ -119,9 +206,12 @@ export class CreateSurvey implements OnInit, OnDestroy {
 
   formatEndDate(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const digits = input.value.replace(/\D/g, '').slice(0, 8);
 
-    input.value = this.addDateDots(digits);
+    input.value =
+      this.createSurveyService.formatEndDate(
+        input.value
+      );
+
     this.surveyEndDate = input.value;
     this.saveDraft();
   }
@@ -130,54 +220,61 @@ export class CreateSurvey implements OnInit, OnDestroy {
     event.preventDefault();
 
     const input = event.target as HTMLInputElement;
-    let digits = input.value.replace(/\D/g, '');
 
-    if (digits.length === 6) {
-      digits = `${digits.slice(0, 4)}20${digits.slice(4)}`;
-    }
+    input.value =
+      this.createSurveyService.completeEndDate(
+        input.value
+      );
 
-    input.value = this.addDateDots(digits);
     this.validateEndDate(event);
   }
 
   validateEndDate(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const date = this.parseEndDate(input.value);
-    const today = new Date();
 
-    today.setHours(0, 0, 0, 0);
-
-    if (input.value && (!date || date < today)) {
-      input.value = '';
-    }
+    input.value =
+      this.createSurveyService.validateEndDate(
+        input.value
+      );
 
     this.surveyEndDate = input.value;
     this.saveDraft();
   }
 
-  private addDateDots(digits: string): string {
-    const parts = [
-      digits.slice(0, 2),
-      digits.slice(2, 4),
-      digits.slice(4, 8)
-    ];
-
-    return parts.filter(Boolean).join('.');
+  isSurveyValid(): boolean {
+    return (
+      this.surveyName.trim().length > 0 &&
+      this.questions.every((question) =>
+        this.isQuestionValid(question)
+      )
+    );
   }
 
-  private parseEndDate(value: string): Date | null {
-    const [day, month, year] = value.split('.').map(Number);
-    const date = new Date(year, month - 1, day);
-    const isValid = year >= 1000
-      && date.getDate() === day
-      && date.getMonth() === month - 1
-      && date.getFullYear() === year;
+  private isQuestionValid(
+    question: Question
+  ): boolean {
+    return (
+      question.text.trim().length > 0 &&
+      question.answers.length >= 2 &&
+      question.answers.every((answer) =>
+        answer.text.trim().length > 0
+      )
+    );
+  }
 
-    return isValid ? date : null;
+  private highlightInvalidFields(): void {
+    this.showValidationErrors.set(true);
+
+    setTimeout(() => {
+      this.showValidationErrors.set(false);
+    }, 700);
   }
 
   private getFieldValue(event: Event): string {
-    const field = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const field =
+      event.target as
+      | HTMLInputElement
+      | HTMLTextAreaElement;
 
     return field.value;
   }
@@ -190,21 +287,19 @@ export class CreateSurvey implements OnInit, OnDestroy {
       questions: this.questions
     };
 
-    sessionStorage.setItem(this.draftKey, JSON.stringify(draft));
+    this.createSurveyService.saveDraft(draft);
   }
 
   private loadDraft(): void {
-    const savedDraft = sessionStorage.getItem(this.draftKey);
+    const draft =
+      this.createSurveyService.loadDraft();
 
-    if (!savedDraft) {
-      return;
-    }
-
-    const draft = JSON.parse(savedDraft) as SurveyDraft;
+    if (!draft) return;
 
     this.surveyName = draft.surveyName;
     this.surveyEndDate = draft.surveyEndDate;
-    this.surveyDescription = draft.surveyDescription;
+    this.surveyDescription =
+      draft.surveyDescription;
     this.questions = draft.questions;
   }
 }

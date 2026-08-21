@@ -2,7 +2,6 @@
 @use '../shared/styles/abstract/mixins' as mx;
 @use '../shared/styles/abstract/functions' as fct;
 
-
 .header {
     &__wrapper {
         @include mx.flex(row, space-between);
@@ -209,6 +208,18 @@
         width: 100%;
         margin-bottom: fct.px-to-rem(10px);
         gap: fct.px-to-rem(8px);
+    }
+
+    &__input {
+        &::placeholder {
+            @include mx.typo(mulish, 400);
+            font-size: fct.font-size(basic);
+            line-height: 100%;
+            letter-spacing: 0;
+
+            color: fct.color(primary-purple);
+            opacity: 1;
+        }
     }
 }
 

@@ -1,29 +1,28 @@
 <div class="dropdown" [class.dropdown--open]="isOpen">
-  <button class="dropdown__trigger" [class.dropdown__trigger--open]="isOpen" type="button" (click)="toggleDropdown()">
-    @if (label) {
-    <span class="dropdown__label">{{ label }}</span>
-    }
+  <button class="dropdown__trigger" [class.dropdown__trigger--open]="isOpen" type="button"
+    (click)="toggleDropdown()">
+    <span class="dropdown__label">
+      {{ hasSelection ? selectedCategory : label }}
+    </span>
 
-    <img class="dropdown__icon" [src]="isOpen
-        ? '/icons/drop_up.svg'
-        : '/icons/drop_down_white.svg'" alt="" aria-hidden="true">
+    <img class="dropdown__icon"
+      [src]="isOpen ? '/icons/drop_up.svg' : '/icons/drop_down_white.svg'"
+      alt="" aria-hidden="true">
   </button>
 
- @if (isOpen) {
+  @if (isOpen) {
   <div class="dropdown__menu">
     <div class="dropdown__options">
       @for (category of surveyCategories; track category) {
-        <div class="dropdown__option-wrapper">
-          <button
-            class="dropdown__option"
-            [class.dropdown__option--active]="selectedCategory === category"
-            type="button"
-            (click)="selectCategory(category)"
-          >
-            {{ category }}
-          </button>
-        </div>
+      <div class="dropdown__option-wrapper">
+        <button class="dropdown__option"
+          [class.dropdown__option--active]="selectedCategory === category"
+          type="button" (click)="selectCategory(category)">
+          {{ category }}
+        </button>
+      </div>
       }
     </div>
   </div>
-}
+  }
+</div>

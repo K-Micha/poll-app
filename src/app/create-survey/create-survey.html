@@ -8,7 +8,7 @@
         <div class="header__wrapper">
           <h1 class="header__title">Create new survey</h1>
 
-          <button class="btn-cancel header__btn" type="button" tabindex="-1">
+          <button class="btn-cancel header__btn" type="button" tabindex="-1" (click)="cancelSurvey()">
             <span class="btn-cancel__text">Cancel</span>
             <span class="btn-cancel__icon" aria-hidden="true"></span>
           </button>
@@ -25,10 +25,11 @@
                 <div class="form-field__control">
                   <input class="input-inline form-field__input form-field__input--name" id="survey-name"
                     name="surveyName" type="text" [value]="surveyName" (input)="updateSurveyName($event)"
-                    (keydown.enter)="$event.preventDefault()">
+                    (keydown.enter)="$event.preventDefault()"
+                    [class.input-inline--invalid]="showValidationErrors() && !surveyName.trim()">
 
                   <button class="btn-delete form-field__delete" type="button" tabindex="-1"
-                    aria-label="Delete survey name">
+                    aria-label="Clear survey name" (click)="clearSurveyName()">
                     <span class="btn-delete__icon" aria-hidden="true"></span>
                   </button>
                 </div>
@@ -48,14 +49,14 @@
                       (blur)="validateEndDate($event)">
 
                     <button class="btn-delete form-field__delete" type="button" tabindex="-1"
-                      aria-label="Delete end date">
+                      aria-label="Clear end date" (click)="clearEndDate()">
                       <span class="btn-delete__icon" aria-hidden="true"></span>
                     </button>
                   </div>
                 </div>
 
                 <div class="survey-details__category">
-                  <app-dropdown label="Choose category"></app-dropdown>
+                  <app-dropdown label="Choose category" (categoryChange)="updateCategory($event)"></app-dropdown>
                 </div>
               </div>
             </div>
@@ -70,8 +71,8 @@
                 <textarea class="input-inline form-field__description" id="survey-description" name="surveyDescription"
                   [value]="surveyDescription" (input)="updateDescription($event)"></textarea>
 
-                <button class="btn-delete form-field__delete" type="button" tabindex="-1"
-                  aria-label="Delete description">
+                <button class="btn-delete form-field__delete" type="button" tabindex="-1" aria-label="Clear description"
+                  (click)="clearDescription()">
                   <span class="btn-delete__icon" aria-hidden="true"></span>
                 </button>
               </div>
@@ -89,15 +90,19 @@
                   {{ questionIndex + 1 }}. Question
                 </label>
 
-                <button class="btn-delete form-field__delete" type="button" tabindex="-1"
-                  [attr.aria-label]="'Delete question ' + (questionIndex + 1)">
+                <button class="btn-delete form-field__delete" type="button" tabindex="-1" [attr.aria-label]="questionIndex === 0
+                              ? 'Clear question 1'
+                              : 'Delete question ' + (questionIndex + 1)" (click)="deleteQuestion(questionIndex)">
                   <span class="btn-delete__icon" aria-hidden="true"></span>
                 </button>
               </div>
 
               <input class="input-inline question__input" [id]="'question-' + (questionIndex + 1)"
-                [name]="'question-' + (questionIndex + 1)" type="text" [value]="question.text"
-                (input)="updateQuestion(questionIndex, $event)" (keydown.enter)="$event.preventDefault()">
+                [name]="'question-' + (questionIndex + 1)" type="text" [value]="question.text" [placeholder]="questionIndex === 0
+                      ? 'Which date would work best for you?'
+                      : ''" (input)="updateQuestion(questionIndex, $event)" (keydown.enter)="$event.preventDefault()"
+                [class.input-inline--invalid]="
+                         showValidationErrors() && !question.text.trim()">
 
               <div class="question__answers-header">
                 <span class="form-field__label">Answers</span>
@@ -120,11 +125,12 @@
                   <input class="input-inline answer__input"
                     [id]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)"
                     [name]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)" type="text" [value]="answer.text"
-                    (input)="updateAnswer(questionIndex, answerIndex, $event)"
-                    (keydown.enter)="$event.preventDefault()">
+                    (input)="updateAnswer(questionIndex, answerIndex, $event)" (keydown.enter)="$event.preventDefault()"
+                    [class.input-inline--invalid]="showValidationErrors() && !answer.text.trim()">
 
                   <button class="btn-delete form-field__delete" type="button" tabindex="-1"
-                    [attr.aria-label]="'Delete answer ' + getAnswerLetter(answerIndex)">
+                    [attr.aria-label]="'Delete answer ' + getAnswerLetter(answerIndex)"
+                    (click)="deleteAnswer(questionIndex, answerIndex)">
                     <span class="btn-delete__icon" aria-hidden="true"></span>
                   </button>
                 </div>
@@ -146,10 +152,9 @@
             }
 
             <div class="question question--add">
-              <button class="btn btn--secondary survey-questions__add" type="button" tabindex="-1"
-                (click)="addQuestion()">
-                <span class="btn__text">Add next question</span>
-                <span class="btn__icon" aria-hidden="true"></span>
+              <button class="question-btn survey-questions__add" type="button" tabindex="-1" (click)="addQuestion()">
+                <span class="question-btn__text">Add next question</span>
+                <img class="question-btn__icon" src="/icons/circle.svg" alt="" aria-hidden="true">
               </button>
             </div>
 
