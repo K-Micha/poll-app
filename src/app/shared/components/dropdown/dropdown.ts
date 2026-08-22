@@ -19,6 +19,7 @@ export type SurveyCategory = (typeof surveyCategories)[number];
 })
 
 export class Dropdown {
+  @Input() invalid = false;
   @Input() label = '';
 
   readonly surveyCategories = surveyCategories;

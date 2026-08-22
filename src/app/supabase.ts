@@ -1,5 +1,23 @@
-import { Injectable, OnDestroy, signal, } from '@angular/core';
-import { createClient, RealtimeChannel, } from '@supabase/supabase-js';
+import {  Injectable,  OnDestroy,  signal,} from '@angular/core';
+import {  createClient,  RealtimeChannel,} from '@supabase/supabase-js';
+
+export type CreateAnswer = {
+  text: string;
+};
+
+export type CreateQuestion = {
+  text: string;
+  multipleAnswers: boolean;
+  answers: CreateAnswer[];
+};
+
+export type CreateSurvey = {
+  title: string;
+  description: string;
+  category: string;
+  endDate: string | null;
+  questions: CreateQuestion[];
+};
 
 type Survey = {
   id: number;
@@ -16,7 +34,6 @@ type Survey = {
 @Injectable({
   providedIn: 'root',
 })
-
 export class Supabase implements OnDestroy {
   private readonly supabaseUrl =
     'https://rnwpzflsvaqgzoznhshb.supabase.co';
@@ -33,6 +50,124 @@ export class Supabase implements OnDestroy {
 
   private channel?: RealtimeChannel;
 
+  async createSurvey(survey: CreateSurvey): Promise<number> {
+    const surveyId = await this.insertSurvey(survey);
+
+    await this.insertQuestions(
+      surveyId,
+      survey.questions
+    );
+
+    await this.getSurveys();
+
+    return surveyId;
+  }
+
+  private async insertSurvey(
+    survey: CreateSurvey
+  ): Promise<number> {
+    const { data, error } = await this.supabase
+      .from('surveys')
+      .insert(this.createSurveyRow(survey))
+      .select('id')
+      .single();
+
+    if (error) throw error;
+
+    return data.id;
+  }
+
+  private createSurveyRow(survey: CreateSurvey) {
+    return {
+      title: survey.title,
+      description: survey.description,
+      category: survey.category,
+      end_date: survey.endDate,
+      status: 'published',
+      is_demo: false,
+    };
+  }
+
+  private async insertQuestions(
+    surveyId: number,
+    questions: CreateQuestion[]
+  ): Promise<void> {
+    for (const [index, question] of questions.entries()) {
+      await this.insertQuestion(
+        surveyId,
+        question,
+        index
+      );
+    }
+  }
+
+  private async insertQuestion(
+    surveyId: number,
+    question: CreateQuestion,
+    index: number
+  ): Promise<void> {
+    const questionId = await this.createQuestion(
+      surveyId,
+      question,
+      index
+    );
+
+    await this.insertAnswers(
+      questionId,
+      question.answers
+    );
+  }
+
+  private async createQuestion(
+    surveyId: number,
+    question: CreateQuestion,
+    index: number
+  ): Promise<number> {
+    const { data, error } = await this.supabase
+      .from('questions')
+      .insert(this.createQuestionRow(
+        surveyId,
+        question,
+        index
+      ))
+      .select('id')
+      .single();
+
+    if (error) throw error;
+
+    return data.id;
+  }
+
+  private createQuestionRow(
+    surveyId: number,
+    question: CreateQuestion,
+    index: number
+  ) {
+    return {
+      survey_id: surveyId,
+      question_text: question.text,
+      allow_multiple: question.multipleAnswers,
+      position: index + 1,
+    };
+  }
+
+  private async insertAnswers(
+    questionId: number,
+    answers: CreateAnswer[]
+  ): Promise<void> {
+    const answerRows = answers.map((answer, index) => ({
+      question_id: questionId,
+      answer_text: answer.text,
+      position: index + 1,
+    }));
+
+    const { error } = await this.supabase
+      .from('answers')
+      .insert(answerRows);
+
+    if (error) throw error;
+  }
+
   async getSurveys(): Promise<void> {
     const { data, error } = await this.supabase
       .from('surveys')
@@ -48,9 +183,7 @@ export class Supabase implements OnDestroy {
   }
 
   subscribeToSurveys(): void {
-    if (this.channel) {
-      return;
-    }
+    if (this.channel) return;
 
     this.channel = this.createSurveysChannel();
   }

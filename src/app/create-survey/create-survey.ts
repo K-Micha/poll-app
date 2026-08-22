@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Dropdown, type SurveyCategory } from '../shared/components/dropdown/dropdown';
-import {  CreateSurveyService,  type Answer,  type Question,  type SurveyDraft} from './create-survey.service';
+import { CreateSurveyService, type Answer, type Question, type SurveyDraft } from './create-survey.service';
 
 @Component({
   selector: 'app-create-survey',
@@ -11,6 +11,7 @@ import {  CreateSurveyService,  type Answer,  type Question,  type SurveyDraft} 
 })
 
 export class CreateSurvey implements OnInit, OnDestroy {
+  private publishedSurveyId: number | null = null;
   private readonly router = inject(Router);
   private readonly createSurveyService =
     inject(CreateSurveyService);
@@ -118,21 +119,65 @@ export class CreateSurvey implements OnInit, OnDestroy {
     this.isCloseHighlighted.set(false);
   }
 
-  publishSurvey(): void {
+  async publishSurvey(): Promise<void> {
     if (!this.isSurveyValid()) {
       this.highlightInvalidFields();
       return;
     }
 
+    await this.savePublishedSurvey();
+  }
+
+  private async savePublishedSurvey(): Promise<void> {
+    if (!this.selectedCategory) {
+      return;
+    }
+
+    await this.publishSurveyData(
+      this.selectedCategory
+    );
+  }
+
+  private async publishSurveyData(
+    category: SurveyCategory
+  ): Promise<void> {
+    try {
+      await this.storePublishedSurvey(category);
+    } catch (error) {
+      this.handlePublishError(error);
+    }
+  }
+
+  private async storePublishedSurvey(
+    category: SurveyCategory
+  ): Promise<void> {
+    this.publishedSurveyId =
+      await this.createSurveyService.publishSurvey(
+        this.getDraft(),
+        category
+      );
+
     this.isPublishOverlayOpen.set(true);
   }
 
+  private handlePublishError(error: unknown): void {
+    console.error('Could not publish survey:', error);
+  }
+
   closePublishOverlay(): void {
+    if (this.publishedSurveyId === null) {
+      return;
+    }
+
+    const surveyId = this.publishedSurveyId;
+
     this.createSurveyService.clearDraft();
     this.isPublishOverlayOpen.set(false);
-    this.isCloseHighlighted.set(false);
 
-    void this.router.navigateByUrl('/');
+    void this.router.navigate([
+      '/survey-detail',
+      surveyId
+    ]);
   }
 
   addQuestion(): void {
@@ -242,12 +287,40 @@ export class CreateSurvey implements OnInit, OnDestroy {
   }
 
   isSurveyValid(): boolean {
+    const hasName = this.surveyName.trim().length > 0;
+    const hasCategory = this.selectedCategory !== null;
+
     return (
-      this.surveyName.trim().length > 0 &&
-      this.questions.every((question) =>
-        this.isQuestionValid(question)
-      )
+      hasName &&
+      hasCategory &&
+      this.areQuestionsValid()
     );
+  }
+
+  private areQuestionsValid(): boolean {
+    return this.questions.every((question) =>
+      this.isQuestionValid(question)
+    );
+  }
+
+  private saveDraft(): void {
+    const draft: SurveyDraft = {
+      surveyName: this.surveyName,
+      surveyEndDate: this.surveyEndDate,
+      surveyDescription: this.surveyDescription,
+      questions: this.questions
+    };
+
+    this.createSurveyService.saveDraft(draft);
+  }
+
+  private getDraft(): SurveyDraft {
+    return {
+      surveyName: this.surveyName,
+      surveyEndDate: this.surveyEndDate,
+      surveyDescription: this.surveyDescription,
+      questions: this.questions,
+    };
   }
 
   private isQuestionValid(
@@ -267,7 +340,7 @@ export class CreateSurvey implements OnInit, OnDestroy {
 
     setTimeout(() => {
       this.showValidationErrors.set(false);
-    }, 700);
+    }, 1000);
   }
 
   private getFieldValue(event: Event): string {
@@ -277,17 +350,6 @@ export class CreateSurvey implements OnInit, OnDestroy {
       | HTMLTextAreaElement;
 
     return field.value;
-  }
-
-  private saveDraft(): void {
-    const draft: SurveyDraft = {
-      surveyName: this.surveyName,
-      surveyEndDate: this.surveyEndDate,
-      surveyDescription: this.surveyDescription,
-      questions: this.questions
-    };
-
-    this.createSurveyService.saveDraft(draft);
   }
 
   private loadDraft(): void {

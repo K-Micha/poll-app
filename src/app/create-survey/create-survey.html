@@ -56,7 +56,9 @@
                 </div>
 
                 <div class="survey-details__category">
-                  <app-dropdown label="Choose category" (categoryChange)="updateCategory($event)"></app-dropdown>
+                  <app-dropdown label="Choose category" [invalid]="showValidationErrors() && !selectedCategory"
+                    (categoryChange)="updateCategory($event)">
+                  </app-dropdown>
                 </div>
               </div>
             </div>
