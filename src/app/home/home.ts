@@ -7,7 +7,10 @@ import { NewSurvey } from '../shared/components/new-survey/new-survey';
     selector: 'app-home',
     imports: [Header, SurveyCard, NewSurvey],
     templateUrl: './home.html',
-    styleUrl: './home.scss',
+    styleUrls: [
+        './home.scss',
+        './home-media.scss'
+    ],
 })
 
 /** Controls the home page and its body styling. */

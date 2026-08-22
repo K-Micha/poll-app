@@ -5,7 +5,10 @@ import { Router } from '@angular/router';
   selector: 'app-new-survey',
   imports: [],
   templateUrl: './new-survey.html',
-  styleUrl: './new-survey.scss',
+  styleUrls: [
+    './new-survey.scss',
+    './new-survey-media.scss'
+  ],
 })
 
 /** Controls the animated button for creating a survey. */

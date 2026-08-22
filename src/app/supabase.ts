@@ -1,9 +1,7 @@
 import { Injectable, OnDestroy, signal, } from '@angular/core';
 import { createClient, RealtimeChannel, } from '@supabase/supabase-js';
 
-export type CreateAnswer = {
-  text: string;
-};
+export type CreateAnswer = { text: string; };
 
 export type CreateQuestion = {
   text: string;
@@ -37,16 +35,11 @@ type Survey = {
 
 /** Handles survey data and realtime database updates. */
 export class Supabase implements OnDestroy {
-  private readonly supabaseUrl =
-    'https://rnwpzflsvaqgzoznhshb.supabase.co';
+  private readonly supabaseUrl = 'https://rnwpzflsvaqgzoznhshb.supabase.co';
 
-  private readonly supabaseKey =
-    'sb_publishable_YRXsZrOvr6dAMaKGOYdXkg_TFenbD8L';
+  private readonly supabaseKey = 'sb_publishable_YRXsZrOvr6dAMaKGOYdXkg_TFenbD8L';
 
-  readonly supabase = createClient(
-    this.supabaseUrl,
-    this.supabaseKey
-  );
+  readonly supabase = createClient(this.supabaseUrl, this.supabaseKey);
 
   readonly surveys = signal<Survey[]>([]);
 
@@ -58,14 +51,11 @@ export class Supabase implements OnDestroy {
    * @returns ID of the created survey.
    */
   async createSurvey(
-    survey: CreateSurvey
-  ): Promise<number> {
+    survey: CreateSurvey): Promise<number> {
+
     const surveyId = await this.insertSurvey(survey);
 
-    await this.insertQuestions(
-      surveyId,
-      survey.questions
-    );
+    await this.insertQuestions(surveyId, survey.questions);
 
     await this.getSurveys();
 
@@ -74,8 +64,8 @@ export class Supabase implements OnDestroy {
 
   /** Inserts the main survey row. */
   private async insertSurvey(
-    survey: CreateSurvey
-  ): Promise<number> {
+    survey: CreateSurvey): Promise<number> {
+
     const { data, error } = await this.supabase
       .from('surveys')
       .insert(this.createSurveyRow(survey))
@@ -102,14 +92,10 @@ export class Supabase implements OnDestroy {
   /** Inserts all questions belonging to a survey. */
   private async insertQuestions(
     surveyId: number,
-    questions: CreateQuestion[]
-  ): Promise<void> {
+    questions: CreateQuestion[]): Promise<void> {
+
     for (const [index, question] of questions.entries()) {
-      await this.insertQuestion(
-        surveyId,
-        question,
-        index
-      );
+      await this.insertQuestion(surveyId, question, index);
     }
   }
 
@@ -117,26 +103,23 @@ export class Supabase implements OnDestroy {
   private async insertQuestion(
     surveyId: number,
     question: CreateQuestion,
-    index: number
-  ): Promise<void> {
+    index: number): Promise<void> {
+
     const questionId = await this.createQuestion(
       surveyId,
       question,
       index
     );
 
-    await this.insertAnswers(
-      questionId,
-      question.answers
-    );
+    await this.insertAnswers(questionId, question.answers);
   }
 
   /** Creates one question and returns its ID. */
   private async createQuestion(
     surveyId: number,
     question: CreateQuestion,
-    index: number
-  ): Promise<number> {
+    index: number): Promise<number> {
+
     const { data, error } = await this.supabase
       .from('questions')
       .insert(this.createQuestionRow(
@@ -169,8 +152,8 @@ export class Supabase implements OnDestroy {
   /** Inserts all answers belonging to a question. */
   private async insertAnswers(
     questionId: number,
-    answers: CreateAnswer[]
-  ): Promise<void> {
+    answers: CreateAnswer[]): Promise<void> {
+
     const answerRows = answers.map((answer, index) => ({
       question_id: questionId,
       answer_text: answer.text,
@@ -210,8 +193,7 @@ export class Supabase implements OnDestroy {
   private createSurveysChannel(): RealtimeChannel {
     return this.supabase
       .channel('surveys-channel')
-      .on(
-        'postgres_changes',
+      .on('postgres_changes',
         {
           event: '*',
           schema: 'public',
@@ -224,8 +206,6 @@ export class Supabase implements OnDestroy {
 
   /** Removes the realtime channel when the service is destroyed. */
   ngOnDestroy(): void {
-    if (this.channel) {
-      void this.supabase.removeChannel(this.channel);
-    }
+    if (this.channel) { void this.supabase.removeChannel(this.channel); }
   }
 }

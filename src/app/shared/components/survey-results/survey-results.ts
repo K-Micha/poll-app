@@ -53,7 +53,10 @@ const RESULT_SELECT = `
   selector: 'app-survey-results',
   imports: [],
   templateUrl: './survey-results.html',
-  styleUrl: './survey-results.scss',
+  styleUrls: [
+    './survey-results.scss',
+    './survey-results-media.scss'
+  ],
 })
 
 /** Loads and prepares the live results of a survey. */

@@ -15,7 +15,9 @@ type SurveyStatus = 'active' | 'past';
   selector: 'app-survey-card',
   imports: [Dropdown, RouterLink],
   templateUrl: './survey-card.html',
-  styleUrl: './survey-card.scss',
+  styleUrls: [
+    './survey-card.scss',
+    './survey-card-media.scss'],
 })
 
 /** Controls survey filtering, sorting, and card data. */
@@ -66,15 +68,6 @@ export class SurveyCard {
         (a.daysLeft ?? Number.POSITIVE_INFINITY) -
         (b.daysLeft ?? Number.POSITIVE_INFINITY)
       );
-  }
-
-  /** Returns the end date as a timestamp. */
-  private getEndDateTime(survey: SurveyCardItem): number {
-    if (!survey.end_date) {
-      return Number.POSITIVE_INFINITY;
-    }
-
-    return new Date(survey.end_date).getTime();
   }
 
   /** Checks whether a survey matches the selected status. */
@@ -135,8 +128,7 @@ export class SurveyCard {
     const difference =
       new Date(endDate).getTime() - Date.now();
 
-    const daysLeft =
-      Math.ceil(difference / millisecondsPerDay);
+    const daysLeft = Math.ceil(difference / millisecondsPerDay);
 
     return Math.max(0, daysLeft);
   }

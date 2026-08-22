@@ -5,7 +5,10 @@ import { NewSurvey } from '../../components/new-survey/new-survey';
   selector: 'app-header',
   imports: [NewSurvey],
   templateUrl: './header.html',
-  styleUrl: './header.scss',
+  styleUrls: [
+    './header.scss',
+    './header-media.scss'
+  ],
 })
 
 /** Displays the configurable page header. */

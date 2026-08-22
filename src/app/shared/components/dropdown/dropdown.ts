@@ -15,7 +15,10 @@ export type SurveyCategory = (typeof surveyCategories)[number];
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.html',
-  styleUrl: './dropdown.scss',
+  styleUrls: [
+    './dropdown.scss',
+    './dropdown-media.scss'
+  ],
 })
 
 /** Controls category selection and dropdown visibility. */

@@ -1,4 +1,4 @@
-import {  Component,  inject,  OnDestroy,  OnInit,  Renderer2,  signal,} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Renderer2, signal, } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Supabase } from '../supabase';
 import { SurveyResults } from '../shared/components/survey-results/survey-results';
@@ -8,8 +8,13 @@ import { Header } from '../shared/layout/header/header';
   selector: 'app-survey-detail',
   imports: [SurveyResults, Header],
   templateUrl: './survey-detail.html',
-  styleUrl: './survey-detail.scss',
+  styleUrls: [
+    './survey-detail.scss',
+    './survey-detail-media.scss',
+  ],
 })
+
+/** Controls survey participation and answer submission. */
 export class SurveyDetail implements OnInit, OnDestroy {
   private readonly supabaseService = inject(Supabase);
   private readonly renderer = inject(Renderer2);
@@ -20,11 +25,13 @@ export class SurveyDetail implements OnInit, OnDestroy {
   selectedAnswers = signal<Record<number, number[]>>({});
   isSubmitting = signal(false);
 
+  /** Loads the selected survey when the component starts. */
   async ngOnInit(): Promise<void> {
     this.renderer.addClass(document.body, 'body--detail');
     await this.loadSurvey();
   }
 
+  /** Loads the survey from the database. */
   private async loadSurvey(): Promise<void> {
     const response = await this.getSurvey();
 
@@ -36,6 +43,7 @@ export class SurveyDetail implements OnInit, OnDestroy {
     this.survey.set(response.data);
   }
 
+  /** Creates the database query for the current survey. */
   private getSurvey() {
     const surveyId = Number(
       this.route.snapshot.paramMap.get('id')
@@ -43,20 +51,18 @@ export class SurveyDetail implements OnInit, OnDestroy {
 
     return this.supabaseService.supabase
       .from('surveys')
-      .select(`
-        *,
-        questions (*, answers (*))
-      `)
+      .select('*, questions (*, answers (*))')
       .eq('id', surveyId)
       .single();
   }
 
+  /** Handles the selection of a survey answer. */
   selectAnswer(
     questionId: number,
     answerId: number,
     allowMultiple: boolean,
-    event: Event
-  ): void {
+    event: Event): void {
+
     const input = event.target as HTMLInputElement;
 
     this.updateSelectedAnswers(
@@ -67,29 +73,33 @@ export class SurveyDetail implements OnInit, OnDestroy {
     );
   }
 
+  /** Updates the selected answers of a question. */
   private updateSelectedAnswers(
     questionId: number,
     answerId: number,
     allowMultiple: boolean,
-    checked: boolean
-  ): void {
-    this.selectedAnswers.update((selected) => ({
-      ...selected,
-      [questionId]: this.getSelectedAnswerIds(
-        selected[questionId],
-        answerId,
-        allowMultiple,
-        checked
-      ),
-    }));
+    checked: boolean): void {
+
+    this.selectedAnswers.update((selected) =>
+      this.createSelectedAnswers(selected, questionId,
+        this.getSelectedAnswerIds(selected[questionId], answerId, allowMultiple, checked)));
   }
 
+  /** Creates the updated selection record. */
+  private createSelectedAnswers(
+    selected: Record<number, number[]>,
+    questionId: number,
+    answerIds: number[]): Record<number, number[]> {
+    return Object.assign({}, selected, { [questionId]: answerIds });
+  }
+
+  /** Returns the answer IDs after a selection change. */
   private getSelectedAnswerIds(
     current: number[] = [],
     answerId: number,
     allowMultiple: boolean,
-    checked: boolean
-  ): number[] {
+    checked: boolean): number[] {
+
     if (!allowMultiple) return [answerId];
 
     if (checked && !current.includes(answerId)) {
@@ -99,23 +109,25 @@ export class SurveyDetail implements OnInit, OnDestroy {
     return current.filter((id) => id !== answerId);
   }
 
+  /** Checks whether every question has an answer. */
   isSurveyComplete(): boolean {
     const questions = this.survey()?.questions ?? [];
 
     return questions.length > 0 &&
-      questions.every((question: any) =>
-        (
-          this.selectedAnswers()[question.id]?.length ??
-          0
-        ) > 0
-      );
+      questions.every((question: any) => (this.selectedAnswers()[question.id]?.length ?? 0) > 0);
   }
 
+  /** Starts the survey submission when it is valid. */
   async submitSurvey(event: Event): Promise<void> {
     event.preventDefault();
 
     if (!this.canSubmitSurvey()) return;
 
+    await this.processSurveySubmission();
+  }
+
+  /** Saves the submission and returns to the home page. */
+  private async processSurveySubmission(): Promise<void> {
     this.isSubmitting.set(true);
 
     const submissionId = await this.createSubmission();
@@ -128,6 +140,7 @@ export class SurveyDetail implements OnInit, OnDestroy {
     }
   }
 
+  /** Checks whether the survey can be submitted. */
   private canSubmitSurvey(): boolean {
     return (
       this.isSurveyComplete() &&
@@ -135,24 +148,20 @@ export class SurveyDetail implements OnInit, OnDestroy {
     );
   }
 
-  private async saveSurvey(
-    submissionId: number | null
-  ): Promise<boolean> {
+  /** Saves answers when a submission was created. */
+  private async saveSurvey(submissionId: number | null): Promise<boolean> {
     if (submissionId === null) return false;
 
     return this.saveSubmissionAnswers(submissionId);
   }
 
+  /** Creates a new survey submission. */
   private async createSubmission(): Promise<number | null> {
     const surveyId = this.survey()?.id;
+
     if (!surveyId) return null;
 
-    const { data, error } =
-      await this.supabaseService.supabase
-        .from('submissions')
-        .insert({ survey_id: surveyId })
-        .select('id')
-        .single();
+    const { data, error } = await this.insertSubmission(surveyId);
 
     if (!error) return data.id;
 
@@ -160,16 +169,20 @@ export class SurveyDetail implements OnInit, OnDestroy {
     return null;
   }
 
+  /** Creates the database request for a submission. */
+  private insertSubmission(surveyId: number) {
+    return this.supabaseService.supabase
+      .from('submissions')
+      .insert({ survey_id: surveyId })
+      .select('id')
+      .single();
+  }
+
+  /** Stores all selected submission answers. */
   private async saveSubmissionAnswers(
     submissionId: number
   ): Promise<boolean> {
-    const answers =
-      this.getSubmissionAnswers(submissionId);
-
-    const { error } =
-      await this.supabaseService.supabase
-        .from('submission_answers')
-        .insert(answers);
+    const { error } = await this.insertSubmissionAnswers(submissionId);
 
     if (!error) return true;
 
@@ -177,6 +190,19 @@ export class SurveyDetail implements OnInit, OnDestroy {
     return false;
   }
 
+  /** Creates the database request for the selected answers. */
+  private insertSubmissionAnswers(
+    submissionId: number
+  ) {
+    const answers =
+      this.getSubmissionAnswers(submissionId);
+
+    return this.supabaseService.supabase
+      .from('submission_answers')
+      .insert(answers);
+  }
+
+  /** Creates database rows for the selected answers. */
   private getSubmissionAnswers(
     submissionId: number
   ) {
@@ -190,10 +216,15 @@ export class SurveyDetail implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Returns the displayed survey end date.
+   * @param isDemo Whether the survey uses a demo deadline.
+   * @param endDate Stored survey end date.
+   * @returns Formatted end date.
+   */
   getEndDate(
     isDemo: boolean,
-    endDate: string | null
-  ): string {
+    endDate: string | null): string {
     if (isDemo) {
       return this.getTomorrowDate();
     }
@@ -201,8 +232,10 @@ export class SurveyDetail implements OnInit, OnDestroy {
     return this.formatDate(endDate);
   }
 
+  /** Returns tomorrow's date for demo surveys. */
   private getTomorrowDate(): string {
     const tomorrow = new Date();
+
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     return tomorrow.toLocaleDateString('de-DE', {
@@ -212,13 +245,13 @@ export class SurveyDetail implements OnInit, OnDestroy {
     });
   }
 
+  /** Returns the display letter for an answer. */
   getAnswerLetter(index: number): string {
     return String.fromCharCode(65 + index);
   }
 
-  private formatDate(
-    date: string | null
-  ): string {
+  /** Converts a database date into the displayed format. */
+  private formatDate(date: string | null): string {
     if (!date) return '';
 
     const [year, month, day] = date
@@ -228,10 +261,8 @@ export class SurveyDetail implements OnInit, OnDestroy {
     return `${day}.${month}.${year}`;
   }
 
+  /** Removes the detail page class when leaving. */
   ngOnDestroy(): void {
-    this.renderer.removeClass(
-      document.body,
-      'body--detail'
-    );
+    this.renderer.removeClass(document.body, 'body--detail');
   }
 }

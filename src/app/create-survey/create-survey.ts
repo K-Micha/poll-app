@@ -7,7 +7,10 @@ import { CreateSurveyService, type Answer, type Question, type SurveyDraft } fro
   selector: 'app-create-survey',
   imports: [Dropdown],
   templateUrl: './create-survey.html',
-  styleUrl: './create-survey.scss',
+  styleUrls: [
+    './create-survey.scss',
+    './create-survey-media.scss',
+  ],
 })
 
 /** Controls the create survey form and its interactions. */
@@ -195,10 +198,7 @@ export class CreateSurvey implements OnInit, OnDestroy {
     this.createSurveyService.clearDraft();
     this.isPublishOverlayOpen.set(false);
 
-    void this.router.navigate([
-      '/survey-detail',
-      surveyId
-    ]);
+    void this.router.navigate(['/survey-detail', surveyId]);
   }
 
   /** Adds a new question with two empty answers. */
@@ -282,10 +282,7 @@ export class CreateSurvey implements OnInit, OnDestroy {
   formatEndDate(event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    input.value =
-      this.createSurveyService.formatEndDate(
-        input.value
-      );
+    input.value = this.createSurveyService.formatEndDate(input.value);
 
     this.surveyEndDate = input.value;
     this.saveDraft();
@@ -297,10 +294,7 @@ export class CreateSurvey implements OnInit, OnDestroy {
 
     const input = event.target as HTMLInputElement;
 
-    input.value =
-      this.createSurveyService.completeEndDate(
-        input.value
-      );
+    input.value = this.createSurveyService.completeEndDate(input.value);
 
     this.validateEndDate(event);
   }
@@ -309,10 +303,7 @@ export class CreateSurvey implements OnInit, OnDestroy {
   validateEndDate(event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    input.value =
-      this.createSurveyService.validateEndDate(
-        input.value
-      );
+    input.value = this.createSurveyService.validateEndDate(input.value);
 
     this.surveyEndDate = input.value;
     this.saveDraft();
@@ -384,24 +375,20 @@ export class CreateSurvey implements OnInit, OnDestroy {
   /** Reads the current value from a form field event. */
   private getFieldValue(event: Event): string {
     const field =
-      event.target as
-      | HTMLInputElement
-      | HTMLTextAreaElement;
+      event.target as | HTMLInputElement | HTMLTextAreaElement;
 
     return field.value;
   }
 
   /** Restores the saved form state. */
   private loadDraft(): void {
-    const draft =
-      this.createSurveyService.loadDraft();
+    const draft = this.createSurveyService.loadDraft();
 
     if (!draft) return;
 
     this.surveyName = draft.surveyName;
     this.surveyEndDate = draft.surveyEndDate;
-    this.surveyDescription =
-      draft.surveyDescription;
+    this.surveyDescription = draft.surveyDescription;
     this.questions = draft.questions;
   }
 }
