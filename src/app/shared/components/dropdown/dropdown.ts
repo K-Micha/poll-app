@@ -18,6 +18,7 @@ export type SurveyCategory = (typeof surveyCategories)[number];
   styleUrl: './dropdown.scss',
 })
 
+/** Controls category selection and dropdown visibility. */
 export class Dropdown {
   @Input() invalid = false;
   @Input() label = '';
@@ -29,6 +30,7 @@ export class Dropdown {
   hasSelection = false;
   isOpen = false;
 
+  /** Selects a category and sends it to the parent component. */
   selectCategory(category: SurveyCategory): void {
     this.selectedCategory = category;
     this.hasSelection = true;
@@ -36,6 +38,7 @@ export class Dropdown {
     this.isOpen = false;
   }
 
+  /** Opens or closes the category menu. */
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
   }

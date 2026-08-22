@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import { Dropdown, type SurveyCategory, } from '../dropdown/dropdown';
+import { Dropdown, type SurveyCategory } from '../dropdown/dropdown';
 import { Supabase } from '../../../supabase';
 import { RouterLink } from '@angular/router';
 
@@ -18,6 +18,7 @@ type SurveyStatus = 'active' | 'past';
   styleUrl: './survey-card.scss',
 })
 
+/** Controls survey filtering, sorting, and card data. */
 export class SurveyCard {
   @Input() label = '';
 
@@ -26,14 +27,17 @@ export class SurveyCard {
 
   private readonly supabase = inject(Supabase);
 
+  /** Changes the displayed survey status. */
   selectStatus(status: SurveyStatus): void {
     this.selectedStatus = status;
   }
 
+  /** Changes the selected category filter. */
   selectCategory(category: SurveyCategory): void {
     this.selectedCategory = category;
   }
 
+  /** Adds the remaining days to each survey. */
   get surveys(): SurveyCardItem[] {
     return this.supabase.surveys().map((survey) => ({
       ...survey,
@@ -43,6 +47,7 @@ export class SurveyCard {
     }));
   }
 
+  /** Returns up to three surveys ending soon. */
   get endingSoonSurveys(): SurveyCardItem[] {
     return this.surveys
       .filter((survey) => this.isEndingSoon(survey))
@@ -50,6 +55,7 @@ export class SurveyCard {
       .slice(0, 3);
   }
 
+  /** Returns filtered surveys sorted by their end date. */
   get filteredSurveys(): SurveyCardItem[] {
     return this.surveys
       .filter((survey) =>
@@ -62,6 +68,7 @@ export class SurveyCard {
       );
   }
 
+  /** Returns the end date as a timestamp. */
   private getEndDateTime(survey: SurveyCardItem): number {
     if (!survey.end_date) {
       return Number.POSITIVE_INFINITY;
@@ -70,6 +77,7 @@ export class SurveyCard {
     return new Date(survey.end_date).getTime();
   }
 
+  /** Checks whether a survey matches the selected status. */
   private matchesSelectedStatus(
     survey: SurveyCardItem
   ): boolean {
@@ -80,6 +88,7 @@ export class SurveyCard {
     return survey.daysLeft === null || survey.daysLeft > 0;
   }
 
+  /** Checks whether a survey matches the category filter. */
   private matchesSelectedCategory(
     survey: SurveyCardItem
   ): boolean {
@@ -89,6 +98,7 @@ export class SurveyCard {
     );
   }
 
+  /** Checks whether a survey ends within three days. */
   private isEndingSoon(survey: SurveyCardItem): boolean {
     return (
       survey.status === 'published' &&
@@ -98,6 +108,7 @@ export class SurveyCard {
     );
   }
 
+  /** Returns fixed remaining days for demo surveys. */
   private getDemoDays(surveyId: number): number | null {
     const demoDays: Record<number, number> = {
       999999: 1,
@@ -108,14 +119,24 @@ export class SurveyCard {
     return demoDays[surveyId] ?? null;
   }
 
-  private getDaysLeft(endDate: string | null): number | null {
+  /**
+   * Calculates the remaining days until a survey ends.
+   * @param endDate Survey end date or null.
+   * @returns Remaining days or null without an end date.
+   */
+  private getDaysLeft(
+    endDate: string | null
+  ): number | null {
     if (!endDate) {
       return null;
     }
 
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const difference = new Date(endDate).getTime() - Date.now();
-    const daysLeft = Math.ceil(difference / millisecondsPerDay);
+    const difference =
+      new Date(endDate).getTime() - Date.now();
+
+    const daysLeft =
+      Math.ceil(difference / millisecondsPerDay);
 
     return Math.max(0, daysLeft);
   }

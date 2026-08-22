@@ -7,11 +7,13 @@ import { NewSurvey } from '../../components/new-survey/new-survey';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
+
+/** Displays the configurable page header. */
 export class Header {
   @Input() variant: 'orange' | 'purple' = 'purple';
   @Input() buttonVariant: 'home' | 'header-create' = 'home';
   @Input() logoSrc = '/icons/logo-orange.svg';
   @Input() showButton = false;
-  
+
   createSurvey = output<void>();
 }

@@ -1,5 +1,5 @@
-import {  Injectable,  OnDestroy,  signal,} from '@angular/core';
-import {  createClient,  RealtimeChannel,} from '@supabase/supabase-js';
+import { Injectable, OnDestroy, signal, } from '@angular/core';
+import { createClient, RealtimeChannel, } from '@supabase/supabase-js';
 
 export type CreateAnswer = {
   text: string;
@@ -34,6 +34,8 @@ type Survey = {
 @Injectable({
   providedIn: 'root',
 })
+
+/** Handles survey data and realtime database updates. */
 export class Supabase implements OnDestroy {
   private readonly supabaseUrl =
     'https://rnwpzflsvaqgzoznhshb.supabase.co';
@@ -50,7 +52,14 @@ export class Supabase implements OnDestroy {
 
   private channel?: RealtimeChannel;
 
-  async createSurvey(survey: CreateSurvey): Promise<number> {
+  /**
+   * Creates a survey with its questions and answers.
+   * @param survey Prepared survey data.
+   * @returns ID of the created survey.
+   */
+  async createSurvey(
+    survey: CreateSurvey
+  ): Promise<number> {
     const surveyId = await this.insertSurvey(survey);
 
     await this.insertQuestions(
@@ -63,6 +72,7 @@ export class Supabase implements OnDestroy {
     return surveyId;
   }
 
+  /** Inserts the main survey row. */
   private async insertSurvey(
     survey: CreateSurvey
   ): Promise<number> {
@@ -77,6 +87,7 @@ export class Supabase implements OnDestroy {
     return data.id;
   }
 
+  /** Creates the database row for a survey. */
   private createSurveyRow(survey: CreateSurvey) {
     return {
       title: survey.title,
@@ -88,6 +99,7 @@ export class Supabase implements OnDestroy {
     };
   }
 
+  /** Inserts all questions belonging to a survey. */
   private async insertQuestions(
     surveyId: number,
     questions: CreateQuestion[]
@@ -101,6 +113,7 @@ export class Supabase implements OnDestroy {
     }
   }
 
+  /** Inserts one question and its answers. */
   private async insertQuestion(
     surveyId: number,
     question: CreateQuestion,
@@ -118,6 +131,7 @@ export class Supabase implements OnDestroy {
     );
   }
 
+  /** Creates one question and returns its ID. */
   private async createQuestion(
     surveyId: number,
     question: CreateQuestion,
@@ -138,6 +152,7 @@ export class Supabase implements OnDestroy {
     return data.id;
   }
 
+  /** Creates the database row for a question. */
   private createQuestionRow(
     surveyId: number,
     question: CreateQuestion,
@@ -151,6 +166,7 @@ export class Supabase implements OnDestroy {
     };
   }
 
+  /** Inserts all answers belonging to a question. */
   private async insertAnswers(
     questionId: number,
     answers: CreateAnswer[]
@@ -168,6 +184,7 @@ export class Supabase implements OnDestroy {
     if (error) throw error;
   }
 
+  /** Loads all surveys from the database. */
   async getSurveys(): Promise<void> {
     const { data, error } = await this.supabase
       .from('surveys')
@@ -182,12 +199,14 @@ export class Supabase implements OnDestroy {
     this.surveys.set(data);
   }
 
+  /** Starts listening for survey database changes. */
   subscribeToSurveys(): void {
     if (this.channel) return;
 
     this.channel = this.createSurveysChannel();
   }
 
+  /** Creates the realtime survey channel. */
   private createSurveysChannel(): RealtimeChannel {
     return this.supabase
       .channel('surveys-channel')
@@ -203,6 +222,7 @@ export class Supabase implements OnDestroy {
       .subscribe();
   }
 
+  /** Removes the realtime channel when the service is destroyed. */
   ngOnDestroy(): void {
     if (this.channel) {
       void this.supabase.removeChannel(this.channel);

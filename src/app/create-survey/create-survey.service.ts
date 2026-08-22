@@ -4,7 +4,6 @@ import type { CreateSurvey as CreateSurveyPayload } from '../supabase';
 
 export interface Answer { text: string; }
 export interface Question { text: string; answers: Answer[]; multipleAnswers: boolean; }
-
 export interface SurveyDraft { surveyName: string; surveyEndDate: string; surveyDescription: string; questions: Question[]; }
 
 /** Handles survey drafts, date formatting, and publishing. */

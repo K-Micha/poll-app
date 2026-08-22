@@ -1,4 +1,4 @@
-import {  Component,  inject,  Input,  output,} from '@angular/core';
+import { Component, inject, Input, output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
   templateUrl: './new-survey.html',
   styleUrl: './new-survey.scss',
 })
+
+/** Controls the animated button for creating a survey. */
 export class NewSurvey {
   @Input() variant: 'home' | 'header-create' = 'home';
   @Input() route = '/create-survey';
@@ -17,6 +19,7 @@ export class NewSurvey {
   isSuccess = false;
   isAnimating = false;
 
+  /** Plays the success animation before opening the create page. */
   handleClick(): void {
     if (this.isAnimating) return;
 
