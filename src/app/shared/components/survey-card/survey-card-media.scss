@@ -1,3 +1,68 @@
-@use '../shared/styles/abstract/variables' as var;
-@use '../shared/styles/abstract/mixins' as mx;
-@use '../shared/styles/abstract/functions' as fct;
+@use '../../styles/abstract/variables' as var;
+@use '../../styles/abstract/mixins' as mx;
+@use '../../styles/abstract/functions' as fct;
+
+@media (max-width: fct.breakpoint(desktop)) {
+    .cards {
+        &__title {
+            font-size: fct.px-to-rem(20px);
+        }
+    }
+}
+
+@media (max-width: fct.breakpoint(laptop)) {
+    .cards {
+        &__card {
+            height: fct.px-to-rem(150px);
+        }
+
+        &__title {
+            white-space: normal;
+        }
+    }
+
+    .soon-cards {
+        &__title {
+            font-size: fct.font-size(xl);
+        }
+    }
+}
+
+.soon-cards__list {
+    display: flex;
+    gap: fct.size(lg);
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-y;
+    scrollbar-width: none;
+
+    &:active {
+        cursor: grabbing;
+    }
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.soon-cards__card {
+    flex: 0 0 fct.px-to-rem(300px);
+}
+
+@media (min-width: fct.breakpoint(cards-mobile)) and (max-width: fct.breakpoint(tablet)) {
+    .cards__list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 649px) {
+    .filters {
+        @include mx.flex(column, flex-start, stretch);
+        gap: fct.size(xxxl);
+    }
+   .survey-cards{
+     padding-inline: unset;
+   }
+}

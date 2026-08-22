@@ -1,6 +1,8 @@
 <div class="survey-cards">
   <section class="soon-cards">
-    <div class="soon-cards__list">
+    <div #soonList class="soon-cards__list" (pointerdown)="startDrag($event, soonList)"
+      (pointermove)="drag($event, soonList)" (pointerup)="stopDrag($event, soonList)"
+      (pointercancel)="stopDrag($event, soonList)">
       @for (survey of endingSoonSurveys; track survey.id) {
       <article class="soon-cards__card" [routerLink]="['/survey-detail', survey.id]" tabindex="0" role="link">
         <header class="soon-cards__header">

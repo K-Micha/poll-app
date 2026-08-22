@@ -24,6 +24,11 @@ type SurveyStatus = 'active' | 'past';
 export class SurveyCard {
   @Input() label = '';
 
+  isDragging = false;
+  private holdTimer?: ReturnType<typeof setTimeout>;
+  private startX = 0;
+  private scrollLeft = 0;
+
   selectedStatus: SurveyStatus = 'active';
   selectedCategory: SurveyCategory = 'All Surveys';
 
@@ -118,18 +123,46 @@ export class SurveyCard {
    * @returns Remaining days or null without an end date.
    */
   private getDaysLeft(
-    endDate: string | null
-  ): number | null {
+    endDate: string | null): number | null {
     if (!endDate) {
       return null;
     }
 
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const difference =
-      new Date(endDate).getTime() - Date.now();
+    const difference = new Date(endDate).getTime() - Date.now();
 
     const daysLeft = Math.ceil(difference / millisecondsPerDay);
 
     return Math.max(0, daysLeft);
+  }
+
+  /** Starts drag mode after a short hold delay. */
+  startDrag(event: PointerEvent, list: HTMLElement): void {
+    this.startX = event.clientX;
+    this.scrollLeft = list.scrollLeft;
+
+    this.holdTimer = setTimeout(() => {
+      this.isDragging = true;
+      list.setPointerCapture(event.pointerId);
+    }, 150);
+  }
+
+  /** Moves the card list while dragging. */
+  drag(event: PointerEvent, list: HTMLElement): void {
+    if (!this.isDragging) return;
+
+    const distance = event.clientX - this.startX;
+    list.scrollLeft = this.scrollLeft - distance;
+  }
+
+  /** Stops dragging and releases pointer capture. */
+  stopDrag(event: PointerEvent, list: HTMLElement): void {
+    clearTimeout(this.holdTimer);
+
+    if (list.hasPointerCapture(event.pointerId)) {
+      list.releasePointerCapture(event.pointerId);
+    }
+
+    this.isDragging = false;
   }
 }

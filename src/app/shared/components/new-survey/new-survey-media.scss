@@ -1,3 +1,21 @@
-@use '../shared/styles/abstract/variables' as var;
-@use '../shared/styles/abstract/mixins' as mx;
-@use '../shared/styles/abstract/functions' as fct;
+@use '../../styles/abstract/variables' as var;
+@use '../../styles/abstract/mixins' as mx;
+@use '../../styles/abstract/functions' as fct;
+
+
+@media (max-width: fct.breakpoint(tablet)) {
+    :host {
+        @include mx.flex(row, center, center);
+    }
+
+    .new-survey:not(.new-survey--success) {
+        width: fct.px-to-rem(172px);
+        gap: fct.px-to-rem(10px);
+        background-color: fct.color(primary-orange);
+
+        .new-survey__icon--add {
+            width: fct.size(lg);
+            opacity: 1;
+        }
+    }
+}

@@ -23,15 +23,41 @@
         width: calc(100% - fct.px-to-rem(400px));
     }
 
-    &__hero-image {
+    &__hero-image-wrapper {
+        position: relative;
         height: fct.px-to-rem(420px);
         width: fct.px-to-rem(420px);
 
-        content: url('/img/animation1.svg');
+        @media (min-width: 769px) {
+            &:hover {
+                .home__hero-image {
+                    content: url('/img/animation2.svg');
+                }
 
-        &:hover {
-            content: url('/img/animation2.svg');
+                .home__hero-bubble {
+                    content: url('/img/bubble2.svg');
+                    top: fct.px-to-rem(59px);
+                    left: fct.px-to-rem(14px);
+                    width: fct.px-to-rem(177px);
+                    height: fct.px-to-rem(115px);
+                }
+            }
         }
+    }
+
+    &__hero-image {
+        height: fct.px-to-rem(420px);
+        width: fct.px-to-rem(420px);
+        content: url('/img/animation1.svg');
+    }
+
+    &__hero-bubble {
+        position: absolute;
+        top: fct.px-to-rem(97px);
+        left: fct.px-to-rem(76px);
+        width: fct.px-to-rem(105px);
+        height: fct.px-to-rem(76px);
+        content: url('/img/bubble1.svg');
     }
 
     &__title {
@@ -42,6 +68,10 @@
         color: fct.color(primary-orange);
 
         white-space: nowrap;
+
+        &--break {
+            display: none;
+        }
     }
 
     &__description-wrapper {

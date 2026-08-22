@@ -1,3 +1,136 @@
 @use '../shared/styles/abstract/variables' as var;
 @use '../shared/styles/abstract/mixins' as mx;
 @use '../shared/styles/abstract/functions' as fct;
+
+@media (min-width: fct.breakpoint(widescreen)) {
+    .home {
+        @include mx.flex(column, center, stretch);
+        min-height: 100vh;
+    }
+}
+
+@media (max-width: fct.breakpoint(desktop)) {
+    .home {
+        &__title {
+            font-size: fct.px-to-rem(85px);
+            line-height: fct.px-to-rem(75px);
+        }
+
+        &__hero-image {
+            width: fct.px-to-rem(390px);
+        }
+    }
+}
+
+@media (max-width: fct.breakpoint(laptop)) {
+    .home {
+        &__title {
+            font-size: fct.px-to-rem(58px);
+            line-height: fct.px-to-rem(60px);
+        }
+
+        &__hero-image {
+            width: fct.px-to-rem(343px);
+        }
+
+        &__description {
+            font-size: fct.font-size(lg);
+            max-width: fct.px-to-rem(400px);
+        }
+
+        &__wrapper {
+            width: fct.content-width(40px);
+        }
+    }
+}
+
+@media (max-width: fct.breakpoint(tablet)) {
+    .home {
+        &__hero-image {
+            animation: survey-image-switch 4s infinite;
+
+            &:hover {
+                content: url('/img/animation1.svg');
+            }
+        }
+
+        &__wrapper {
+            width: fct.content-width(24px);
+        }
+
+        &__hero {
+            @include mx.flex(column, flex-start, stretch);
+        }
+
+        &__description {
+            max-width: none;
+        }
+
+        &__hero-content {
+            display: contents;
+        }
+
+        &__title {
+            order: 1;
+        }
+
+        &__hero-image-wrapper {
+            @include mx.flex(column, center, center);
+            margin-inline: auto;
+            order: 2;
+        }
+
+        &__description-wrapper {
+            order: 3;
+        }
+
+        &__create-button {
+            order: 4;
+        }
+    }
+}
+
+@keyframes survey-image-switch {
+
+    0%,
+    45% {
+        content: url('/img/animation1.svg');
+    }
+
+    50%,
+    95% {
+        content: url('/img/animation2.svg');
+    }
+
+    100% {
+        content: url('/img/animation1.svg');
+    }
+}
+
+@media (max-width: 649px) {
+    .surveys {
+        padding-inline: unset;
+    }
+
+    .home {
+        &__hero-image-wrapper {
+            max-width: fct.px-to-rem(343px);
+        }
+
+        &__title {
+            font-size: fct.font-size(d-lg) !important;
+
+            &--break {
+                display: block;
+            }
+        }
+
+        &__hero-bubble {
+            left: fct.px-to-rem(40px);
+        }
+    }
+}
+
+@media (max-width: 450px) {
+    
+}
