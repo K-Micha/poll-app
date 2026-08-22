@@ -89,8 +89,8 @@
     height: fct.px-to-rem(13.15px);
 
     background-color: currentColor;
-    mask: url('/icons/close.svg') center / contain no-repeat;
-    -webkit-mask: url('/icons/close.svg') center / contain no-repeat;
+    mask: url('/app-icons/close.svg') center / contain no-repeat;
+    -webkit-mask: url('/app-icons/close.svg') center / contain no-repeat;
   }
 }
 
@@ -109,7 +109,7 @@
     display: block;
     width: fct.px-to-rem(17px);
     height: fct.px-to-rem(19px);
-    background: url('/icons/delete-w.svg') center / contain no-repeat;
+    background: url('/app-icons/delete-w.svg') center / contain no-repeat;
   }
 }
 
@@ -244,7 +244,7 @@
       height: fct.size(lg);
       flex-shrink: 0;
 
-      background: url('/icons/circle.svg') center / contain no-repeat;
+      background: url('/app-icons/circle.svg') center / contain no-repeat;
     }
   }
   

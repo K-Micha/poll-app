@@ -143,7 +143,7 @@
                     (click)="addAnswer(questionIndex)">
                     <span class="add-btn__content">
                       <span class="add-btn__text">Add answer</span>
-                      <img class="add-btn__icon" src="/icons/circle.svg" alt="" aria-hidden="true">
+                      <img class="add-btn__icon" src="/app-icons/circle.svg" alt="" aria-hidden="true">
                     </span>
 
                     <span class="add-btn__line" aria-hidden="true"></span>
@@ -156,7 +156,7 @@
             <div class="question question--add">
               <button class="question-btn survey-questions__add" type="button" tabindex="-1" (click)="addQuestion()">
                 <span class="question-btn__text">Add next question</span>
-                <img class="question-btn__icon" src="/icons/circle.svg" alt="" aria-hidden="true">
+                <img class="question-btn__icon" src="/app-icons/circle.svg" alt="" aria-hidden="true">
               </button>
             </div>
 
@@ -169,7 +169,7 @@
           <button class="btn btn--primary footer__btn" type="button"
             [class.footer__btn--active]="isPublishOverlayOpen()" (click)="publishSurvey()">
             <span class="btn__text">Publish</span>
-            <img class="btn__icon" src="/icons/check.svg" alt="" aria-hidden="true">
+            <img class="btn__icon" src="/app-icons/check.svg" alt="" aria-hidden="true">
           </button>
 
           @if (isPublishOverlayOpen()) {

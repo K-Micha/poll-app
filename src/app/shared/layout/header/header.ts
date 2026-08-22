@@ -12,7 +12,7 @@ import { NewSurvey } from '../../components/new-survey/new-survey';
 export class Header {
   @Input() variant: 'orange' | 'purple' = 'purple';
   @Input() buttonVariant: 'home' | 'header-create' = 'home';
-  @Input() logoSrc = '/icons/logo-orange.svg';
+  @Input() logoSrc = '/app-icons/logo-orange.svg';
   @Input() showButton = false;
 
   createSurvey = output<void>();

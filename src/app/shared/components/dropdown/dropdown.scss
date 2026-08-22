@@ -31,7 +31,7 @@
       animation: category-error-pulse 350ms ease-in-out 2;
 
       .dropdown__icon {
-        content: url('/icons/drop_down.svg');
+        content: url('/app-icons/drop_down.svg');
       }
     }
 
@@ -55,7 +55,7 @@
   }
 
   &__trigger:hover:not(&__trigger--open) &__icon {
-    content: url('/icons/drop_down.svg');
+    content: url('/app-icons/drop_down.svg');
   }
 
   &__menu {
