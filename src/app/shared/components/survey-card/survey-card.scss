@@ -81,6 +81,14 @@
     max-width: fct.px-to-rem(fct.layout(surveys));
     min-height: fct.px-to-rem(25px);
     margin-block: fct.px-to-rem(25px);
+
+    &__button {
+        background-color: fct.color(secondary-btn);
+
+        &--active {
+            background-color: fct.color(primary-orange);
+        }
+    }
 }
 
 :host {
@@ -95,18 +103,21 @@
         display: grid;
         align-content: start;
         gap: fct.size(md);
-        height: auto;
-        overflow: visible;
+
+        width: 100%;
+        max-width: fct.px-to-rem(1042px);
+        margin-top: fct.px-to-rem(65px);
+
+        @media (min-width: fct.breakpoint(laptop)) {
+            height: fct.px-to-rem(422px);
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
 
         @media (min-width: fct.breakpoint(tablet)) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-    }
-
-    @media (min-width: fct.breakpoint(surveys)) {
-        max-height: fct.px-to-rem(413px);
-        overflow-x: hidden;
-        overflow-y: auto;
 
         &::-webkit-scrollbar {
             width: fct.px-to-rem(8px);

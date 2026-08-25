@@ -62,7 +62,26 @@
         @include mx.flex(column, flex-start, stretch);
         gap: fct.size(xxxl);
     }
-   .survey-cards{
-     padding-inline: unset;
-   }
+
+    .survey-cards {
+        padding-inline: unset;
+    }
+}
+
+@media (max-width: fct.breakpoint(mobile)) {
+    .soon-cards {
+        &__card {
+            max-width: fct.px-to-rem(250px);
+            height: fct.px-to-rem(233px);
+            padding: fct.size(lg) fct.size(md);
+
+            border-radius: 0 fct.px-to-rem(80px) 0 0;
+        }
+    }
+
+    .filters {
+        &__status {
+            margin-top: fct.px-to-rem(36px);
+        }
+    }
 }

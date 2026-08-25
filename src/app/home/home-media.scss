@@ -131,6 +131,49 @@
     }
 }
 
-@media (max-width: 450px) {
-    
+@media (max-width: fct.breakpoint(mobile)) {
+    .home {
+
+        margin-top: fct.px-to-rem(54px);
+
+        &__hero-image-wrapper {
+            width: calc(100vw - fct.px-to-rem(48px));
+            height: calc(100vw - fct.px-to-rem(48px));
+            max-width: fct.px-to-rem(343px);
+            max-height: fct.px-to-rem(343px);
+            margin-top: fct.size(xxl);
+        }
+
+        &__hero-image {
+            width: 100%;
+            height: 100%;
+        }
+
+        &__description {
+            margin-top: fct.size(lg);
+            font-size: fct.font-size(md);
+        }
+    }
+
+    .surveys {
+        &__title {
+            font-size: fct.font-size(d-sm);
+        }
+
+        &__subtitle {
+            font-size: fct.font-size(xl);
+        }
+    }
+}
+
+@media (max-width: 390px) {
+    .home {
+        &__hero-image-wrapper {
+            max-width: 300px;
+        }
+
+        &__title {
+            font-size: fct.px-to-rem(55px) !important;
+        }
+    }
 }

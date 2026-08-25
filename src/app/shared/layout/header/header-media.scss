@@ -1,3 +1,16 @@
 @use '../../styles/abstract/variables' as var;
 @use '../../styles/abstract/mixins' as mx;
 @use '../../styles/abstract/functions' as fct;
+
+@media (max-width: fct.breakpoint(tablet)) {
+    .header {
+
+        &__wrapper {
+            width: fct.content-width(25px);
+        }
+
+        &__logo {
+            height: fct.px-to-rem(50px);
+        }
+    }
+}

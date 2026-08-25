@@ -26,6 +26,7 @@
 .filters {
   &__button {
     width: fit-content;
+    height: 23px;
     padding: fct.px-to-rem(2px) fct.px-to-rem(10px);
 
     border: none;
@@ -247,7 +248,7 @@
       background: url('/app-icons/circle.svg') center / contain no-repeat;
     }
   }
-  
+
 }
 
 .question-btn {
@@ -284,5 +285,13 @@
     flex-shrink: 0;
     object-fit: contain;
     opacity: 1;
+  }
+}
+
+@media (max-width: fct.breakpoint(mobile)) {
+  .filters {
+    &__status {
+      gap: fct.size(md);
+    }
   }
 }
