@@ -397,47 +397,7 @@
       }
     }
   }
-
-  .close--btn {
-    display: flex;
+  .close--btn{
+    display: block;
   }
 }
-
-@media (max-width: 650px) {
-  .btn--primary {
-    background-color: fct.color(primary-orange) !important;
-    width: fct.px-to-rem(142px);
-    height: fct.px-to-rem(48px);
-    padding: fct.size(sm) fct.font-size(basic);
-    gap: fct.px-to-rem(10px);
-
-    .btn__text {
-      color: transparent;
-      font-size: 0 !important;
-
-      &::after {
-        font-size: 18px;
-        content: 'Complete';
-        color: fct.color(primary-purple);
-        font-size: fct.font-size(basic);
-      }
-    }
-
-    &::after {
-      content: '';
-      display: block;
-      width: fct.px-to-rem(18px);
-      height: fct.px-to-rem(18px);
-
-      background-color: fct.color(primary-purple);
-      mask: url('/app-icons/check.svg') center / contain no-repeat;
-      -webkit-mask: url('/app-icons/check.svg') center / contain no-repeat;
-    }
-
-    &__content {
-      @include mx.flex(row, center, center);
-      gap: fct.size(xs);
-    }
-  }
-}
-

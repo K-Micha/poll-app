@@ -33,3 +33,11 @@ app-root {
         background-color: fct.color(wht);
     }
 }
+
+@media (max-width: fct.breakpoint(tablet)) {
+    .body--home {
+        .new-survey {
+           display: block !important;
+        }
+    }
+}

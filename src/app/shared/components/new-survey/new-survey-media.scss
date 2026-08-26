@@ -19,3 +19,26 @@
         }
     }
 }
+
+@media (max-width: fct.breakpoint(tablet)) {
+    :host-context(.body--home) {
+        .new-survey {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: fct.px-to-rem(10px);
+
+            &__icon {
+                display: none !important;
+            }
+
+            &__tablet-icon {
+                display: block !important;
+                width: fct.size(lg);
+                height: fct.size(lg);
+
+                background: url('/app-icons/add_circle.svg') center / contain no-repeat;
+            }
+        }
+    }
+}
