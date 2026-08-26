@@ -155,3 +155,16 @@
         background-color: fct.color(secondary-btn);
     }
 }
+
+@media (min-width: 769px) and (max-width: 830px) {
+    .question {
+        &__input {
+            &::placeholder {
+                display: inline-block;
+                transform: scaleX(0.8);
+                transform-origin: left center;
+                width: fct.px-to-rem(429px);
+            }
+        }
+    }
+}

@@ -2,10 +2,11 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Dropdown, type SurveyCategory } from '../shared/components/dropdown/dropdown';
 import { CreateSurveyService, type Answer, type Question, type SurveyDraft } from './create-survey.service';
+import { Header } from '../shared/layout/header/header';
 
 @Component({
   selector: 'app-create-survey',
-  imports: [Dropdown],
+  imports: [Dropdown, Header],
   templateUrl: './create-survey.html',
   styleUrls: [
     './create-survey.scss',

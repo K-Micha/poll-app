@@ -1,3 +1,7 @@
+<div class="app-header">
+<app-header logoSrc="/app-icons/logo-purple.svg" [showButton]="false"></app-header>
+</div>
+
 <main class="create-survey">
   <div class="content-wrapper">
     <form class="create-survey__form">
@@ -64,7 +68,7 @@
             </div>
 
             <div class="form-field form-field--description">
-              <label class="form-field__label" for="survey-description">
+              <label class="form-field__label--top" for="survey-description">
                 Describing text
                 <span class="form-field__label--optional">(optional)</span>
               </label>
@@ -73,7 +77,7 @@
                 <textarea class="input-inline form-field__description" id="survey-description" name="surveyDescription"
                   [value]="surveyDescription" (input)="updateDescription($event)"></textarea>
 
-                <button class="btn-delete form-field__delete" type="button" tabindex="-1" aria-label="Clear description"
+                <button class="btn-delete form-field__delete padding-top" type="button" tabindex="-1" aria-label="Clear description"
                   (click)="clearDescription()">
                   <span class="btn-delete__icon" aria-hidden="true"></span>
                 </button>

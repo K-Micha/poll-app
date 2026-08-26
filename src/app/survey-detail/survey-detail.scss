@@ -246,25 +246,6 @@
 }
 
 .survey-detail {
-    &__results {
-        opacity: 0;
-        visibility: hidden;
-        filter: blur(14px);
-        transform: scale(0.96);
-
-        transition:
-            opacity 800ms ease,
-            filter 800ms ease,
-            transform 800ms ease,
-            visibility 0s;
-
-        &--open {
-            opacity: 1;
-            visibility: visible;
-            filter: blur(0);
-            transform: scale(1);
-        }
-    }
 
     &__results-toggle {
         @include mx.flex(row, flex-start, center);
