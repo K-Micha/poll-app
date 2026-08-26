@@ -1,15 +1,24 @@
-<app-header  logoSrc="/app-icons/logo-purple.svg" [showButton]="true"></app-header>
+<app-header logoSrc="/app-icons/logo-purple.svg" [showButton]="true"></app-header>
 
 @if (survey(); as currentSurvey) {
 <main class="survey-detail">
   <div class="content-wrapper">
+
     <form class="survey-detail__form" (submit)="submitSurvey($event)">
       <div class="survey-detail__content">
+
         <header class="survey-detail__information">
           <div class="survey-detail__header">
-            <span class="survey-detail__status">
-              {{ currentSurvey.status }}
-            </span>
+
+            <div class="survey-detail__header-actions">
+              <span class="survey-detail__status">
+                {{ currentSurvey.status }}
+              </span>
+
+              <button class="close--btn" type="button" aria-label="Close" routerLink="/">
+                <img src="/app-icons/close-dark.svg" alt="" aria-hidden="true">
+              </button>
+            </div>
 
             <div class="survey-detail__meta">
               <p class="survey-detail__date">
@@ -23,7 +32,8 @@
               </p>
 
               <p class="survey-detail__category">
-                Category: {{ currentSurvey.category }}
+                Category:<br class="survey-detail__category--break">
+                {{ currentSurvey.category }}
               </p>
             </div>
           </div>
@@ -47,8 +57,12 @@
           ) {
           <article class="survey-question">
             <h2 class="survey-question__title">
-              {{ questionIndex + 1 }}.
-              {{ question.question_text }}
+              <span class="survey-question__number">
+                {{ questionIndex + 1 }}.
+              </span>
+              <span class="survey-question__text">
+                {{ question.question_text }}
+              </span>
             </h2>
 
             @if (question.allow_multiple) {
@@ -93,17 +107,30 @@
 
         <footer class="survey-detail__footer">
           <button class="btn btn--primary" type="submit" [disabled]="!isSurveyComplete() || isSubmitting()">
-            <span class="btn__text">
-              Complete survey
+            <span class="btn__content">
+              <span class="btn__text">
+                Complete survey
+              </span>
             </span>
           </button>
         </footer>
       </div>
 
-      <aside class="survey-detail__results">
-        <app-survey-results [surveyId]="currentSurvey.id"></app-survey-results>
-      </aside>
+      <div class="results-toggle-wrapper">
+        <button class="survey-detail__results-toggle" [class.survey-detail__results-toggle--open]="showResults"
+          type="button" (click)="toggleResults()">
+          <span class="survey-detail__results-toggle-text"></span>
+
+          <span class="survey-detail__results-toggle-icon" aria-hidden="true"></span>
+        </button>
+
+        <aside class="survey-detail__results" [class.survey-detail__results--open]="showResults">
+          <app-survey-results [surveyId]="currentSurvey.id"></app-survey-results>
+        </aside>
+      </div>
+
     </form>
   </div>
+
 </main>
 }

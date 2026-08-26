@@ -20,8 +20,12 @@
     ) {
     <section class="question-result">
       <h4 class="question-result__title">
-        {{ questionIndex + 1 }}.
-        {{ question.questionText }}
+        <span class="question-result__number">
+          {{ questionIndex + 1 }}.
+        </span>
+        <span class="question-result__text">
+          {{ question.questionText }}
+        </span>
       </h4>
 
       @for (
@@ -35,19 +39,10 @@
         </span>
 
         <span class="question-result__bar bar" [style.--percentage]="
-                getPercentage(
-                  question.answers,
-                  answer.votes
-                ) + '%'
-              "></span>
+                getPercentage( question.answers, answer.votes ) + '%' "></span>
 
         <span class="question-result__percentage">
-          {{
-          getPercentage(
-          question.answers,
-          answer.votes
-          )
-          }}%
+          {{ getPercentage( question.answers, answer.votes ) }}%
         </span>
       </div>
       }

@@ -60,6 +60,7 @@
 
 .question-result {
     &__title {
+        @include mx.flex(row, flex-start, flex-start);
         @include mx.typo(mulish, 700);
 
         margin: 0;

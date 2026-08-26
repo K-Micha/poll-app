@@ -1,12 +1,12 @@
 import { Component, inject, OnDestroy, OnInit, Renderer2, signal, } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Supabase } from '../supabase';
 import { SurveyResults } from '../shared/components/survey-results/survey-results';
 import { Header } from '../shared/layout/header/header';
 
 @Component({
   selector: 'app-survey-detail',
-  imports: [SurveyResults, Header],
+  imports: [SurveyResults, Header, RouterLink],
   templateUrl: './survey-detail.html',
   styleUrls: [
     './survey-detail.scss',
@@ -21,9 +21,15 @@ export class SurveyDetail implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
+  showResults = false;
   survey = signal<any | null>(null);
   selectedAnswers = signal<Record<number, number[]>>({});
   isSubmitting = signal(false);
+
+  /** Toggles the survey results visibility. */
+  toggleResults(): void {
+    this.showResults = !this.showResults;
+  }
 
   /** Loads the selected survey when the component starts. */
   async ngOnInit(): Promise<void> {

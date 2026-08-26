@@ -1,3 +1,83 @@
 @use '../../styles/abstract/variables' as var;
 @use '../../styles/abstract/mixins' as mx;
 @use '../../styles/abstract/functions' as fct;
+
+@media (max-width: fct.breakpoint(desktop)) {
+    .question-result {
+        &__answer {
+            gap: fct.px-to-rem(8px);
+        }
+    }
+}
+
+@media (max-width: fct.breakpoint(laptop)) {
+    .survey-results {
+        margin-right: fct.px-to-rem(25px);
+        background-color: fct.color(wht);
+
+        &__title {
+            font-size: fct.px-to-rem(28px);
+
+            &--title {
+                display: block;
+            }
+        }
+
+        &__heading {
+            @include mx.flex(row, flex-start, center);
+        }
+
+        &__content {
+            padding-bottom: 48px;
+        }
+    }
+
+    .question-result {
+
+        &__number,
+        &__text {
+            margin-top: fct.px-to-rem(16px);
+        }
+    }
+}
+
+@media (max-width: fct.breakpoint(tablet)) {
+    .survey-results {
+        &__heading {
+            margin-top: 100px;
+        }
+    }
+
+    .survey-results {
+        justify-self: center;
+
+    }
+
+    .question-result {
+        &__answer {
+            justify-content: unset;
+        }
+    }
+}
+
+@media (max-width: fct.breakpoint(cards-mobile)) {
+    .survey-results {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .survey-results__content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .question-result {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .survey-results {
+        width: fct.content-width(20px);
+    }
+}
