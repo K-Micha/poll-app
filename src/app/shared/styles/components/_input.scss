@@ -2,7 +2,15 @@
 @use '../abstract/mixins' as mx;
 @use '../abstract/functions' as fct;
 
+input,
+textarea,
+select {
+    font-family: fct.font(mulish) !important;
+    font-weight: 400 !important;
+}
+
 .input {
+
     appearance: none;
     -webkit-appearance: none;
     flex: 0 0 auto;

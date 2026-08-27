@@ -136,8 +136,10 @@ export class SurveyCard {
     return Math.max(0, daysLeft);
   }
 
-  /** Starts drag mode after a short hold delay. */
+  /** Starts mouse drag mode after a short hold delay. */
   startDrag(event: PointerEvent, list: HTMLElement): void {
+    if (event.pointerType === 'touch') return;
+
     this.startX = event.clientX;
     this.scrollLeft = list.scrollLeft;
 
@@ -149,7 +151,7 @@ export class SurveyCard {
 
   /** Moves the card list while dragging. */
   drag(event: PointerEvent, list: HTMLElement): void {
-    if (!this.isDragging) return;
+    if (event.pointerType === 'touch' || !this.isDragging) return;
 
     const distance = event.clientX - this.startX;
     list.scrollLeft = this.scrollLeft - distance;
@@ -158,6 +160,8 @@ export class SurveyCard {
   /** Stops dragging and releases pointer capture. */
   stopDrag(event: PointerEvent, list: HTMLElement): void {
     clearTimeout(this.holdTimer);
+
+    if (event.pointerType === 'touch') return;
 
     if (list.hasPointerCapture(event.pointerId)) {
       list.releasePointerCapture(event.pointerId);

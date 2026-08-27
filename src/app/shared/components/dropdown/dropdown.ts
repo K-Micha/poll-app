@@ -23,20 +23,36 @@ export type SurveyCategory = (typeof surveyCategories)[number];
 
 /** Controls category selection and dropdown visibility. */
 export class Dropdown {
-  @Input() invalid = false;
+  @Input() variant: 'default' | 'create' = 'default';
+  @Input() showSelectionBelow = false;
   @Input() label = '';
 
+  @Input() set invalid(value: boolean) {
+    this._invalid = value;
+    if (value && !this.hasSelection) {
+      this.showError = true;
+    }
+  }
+
+  private _invalid = false;
   readonly surveyCategories = surveyCategories;
   readonly categoryChange = output<SurveyCategory>();
 
   selectedCategory: SurveyCategory = 'All Surveys';
   hasSelection = false;
   isOpen = false;
+  showError = false;
+
+  /** Returns whether the dropdown is currently invalid. */
+  get invalid(): boolean {
+    return this._invalid;
+  }
 
   /** Selects a category and sends it to the parent component. */
   selectCategory(category: SurveyCategory): void {
     this.selectedCategory = category;
     this.hasSelection = true;
+    this.showError = false;
     this.categoryChange.emit(category);
     this.isOpen = false;
   }

@@ -8,9 +8,10 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     height: auto !important;
-   
+
 }
 
 app-root {
@@ -37,7 +38,7 @@ app-root {
 @media (max-width: fct.breakpoint(tablet)) {
     .body--home {
         .new-survey {
-           display: block !important;
+            display: block !important;
         }
     }
 }

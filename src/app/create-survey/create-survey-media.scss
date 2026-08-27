@@ -324,7 +324,6 @@
 
     .question {
         &__answers-header {
-            @include mx.flex(column);
             gap: fct.px-to-rem(8px);
             padding-top: fct.px-to-rem(16px);
             margin-bottom: fct.px-to-rem(45px);
@@ -340,3 +339,12 @@
         }
     }
 }
+
+@media (max-width: 360px) {
+    .checkbox {
+        &__break {
+            display: inline;
+        }
+    }
+}
+

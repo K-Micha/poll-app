@@ -123,6 +123,15 @@ export class SurveyDetail implements OnInit, OnDestroy {
       questions.every((question: any) => (this.selectedAnswers()[question.id]?.length ?? 0) > 0);
   }
 
+  /** Checks whether the survey has already ended. */
+  isSurveyExpired(): boolean {
+    const endDate = this.survey()?.end_date;
+
+    if (!endDate) return false;
+
+    return new Date(endDate).getTime() < Date.now();
+  }
+
   /** Starts the survey submission when it is valid. */
   async submitSurvey(event: Event): Promise<void> {
     event.preventDefault();
@@ -135,20 +144,34 @@ export class SurveyDetail implements OnInit, OnDestroy {
   /** Saves the submission and returns to the home page. */
   private async processSurveySubmission(): Promise<void> {
     this.isSubmitting.set(true);
-
     const submissionId = await this.createSubmission();
     const saved = await this.saveSurvey(submissionId);
 
     this.isSubmitting.set(false);
 
     if (saved) {
+      this.rememberVote();
       await this.router.navigateByUrl('/');
     }
+  }
+
+  /** Stores that this survey was completed in this browser. */
+  private rememberVote(): void {
+    const surveyId = this.survey()?.id;
+
+    if (!surveyId) return;
+
+    localStorage.setItem(
+      `voted-survey-${surveyId}`,
+      'true'
+    );
   }
 
   /** Checks whether the survey can be submitted. */
   private canSubmitSurvey(): boolean {
     return (
+      !this.isSurveyExpired() &&
+      !this.hasAlreadyVoted() &&
       this.isSurveyComplete() &&
       !this.isSubmitting()
     );
@@ -265,6 +288,17 @@ export class SurveyDetail implements OnInit, OnDestroy {
       .split('-');
 
     return `${day}.${month}.${year}`;
+  }
+
+  /** Checks whether this survey was already completed in this browser. */
+  hasAlreadyVoted(): boolean {
+    const surveyId = this.survey()?.id;
+
+    if (!surveyId) return false;
+
+    return localStorage.getItem(
+      `voted-survey-${surveyId}`
+    ) === 'true';
   }
 
   /** Removes the detail page class when leaving. */

@@ -6,6 +6,25 @@
   position: relative;
   width: fct.px-to-rem(206px);
 
+  &__selection,
+  &__error {
+    display: block;
+    margin-top: fct.px-to-rem(10px);
+    margin-left: fct.px-to-rem(10px);
+
+    @include mx.typo(mulish, 400);
+
+    font-size: fct.font-size(sm);
+  }
+
+  &__selection {
+    color: fct.color(primary-orange);
+  }
+
+  &__error {
+    color: fct.color(error);
+  }
+
   &__label {
     @include mx.typo(mulish, 700);
 

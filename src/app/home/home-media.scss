@@ -19,6 +19,10 @@
         &__hero-image {
             width: fct.px-to-rem(390px);
         }
+
+        &__hero-bubble--default {
+            left: fct.px-to-rem(48px);
+        }
     }
 }
 

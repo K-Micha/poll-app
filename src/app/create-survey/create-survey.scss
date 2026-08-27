@@ -15,17 +15,18 @@
 
     &__status {
         @include mx.flex();
+
         width: fit-content;
         padding: fct.px-to-rem(3px) fct.size(sm) fct.px-to-rem(3px) fct.px-to-rem(8px);
         gap: fct.px-to-rem(10px);
 
         @include mx.typo(mulish, 400);
-        font-size: fct.font-size(basic);
-        line-height: fct.px-to-rem(20px);
 
         color: fct.color(primary-purple);
         background-color: fct.color(secondary-orange);
         border-radius: 0 fct.px-to-rem(14px) 0 0;
+        font-size: fct.font-size(basic);
+        line-height: fct.px-to-rem(20px);
     }
 
     &__title {
@@ -35,16 +36,17 @@
         margin: 0;
 
         @include mx.typo(nerko-one, 400);
+
+        color: fct.color(title-orange);
         font-size: fct.font-size(d-md);
         line-height: 1;
         letter-spacing: 0;
-
-        color: fct.color(title-orange);
     }
 }
 
 .create-survey {
     @include mx.flex(row, center, center);
+
     width: 100%;
     max-width: fct.layout(content-max);
     margin-inline: auto;
@@ -61,11 +63,16 @@
 
         color: fct.color(wht);
         background-color: fct.color(primary-purple);
-        border-radius: fct.px-to-rem(5px) fct.px-to-rem(100px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+        border-radius:
+            fct.px-to-rem(5px)
+            fct.px-to-rem(100px)
+            fct.px-to-rem(5px)
+            fct.px-to-rem(5px);
     }
 
     &__content {
         @include mx.flex(column, flex-start, stretch);
+
         width: 100%;
         max-width: fct.px-to-rem(1166px);
         min-height: fct.px-to-rem(549px);
@@ -75,7 +82,11 @@
         gap: fct.size(xxxl);
 
         background-color: fct.color(form-bg);
-        border-radius: fct.px-to-rem(5px) fct.px-to-rem(100px) fct.px-to-rem(5px) fct.px-to-rem(5px);
+        border-radius:
+            fct.px-to-rem(5px)
+            fct.px-to-rem(100px)
+            fct.px-to-rem(5px)
+            fct.px-to-rem(5px);
     }
 
     &__form {
@@ -90,6 +101,7 @@
 
     &__wrapper {
         @include mx.flex(row, flex-start, stretch);
+
         width: 100%;
         min-height: inherit;
         gap: fct.size(huge);
@@ -97,6 +109,7 @@
 
     &__left {
         @include mx.flex(column, flex-start, stretch);
+
         width: 100%;
         max-width: fct.px-to-rem(470px);
         min-height: fct.px-to-rem(134px);
@@ -111,6 +124,7 @@
 
     &__row {
         @include mx.flex(row, flex-start, flex-start);
+
         width: 100%;
         gap: fct.px-to-rem(8px);
     }
@@ -126,13 +140,11 @@
     min-height: fct.px-to-rem(271px);
 
     &__wrapper {
-        @include mx.flex(row, space-between, flex-start);
-        flex-wrap: wrap;
         width: 100%;
         min-height: inherit;
-        gap: fct.px-to-rem(64px);
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: fct.px-to-rem(64px);
     }
 }
 
@@ -144,16 +156,18 @@
 
 .form-field {
     @include mx.flex(column, flex-start, stretch);
+
+    width: 100%;
     gap: fct.px-to-rem(8px);
 
     color: fct.color(wht);
     font-size: fct.font-size(md);
     line-height: 100%;
     letter-spacing: 0;
-    width: 100%;
 
     &__wrapper {
         @include mx.flex(row, flex-start, center);
+
         gap: fct.px-to-rem(8px);
     }
 
@@ -163,11 +177,13 @@
         flex-shrink: 1;
 
         @include mx.typo(mulish, 400);
+
         font-size: fct.font-size(basic);
     }
 
     &__label {
         @include mx.typo(mulish, 700);
+
         padding-top: fct.px-to-rem(8px);
 
         &--optional {
@@ -181,6 +197,7 @@
 
     &__control {
         @include mx.flex(row, flex-start, center);
+
         gap: fct.px-to-rem(8px);
 
         &--flex-start {
@@ -194,11 +211,11 @@
     flex: 0 1 fct.px-to-rem(429px);
     width: 100%;
     max-width: fct.px-to-rem(429px);
-    min-height: fct.px-to-rem(271px);
     height: auto;
 
     &__answers {
         @include mx.flex(column, flex-start, stretch);
+
         width: 100%;
         max-width: fct.px-to-rem(424px);
         min-height: fct.px-to-rem(82px);
@@ -208,14 +225,16 @@
 
     &__answers-header {
         @include mx.flex(row, space-between, center);
-        margin: fct.size(lg) 0 fct.size(md);
+
         width: 100%;
         max-width: fct.px-to-rem(429px);
         height: fct.px-to-rem(22px);
+        margin: fct.size(lg) 0 fct.size(md);
     }
 
     &__label {
         @include mx.typo(mulish, 700);
+
         color: fct.color(wht);
         font-size: fct.font-size(md);
         line-height: 100%;
@@ -224,6 +243,7 @@
 
     &__header {
         @include mx.flex(row, space-between, center);
+
         width: 100%;
         margin-bottom: fct.px-to-rem(10px);
         gap: fct.px-to-rem(8px);
@@ -232,18 +252,25 @@
     &__input {
         &::placeholder {
             @include mx.typo(mulish, 400);
+
+            color: fct.color(primary-purple);
             font-size: fct.font-size(basic);
             line-height: 100%;
             letter-spacing: 0;
-
-            color: fct.color(primary-purple);
             opacity: 1;
+        }
+
+        &--error {
+            &::placeholder {
+                color: fct.color(error);
+            }
         }
     }
 }
 
 .answer {
     @include mx.flex(row, flex-start, center);
+
     gap: fct.px-to-rem(8px);
 }
 
@@ -253,6 +280,7 @@
 
 .checkbox {
     @include mx.flex(row, center, center);
+
     gap: fct.size(xxs);
     cursor: pointer;
 
@@ -283,6 +311,16 @@
             border: 0;
         }
     }
+
+    &__break {
+        display: none;
+    }
+
+    &__label {
+        @include mx.typo(mulish, 400);
+
+        font-size: fct.font-size(sm);
+    }
 }
 
 .footer {
@@ -290,6 +328,7 @@
 
     &__wrapper {
         @include mx.flex(row-reverse, flex-start, stretch);
+
         position: relative;
     }
 }

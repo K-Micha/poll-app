@@ -22,13 +22,7 @@
 
             <div class="survey-detail__meta">
               <p class="survey-detail__date">
-                Ends on
-                {{
-                getEndDate(
-                currentSurvey.is_demo,
-                currentSurvey.end_date
-                )
-                }}
+                Ends on {{ getEndDate( currentSurvey.is_demo, currentSurvey.end_date ) }}
               </p>
 
               <p class="survey-detail__category">
@@ -82,7 +76,7 @@
               <label class="survey-answer">
                 <input class="input survey-answer__input" [type]="question.allow_multiple ? 'checkbox' : 'radio'"
                   [name]="'question-' + question.id" [value]="answer.id"
-                  (change)="selectAnswer(    question.id,    answer.id,    question.allow_multiple,    $event  )">
+                  (change)="selectAnswer( question.id, answer.id, question.allow_multiple,    $event  )">
 
                 <span class="survey-answer__content">
                   <span class="survey-answer__letter">
@@ -106,10 +100,18 @@
         </section>
 
         <footer class="survey-detail__footer">
-          <button class="btn btn--primary" type="submit" [disabled]="!isSurveyComplete() || isSubmitting()">
+          <button class="btn btn--primary" type="submit"
+            [disabled]=" isSurveyExpired() || hasAlreadyVoted() || !isSurveyComplete() || isSubmitting() ">
+
             <span class="btn__content">
               <span class="btn__text">
+                @if (hasAlreadyVoted()) {
+                Already voted
+                } @else if (isSurveyExpired()) {
+                Survey ended
+                } @else {
                 Complete survey
+                }
               </span>
             </span>
           </button>
@@ -117,15 +119,16 @@
       </div>
 
       <div class="results-toggle-wrapper">
+
         <button class="survey-detail__results-toggle" [class.survey-detail__results-toggle--open]="showResults"
           type="button" (click)="toggleResults()">
           <span class="survey-detail__results-toggle-text"></span>
-
           <span class="survey-detail__results-toggle-icon" aria-hidden="true"></span>
         </button>
 
         <aside class="survey-detail__results" [class.survey-detail__results--open]="showResults">
-          <app-survey-results [surveyId]="currentSurvey.id"></app-survey-results>
+          <app-survey-results [surveyId]="currentSurvey.id" [selectedAnswers]="selectedAnswers()">
+          </app-survey-results>
         </aside>
       </div>
 

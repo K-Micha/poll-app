@@ -10,3 +10,13 @@
     }
 }
 
+@media (min-width: fct.breakpoint(laptop)) and (max-width: fct.breakpoint(desktop)) {
+    .dropdown {
+        &--create {
+            .dropdown__selection,
+            .dropdown__error {
+                justify-self: center;
+            }
+        }
+    }
+}

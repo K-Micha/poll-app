@@ -18,6 +18,7 @@
     track question.id;
     let questionIndex = $index
     ) {
+
     <section class="question-result">
       <h4 class="question-result__title">
         <span class="question-result__number">
@@ -33,23 +34,26 @@
       track answer.id;
       let answerIndex = $index
       ) {
+
       <div class="question-result__answer">
         <span class="question-result__letter">
           {{ getAnswerLetter(answerIndex) }}
         </span>
 
-        <span class="question-result__bar bar" [style.--percentage]="
-                getPercentage( question.answers, answer.votes ) + '%' "></span>
+        <span class="question-result__bar bar"
+          [style.--percentage]=" getPercentage(question.id, question.answers, answer) + '%'">
+        </span>
 
-        <span class="question-result__percentage">
-          {{ getPercentage( question.answers, answer.votes ) }}%
+        <span class="question-result__percentage"> {{ getPercentage( question.id, question.answers, answer ) }}%
         </span>
       </div>
       }
     </section>
     }
   </div>
-  } @else {
+  }
+
+  @else {
   <div class="empty-state">
     <p class="empty-state__description">
       Results will be shown here after participants complete the survey.

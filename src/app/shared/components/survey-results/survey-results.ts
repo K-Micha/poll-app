@@ -63,11 +63,12 @@ const RESULT_SELECT = `
 export class SurveyResults implements OnInit {
   private readonly supabaseService = inject(Supabase);
 
+  selectedAnswers = input<Record<number, number[]>>({});
   surveyId = input.required<number>();
   results = signal<ResultQuestion[]>([]);
 
   hasResults = computed(() =>
-    containsVotes(this.results())
+    containsVotes(this.results()) || this.hasSelectedAnswers()
   );
 
   /** Loads the survey results when the component starts. */
@@ -89,9 +90,27 @@ export class SurveyResults implements OnInit {
     );
   }
 
+  /** Returns database votes including the current local selection. */
+  getLiveVotes(
+    questionId: number,
+    answerId: number,
+    votes: number): number {
+    const selected = this.selectedAnswers()[questionId] ?? [];
+
+    return selected.includes(answerId)
+      ? votes + 1
+      : votes;
+  }
+
   /** Reports an error while loading results. */
   private handleResultsError(error: unknown): void {
     console.error('Could not load results:', error);
+  }
+
+  /** Checks whether the current user selected an answer. */
+  private hasSelectedAnswers(): boolean {
+    return Object.values(this.selectedAnswers())
+      .some((answers) => answers.length > 0);
   }
 
   /** Creates the database query for the current survey. */
@@ -148,28 +167,43 @@ export class SurveyResults implements OnInit {
   }
 
   /**
-  * Calculates an answer's percentage of all votes.
-  * @param answers Answers belonging to the question.
-  * @param votes Votes received by the answer.
-  * @returns Rounded vote percentage.
-  */
+   * Calculates an answer's live percentage.
+   */
   getPercentage(
+    questionId: number,
     answers: ResultAnswer[],
-    votes: number
-  ): number {
-    const total = this.getTotalVotes(answers);
+    answer: ResultAnswer): number {
+    const votes = this.getLiveVotes(
+      questionId,
+      answer.id,
+      answer.votes
+    );
 
-    return total
-      ? Math.round((votes / total) * 100)
-      : 0;
+    return this.calculatePercentage(
+      votes, this.getTotalVotes(questionId, answers)
+    );
   }
 
-  /** Calculates the total votes of all answers. */
+  /** Calculates the rounded percentage of votes. */
+  private calculatePercentage(
+    votes: number,
+    total: number): number {
+    return total
+      ? Math.round((votes / total) * 100) : 0;
+  }
+
+  /** Calculates the total votes including the current selection. */
   private getTotalVotes(
+    questionId: number,
     answers: ResultAnswer[]
   ): number {
     return answers.reduce(
-      (sum, answer) => sum + answer.votes,
+      (sum, answer) =>
+        sum + this.getLiveVotes(
+          questionId,
+          answer.id,
+          answer.votes
+        ),
       0
     );
   }

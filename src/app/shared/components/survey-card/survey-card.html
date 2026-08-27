@@ -1,8 +1,10 @@
 <div class="survey-cards">
+
   <section class="soon-cards">
     <div #soonList class="soon-cards__list" (pointerdown)="startDrag($event, soonList)"
       (pointermove)="drag($event, soonList)" (pointerup)="stopDrag($event, soonList)"
       (pointercancel)="stopDrag($event, soonList)">
+
       @for (survey of endingSoonSurveys; track survey.id) {
       <article class="soon-cards__card" [routerLink]="['/survey-detail', survey.id]" tabindex="0" role="link">
         <header class="soon-cards__header">
@@ -43,13 +45,14 @@
       </button>
     </div>
 
-    <app-dropdown label="Sort by categories" (categoryChange)="selectCategory($event)"></app-dropdown>
+    <app-dropdown label="Sort by categories" [showSelectionBelow]="true"
+      (categoryChange)="selectCategory($event)"></app-dropdown>
   </div>
 
   <section class="cards">
     <div class="cards__list">
-      @for (survey of filteredSurveys; track survey.id) {
 
+      @for (survey of filteredSurveys; track survey.id) {
       <article class="cards__card" [routerLink]="['./survey-detail', survey.id]" tabindex="0" role="link">
         <header class="cards__header">
           <p class="cards__category">
@@ -57,13 +60,20 @@
           </p>
 
           <h3 class="cards__title" [title]="survey.title">
+
             @if (survey.title.length <= 36) { {{ survey.title }} } @else { {{ survey.title.slice(0, 36) }}… } </h3>
         </header>
 
         <footer class="cards__footer">
           <p class="cards__ending">
+            @if (survey.daysLeft === null) {
+            No end date
+            } @else if (survey.daysLeft === 0) {
+            Survey expired
+            } @else {
             Ends in {{ survey.daysLeft }}
             {{ survey.daysLeft === 1 ? 'Day' : 'Days' }}
+            }
           </p>
         </footer>
       </article>

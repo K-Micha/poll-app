@@ -1,5 +1,5 @@
 <div class="app-header">
-<app-header logoSrc="/app-icons/logo-purple.svg" [showButton]="false"></app-header>
+  <app-header logoSrc="/app-icons/logo-purple.svg" [showButton]="false"></app-header>
 </div>
 
 <main class="create-survey">
@@ -28,9 +28,10 @@
 
                 <div class="form-field__control">
                   <input class="input-inline form-field__input form-field__input--name" id="survey-name"
-                    name="surveyName" type="text" [value]="surveyName" (input)="updateSurveyName($event)"
-                    (keydown.enter)="$event.preventDefault()"
-                    [class.input-inline--invalid]="showValidationErrors() && !surveyName.trim()">
+                    name="surveyName" type="text" [value]="surveyName" [placeholder]=" showFieldErrors() && !surveyName.trim()  
+                                  ? 'Survey name required'  
+                                  : '' " (input)="updateSurveyName($event)" (keydown.enter)="$event.preventDefault()"
+                    [class.input-inline--invalid]=" showValidationErrors() && !surveyName.trim() ">
 
                   <button class="btn-delete form-field__delete" type="button" tabindex="-1"
                     aria-label="Clear survey name" (click)="clearSurveyName()">
@@ -49,7 +50,8 @@
                   <div class="form-field__wrapper form-field--end-date">
                     <input class="input-inline form-field__input form-field__input--end-date" id="survey-end-date"
                       name="surveyEndDate" type="text" inputmode="numeric" maxlength="10" autocomplete="off"
-                      [value]="surveyEndDate" (input)="formatEndDate($event)" (keydown.enter)="completeEndDate($event)"
+                      [value]="surveyEndDate" [class.input-inline--invalid]="isEndDateInvalid()"
+                      (input)="formatEndDate($event)" (keydown.enter)="completeEndDate($event)"
                       (blur)="validateEndDate($event)">
 
                     <button class="btn-delete form-field__delete" type="button" tabindex="-1"
@@ -60,9 +62,11 @@
                 </div>
 
                 <div class="survey-details__category">
-                  <app-dropdown label="Choose category" [invalid]="showValidationErrors() && !selectedCategory"
-                    (categoryChange)="updateCategory($event)">
+
+                  <app-dropdown label="Choose category" variant="create" [showSelectionBelow]="true"
+                    [invalid]="showValidationErrors() && !selectedCategory" (categoryChange)="updateCategory($event)">
                   </app-dropdown>
+
                 </div>
               </div>
             </div>
@@ -77,8 +81,8 @@
                 <textarea class="input-inline form-field__description" id="survey-description" name="surveyDescription"
                   [value]="surveyDescription" (input)="updateDescription($event)"></textarea>
 
-                <button class="btn-delete form-field__delete padding-top" type="button" tabindex="-1" aria-label="Clear description"
-                  (click)="clearDescription()">
+                <button class="btn-delete form-field__delete padding-top" type="button" tabindex="-1"
+                  aria-label="Clear description" (click)="clearDescription()">
                   <span class="btn-delete__icon" aria-hidden="true"></span>
                 </button>
               </div>
@@ -104,11 +108,12 @@
               </div>
 
               <input class="input-inline question__input" [id]="'question-' + (questionIndex + 1)"
-                [name]="'question-' + (questionIndex + 1)" type="text" [value]="question.text" [placeholder]="questionIndex === 0
-                      ? 'Which date would work best for you?'
-                      : ''" (input)="updateQuestion(questionIndex, $event)" (keydown.enter)="$event.preventDefault()"
-                [class.input-inline--invalid]="
-                         showValidationErrors() && !question.text.trim()">
+                [name]="'question-' + (questionIndex + 1)" type="text" [value]="question.text" [placeholder]=" showFieldErrors() && !question.text.trim()
+                       ? 'Question required'
+                       : questionIndex === 0
+                       ? 'Which date would work best for you?'
+                       : '' " (input)="updateQuestion(questionIndex, $event)" (keydown.enter)="$event.preventDefault()"
+                [class.input-inline--invalid]=" showValidationErrors() && !question.text.trim() ">
 
               <div class="question__answers-header">
                 <span class="form-field__label">Answers</span>
@@ -117,11 +122,14 @@
                   <input class="checkbox__input" [name]="'multipleAnswers-' + (questionIndex + 1)" type="checkbox"
                     [checked]="question.multipleAnswers" (change)="updateMultipleAnswers(questionIndex, $event)">
 
-                  <span class="checkbox__label">Allow multiple answers.</span>
+                  <span class="checkbox__label">
+                    Allow multiple<span class="checkbox__break"><br></span> answers.
+                  </span>
                 </label>
               </div>
 
               <div class="question__answers">
+
                 @for (answer of question.answers; track $index; let answerIndex = $index) {
                 <div class="answer">
                   <label class="answer__label" [for]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)">
@@ -131,8 +139,11 @@
                   <input class="input-inline answer__input"
                     [id]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)"
                     [name]="'answer-' + (questionIndex + 1) + '-' + (answerIndex + 1)" type="text" [value]="answer.text"
-                    (input)="updateAnswer(questionIndex, answerIndex, $event)" (keydown.enter)="$event.preventDefault()"
-                    [class.input-inline--invalid]="showValidationErrors() && !answer.text.trim()">
+                    [placeholder]=" showFieldErrors() && !answer.text.trim()
+                                 ? 'Answer required'
+                                 : ''" (input)="updateAnswer(questionIndex, answerIndex, $event)"
+                    (keydown.enter)="$event.preventDefault()"
+                    [class.input-inline--invalid]="  showValidationErrors() && !answer.text.trim() ">
 
                   <button class="btn-delete form-field__delete" type="button" tabindex="-1"
                     [attr.aria-label]="'Delete answer ' + getAnswerLetter(answerIndex)"

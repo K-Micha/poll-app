@@ -180,7 +180,11 @@
 
         &--primary {
             background-color: rgba(fct.color(primary-orange), 0.3);
-            margin-bottom: 10px;
+            margin-bottom: fct.px-to-rem(10px);
+
+            &:hover:not(:disabled) {
+                background-color: fct.color(primary-orange);
+            }
         }
 
         &__text {

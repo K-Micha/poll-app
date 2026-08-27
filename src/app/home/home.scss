@@ -30,34 +30,50 @@
 
         @media (min-width: 769px) {
             &:hover {
-                .home__hero-image {
-                    content: url('/img/animation2.svg');
+
+                .home__hero-image--default,
+                .home__hero-bubble--default {
+                    opacity: 0;
                 }
 
-                .home__hero-bubble {
-                    content: url('/img/bubble2.svg');
-                    top: fct.px-to-rem(59px);
-                    left: fct.px-to-rem(14px);
-                    width: fct.px-to-rem(177px);
-                    height: fct.px-to-rem(115px);
+                .home__hero-image--hover,
+                .home__hero-bubble--hover {
+                    opacity: 1;
                 }
             }
         }
     }
 
     &__hero-image {
+        position: absolute;
+        inset: 0;
         height: fct.px-to-rem(420px);
         width: fct.px-to-rem(420px);
-        content: url('/img/animation1.svg');
+        transition: opacity 300ms ease;
+
+        &--hover {
+            opacity: 0;
+        }
     }
 
     &__hero-bubble {
         position: absolute;
-        top: fct.px-to-rem(97px);
-        left: fct.px-to-rem(76px);
-        width: fct.px-to-rem(105px);
-        height: fct.px-to-rem(76px);
-        content: url('/img/bubble1.svg');
+        transition: opacity 300ms ease;
+
+        &--default {
+            top: fct.px-to-rem(97px);
+            left: fct.px-to-rem(76px);
+            width: fct.px-to-rem(105px);
+            height: fct.px-to-rem(76px);
+        }
+
+        &--hover {
+            top: fct.px-to-rem(59px);
+            left: fct.px-to-rem(14px);
+            width: fct.px-to-rem(177px);
+            height: fct.px-to-rem(115px);
+            opacity: 0;
+        }
     }
 
     &__title {
@@ -66,6 +82,7 @@
         font-size: fct.font-size(d-xxl);
         line-height: fct.px-to-rem(89px);
         color: fct.color(primary-orange);
+        margin-bottom: fct.px-to-rem(24px);
 
         white-space: nowrap;
 

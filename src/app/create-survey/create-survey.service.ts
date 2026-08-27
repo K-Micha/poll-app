@@ -158,13 +158,15 @@ export class CreateSurveyService {
 
     /** Adds dots to numeric date input. */
     private addDateDots(digits: string): string {
-        const parts = [
-            digits.slice(0, 2),
-            digits.slice(2, 4),
-            digits.slice(4, 8),
-        ];
+        if (digits.length <= 2) {
+            return digits.length === 2 ? `${digits}.` : digits;
+        }
 
-        return parts.filter(Boolean).join('.');
+        if (digits.length <= 4) {
+            return `${digits.slice(0, 2)}.${digits.slice(2)}${digits.length === 4 ? '.' : ''}`;
+        }
+
+        return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`;
     }
 
     /** Returns today without a time value. */
@@ -209,4 +211,31 @@ export class CreateSurveyService {
             date.getFullYear() === year
         );
     }
+    /** Checks whether all required survey fields are valid. */
+    isSurveyValid(draft: SurveyDraft, category: string | null): boolean {
+        return (
+            draft.surveyName.trim().length > 0 &&
+            category !== null &&
+            this.areQuestionsValid(draft.questions)
+        );
+    }
+
+    /** Checks whether every question is valid. */
+    private areQuestionsValid(questions: Question[]): boolean {
+
+        return questions.every((question) =>
+            this.isQuestionValid(question)
+        );
+    }
+
+    /** Checks the text and answers of one question. */
+    private isQuestionValid(question: Question): boolean {
+        return (
+            question.text.trim().length > 0 &&
+            question.answers.length >= 2 &&
+            question.answers.every((answer) =>
+                answer.text.trim().length > 0
+            ));
+    }
 }
+

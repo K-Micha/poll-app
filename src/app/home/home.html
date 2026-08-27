@@ -18,14 +18,18 @@
         </div>
 
         <div class="home__create-button" type="button">
+
           <app-new-survey variant="home" />
+
         </div>
       </div>
 
       <div class="home__hero-image-wrapper">
-        <img class="home__hero-image" src="/img/animation1.svg" alt="Illustration of a digital survey" />
+        <img class="home__hero-image home__hero-image--default" src="/img/animation1.svg" alt="">
+        <img class="home__hero-image home__hero-image--hover" src="/img/animation2.svg" alt="">
 
-        <img class="home__hero-bubble" src="/img/bubble1.svg" alt="" aria-hidden="true" />
+        <img class="home__hero-bubble home__hero-bubble--default" src="/img/bubble1.svg" alt="">
+        <img class="home__hero-bubble home__hero-bubble--hover" src="/img/bubble2.svg" alt="">
       </div>
     </section>
 
@@ -40,6 +44,8 @@
         </p>
       </div>
     </section>
+
     <app-survey-card></app-survey-card>
+
   </div>
 </main>

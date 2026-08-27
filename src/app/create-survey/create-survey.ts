@@ -20,9 +20,11 @@ export class CreateSurvey implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly createSurveyService = inject(CreateSurveyService);
 
+  showFieldErrors = signal(false);
   readonly isPublishOverlayOpen = signal(false);
   readonly isCloseHighlighted = signal(false);
   readonly showValidationErrors = signal(false);
+  readonly isEndDateInvalid = signal(false);
 
   selectedCategory: SurveyCategory | null = null;
   surveyName = '';
@@ -37,13 +39,10 @@ export class CreateSurvey implements OnInit, OnDestroy {
         { text: '' },
         { text: '' }
       ]
-    }
-  ];
+    }];
 
   /** Restores the saved survey draft. */
-  ngOnInit(): void {
-    this.loadDraft();
-  }
+  ngOnInit(): void { this.loadDraft(); }
 
   /** Removes the draft when leaving the component. */
   ngOnDestroy(): void { this.createSurveyService.clearDraft(); }
@@ -134,18 +133,25 @@ export class CreateSurvey implements OnInit, OnDestroy {
   }
 
   /** Removes the close button highlight. */
-  resetCloseHighlight(): void {
-    this.isCloseHighlighted.set(false);
-  }
+  resetCloseHighlight(): void { this.isCloseHighlighted.set(false); }
 
   /** Validates and publishes the current survey. */
   async publishSurvey(): Promise<void> {
     if (!this.isSurveyValid()) {
+      this.showFieldErrors.set(true);
       this.highlightInvalidFields();
       return;
     }
 
     await this.savePublishedSurvey();
+  }
+
+  /** Checks whether all required survey fields are valid. */
+  isSurveyValid(): boolean {
+    return this.createSurveyService.isSurveyValid(
+      this.getDraft(),
+      this.selectedCategory
+    );
   }
 
   /** Publishes the survey when a category is selected. */
@@ -154,9 +160,15 @@ export class CreateSurvey implements OnInit, OnDestroy {
       return;
     }
 
-    await this.publishSurveyData(
-      this.selectedCategory
-    );
+    await this.publishSurveyData(this.selectedCategory);
+    this.redirectAfterPublish();
+  }
+
+  /** Redirects to the home page after publishing. */
+  private redirectAfterPublish(): void {
+    setTimeout(() => {
+      this.router.navigateByUrl('/');
+    }, 2000);
   }
 
   /** Handles errors during the publishing process. */
@@ -300,33 +312,35 @@ export class CreateSurvey implements OnInit, OnDestroy {
     this.validateEndDate(event);
   }
 
-  /** Removes an invalid or past end date. */
+  /** Validates the end date and highlights invalid values. */
   validateEndDate(event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    input.value = this.createSurveyService.validateEndDate(input.value);
+    input.value = this.getValidatedEndDate(input.value);
 
     this.surveyEndDate = input.value;
     this.saveDraft();
   }
 
-  /** Checks whether all required survey fields are valid. */
-  isSurveyValid(): boolean {
-    const hasName = this.surveyName.trim().length > 0;
-    const hasCategory = this.selectedCategory !== null;
+  /** Returns a validated end date and highlights invalid input. */
+  private getValidatedEndDate(value: string): string {
+    const validatedValue =
+      this.createSurveyService.validateEndDate(value);
 
-    return (
-      hasName &&
-      hasCategory &&
-      this.areQuestionsValid()
-    );
+    if (value && !validatedValue) {
+      this.highlightEndDate();
+    }
+
+    return validatedValue;
   }
 
-  /** Checks whether every question is valid. */
-  private areQuestionsValid(): boolean {
-    return this.questions.every((question) =>
-      this.isQuestionValid(question)
-    );
+  /** Briefly highlights an invalid end date. */
+  private highlightEndDate(): void {
+    this.isEndDateInvalid.set(true);
+
+    setTimeout(() => {
+      this.isEndDateInvalid.set(false);
+    }, 1000);
   }
 
   /** Saves the current form state as a draft. */
@@ -349,19 +363,6 @@ export class CreateSurvey implements OnInit, OnDestroy {
       surveyDescription: this.surveyDescription,
       questions: this.questions,
     };
-  }
-
-  /** Checks the text and answers of one question. */
-  private isQuestionValid(
-    question: Question
-  ): boolean {
-    return (
-      question.text.trim().length > 0 &&
-      question.answers.length >= 2 &&
-      question.answers.every((answer) =>
-        answer.text.trim().length > 0
-      )
-    );
   }
 
   /** Briefly highlights invalid required fields. */

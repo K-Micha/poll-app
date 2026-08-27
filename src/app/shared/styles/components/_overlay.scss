@@ -3,9 +3,11 @@
 
 .overlay {
   @include mx.flex(row, space-between, flex-start);
-  position: absolute;
-  right: fct.px-to-rem(18px);
-  bottom: 0;
+
+  position: fixed;
+  top: 50%;
+  bottom: 50%;
+  right: auto;
   z-index: 10;
 
   box-sizing: border-box;
@@ -16,6 +18,7 @@
 
   background-color: fct.color(secondary-btn);
   border-radius: fct.px-to-rem(5px) fct.size(xxl) fct.px-to-rem(5px) fct.px-to-rem(5px);
+
 
   animation: overlay-slide-in 300ms ease-out both;
 
@@ -50,7 +53,8 @@
     mask: url('/app-icons/close.svg') center / contain no-repeat;
     -webkit-mask: url('/app-icons/close.svg') center / contain no-repeat;
   }
-   &__close {
+
+  &__close {
     &--highlight {
       animation: overlay-close-highlight 300ms ease-in-out 2;
     }
@@ -58,6 +62,7 @@
 }
 
 @keyframes overlay-close-highlight {
+
   0%,
   100% {
     color: fct.color(primary-purple);
