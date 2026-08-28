@@ -15,8 +15,10 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 - Highlight surveys that are ending soon
 - Filter surveys by category
 - Vote on active surveys
-- Display dynamically updated results
+- Prevent duplicate voting in the same browser
+- Display live survey results
 - Store survey data and votes in Supabase
+- Responsive layout for desktop, tablet and mobile
 
 ## Technologies
 
@@ -25,7 +27,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 - SCSS
 - Supabase
 
-## Development server
+## Setup
 
 Install the project dependencies:
 
