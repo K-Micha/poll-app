@@ -73,10 +73,12 @@
               ) {
               @let answerLines = answer.answer_text.split('\n');
 
-              <label class="survey-answer">
+              <label class="survey-answer" [class.survey-answer--disabled]="isSurveyExpired() || hasAlreadyVoted()">
+                
                 <input class="input survey-answer__input" [type]="question.allow_multiple ? 'checkbox' : 'radio'"
                   [name]="'question-' + question.id" [value]="answer.id"
-                  (change)="selectAnswer( question.id, answer.id, question.allow_multiple,    $event  )">
+                  [disabled]="isSurveyExpired() || hasAlreadyVoted()"
+                  (change)="selectAnswer( question.id,  answer.id, question.allow_multiple,  $event )">
 
                 <span class="survey-answer__content">
                   <span class="survey-answer__letter">
@@ -119,16 +121,16 @@
       </div>
 
 
-        <button class="survey-detail__results-toggle" [class.survey-detail__results-toggle--open]="showResults"
-          type="button" (click)="toggleResults()">
-          <span class="survey-detail__results-toggle-text"></span>
-          <span class="survey-detail__results-toggle-icon" aria-hidden="true"></span>
-        </button>
+      <button class="survey-detail__results-toggle" [class.survey-detail__results-toggle--open]="showResults"
+        type="button" (click)="toggleResults()">
+        <span class="survey-detail__results-toggle-text"></span>
+        <span class="survey-detail__results-toggle-icon" aria-hidden="true"></span>
+      </button>
 
-        <aside class="survey-detail__results" [class.survey-detail__results--open]="showResults">
-          <app-survey-results [surveyId]="currentSurvey.id" [selectedAnswers]="selectedAnswers()">
-          </app-survey-results>
-        </aside>
+      <aside class="survey-detail__results" [class.survey-detail__results--open]="showResults">
+        <app-survey-results [surveyId]="currentSurvey.id" [selectedAnswers]="selectedAnswers()">
+        </app-survey-results>
+      </aside>
 
 
     </form>

@@ -87,10 +87,10 @@
     }
 
     .survey-detail {
-        &__results-toggle{
+        &__results-toggle {
             margin-bottom: 30px;
         }
-        
+
         &__results {
             width: auto;
             max-height: 0;
@@ -117,6 +117,7 @@
                 visibility: visible;
                 filter: blur(0);
                 transform: scale(1);
+                margin-bottom: 30px;
 
                 transition:
                     max-height 800ms ease,
@@ -150,6 +151,7 @@
         &__content {
             padding-inline: fct.size(lg);
             border-radius: fct.size(md) fct.px-to-rem(80px) fct.size(md) fct.size(md);
+            margin-bottom: 40px;
         }
     }
 }

@@ -1,7 +1,11 @@
-import { Injectable, OnDestroy, signal, } from '@angular/core';
-import { createClient, RealtimeChannel, } from '@supabase/supabase-js';
+import { Injectable, OnDestroy, signal } from '@angular/core';
+import { createClient, RealtimeChannel } from '@supabase/supabase-js';
 
-export type CreateAnswer = { text: string; };
+const POSITION_OFFSET = 1;
+
+export type CreateAnswer = {
+  text: string;
+};
 
 export type CreateQuestion = {
   text: string;
@@ -35,37 +39,47 @@ type Survey = {
 
 /** Handles survey data and realtime database updates. */
 export class Supabase implements OnDestroy {
-  private readonly supabaseUrl = 'https://rnwpzflsvaqgzoznhshb.supabase.co';
+  private readonly supabaseUrl =
+    'https://rnwpzflsvaqgzoznhshb.supabase.co';
 
-  private readonly supabaseKey = 'sb_publishable_YRXsZrOvr6dAMaKGOYdXkg_TFenbD8L';
+  private readonly supabaseKey =
+    'sb_publishable_YRXsZrOvr6dAMaKGOYdXkg_TFenbD8L';
 
-  readonly supabase = createClient(this.supabaseUrl, this.supabaseKey);
+  readonly supabase = createClient(
+    this.supabaseUrl,
+    this.supabaseKey
+  );
 
   readonly surveys = signal<Survey[]>([]);
 
   private channel?: RealtimeChannel;
 
-  /**
-   * Creates a survey with its questions and answers.
-   * @param survey Prepared survey data.
-   * @returns ID of the created survey.
-   */
+/**
+* Creates a survey with its questions and answers.
+* @param survey Prepared survey data.
+* @returns ID of the created survey.
+*/
   async createSurvey(
-    survey: CreateSurvey): Promise<number> {
-
+    survey: CreateSurvey
+  ): Promise<number> {
     const surveyId = await this.insertSurvey(survey);
 
-    await this.insertQuestions(surveyId, survey.questions);
+    await this.insertQuestions(
+      surveyId,
+      survey.questions
+    );
 
     await this.getSurveys();
 
     return surveyId;
-  }
-
-  /** Inserts the main survey row. */
+  }/**
+* Inserts the main survey row.
+* @param survey Prepared survey data.
+* @returns ID of the inserted survey.
+*/
   private async insertSurvey(
-    survey: CreateSurvey): Promise<number> {
-
+    survey: CreateSurvey
+  ): Promise<number> {
     const { data, error } = await this.supabase
       .from('surveys')
       .insert(this.createSurveyRow(survey))
@@ -75,10 +89,14 @@ export class Supabase implements OnDestroy {
     if (error) throw error;
 
     return data.id;
-  }
-
-  /** Creates the database row for a survey. */
-  private createSurveyRow(survey: CreateSurvey) {
+  }/**
+* Creates the database row for a survey.
+* @param survey Prepared survey data.
+* @returns Database row for the survey.
+*/
+  private createSurveyRow(
+    survey: CreateSurvey
+  ) {
     return {
       title: survey.title,
       description: survey.description,
@@ -87,39 +105,57 @@ export class Supabase implements OnDestroy {
       status: 'published',
       is_demo: false,
     };
-  }
-
-  /** Inserts all questions belonging to a survey. */
+  }/**
+* Inserts all questions belonging to a survey.
+* @param surveyId ID of the survey.
+* @param questions Questions to insert.
+* @returns Promise that resolves when all questions are inserted.
+*/
   private async insertQuestions(
     surveyId: number,
-    questions: CreateQuestion[]): Promise<void> {
-
+    questions: CreateQuestion[]
+  ): Promise<void> {
     for (const [index, question] of questions.entries()) {
-      await this.insertQuestion(surveyId, question, index);
+      await this.insertQuestion(
+        surveyId,
+        question,
+        index
+      );
     }
-  }
-
-  /** Inserts one question and its answers. */
+  }/**
+* Inserts one question and its answers.
+* @param surveyId ID of the survey.
+* @param question Question to insert.
+* @param index Position of the question.
+* @returns Promise that resolves when the question and answers are inserted.
+*/
   private async insertQuestion(
     surveyId: number,
     question: CreateQuestion,
-    index: number): Promise<void> {
-
+    index: number
+  ): Promise<void> {
     const questionId = await this.createQuestion(
       surveyId,
       question,
       index
     );
 
-    await this.insertAnswers(questionId, question.answers);
-  }
-
-  /** Creates one question and returns its ID. */
+    await this.insertAnswers(
+      questionId,
+      question.answers
+    );
+  }/**
+* Creates one question.
+* @param surveyId ID of the survey.
+* @param question Question to create.
+* @param index Position of the question.
+* @returns ID of the created question.
+*/
   private async createQuestion(
     surveyId: number,
     question: CreateQuestion,
-    index: number): Promise<number> {
-
+    index: number
+  ): Promise<number> {
     const { data, error } = await this.supabase
       .from('questions')
       .insert(this.createQuestionRow(
@@ -133,9 +169,13 @@ export class Supabase implements OnDestroy {
     if (error) throw error;
 
     return data.id;
-  }
-
-  /** Creates the database row for a question. */
+  }/**
+* Creates the database row for a question.
+* @param surveyId ID of the survey.
+* @param question Question data.
+* @param index Position of the question.
+* @returns Database row for the question.
+*/
   private createQuestionRow(
     surveyId: number,
     question: CreateQuestion,
@@ -145,29 +185,35 @@ export class Supabase implements OnDestroy {
       survey_id: surveyId,
       question_text: question.text,
       allow_multiple: question.multipleAnswers,
-      position: index + 1,
+      position: index + POSITION_OFFSET,
     };
-  }
-
-  /** Inserts all answers belonging to a question. */
+  }/**
+* Inserts all answers belonging to a question.
+* @param questionId ID of the question.
+* @param answers Answers to insert.
+* @returns Promise that resolves when all answers are inserted.
+*/
   private async insertAnswers(
     questionId: number,
-    answers: CreateAnswer[]): Promise<void> {
-
-    const answerRows = answers.map((answer, index) => ({
-      question_id: questionId,
-      answer_text: answer.text,
-      position: index + 1,
-    }));
+    answers: CreateAnswer[]
+  ): Promise<void> {
+    const answerRows = answers.map(
+      (answer, index) => ({
+        question_id: questionId,
+        answer_text: answer.text,
+        position: index + POSITION_OFFSET,
+      })
+    );
 
     const { error } = await this.supabase
       .from('answers')
       .insert(answerRows);
 
     if (error) throw error;
-  }
-
-  /** Loads all surveys from the database. */
+  }/**
+* Loads all surveys from the database.
+* @returns Promise that resolves when surveys are loaded.
+*/
   async getSurveys(): Promise<void> {
     const { data, error } = await this.supabase
       .from('surveys')
@@ -175,25 +221,35 @@ export class Supabase implements OnDestroy {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Could not load surveys:', error);
+      console.error(
+        'Could not load surveys:',
+        error
+      );
       return;
     }
 
     this.surveys.set(data);
   }
 
-  /** Starts listening for survey database changes. */
+/**
+* Starts listening for survey database changes.
+* @returns Nothing.
+*/
   subscribeToSurveys(): void {
     if (this.channel) return;
 
     this.channel = this.createSurveysChannel();
   }
 
-  /** Creates the realtime survey channel. */
+/**
+* Creates the realtime survey channel.
+* @returns Realtime survey channel.
+*/
   private createSurveysChannel(): RealtimeChannel {
     return this.supabase
       .channel('surveys-channel')
-      .on('postgres_changes',
+      .on(
+        'postgres_changes',
         {
           event: '*',
           schema: 'public',
@@ -204,8 +260,13 @@ export class Supabase implements OnDestroy {
       .subscribe();
   }
 
-  /** Removes the realtime channel when the service is destroyed. */
+/**
+* Removes the realtime channel when the service is destroyed.
+* @returns Nothing.
+*/
   ngOnDestroy(): void {
-    if (this.channel) { void this.supabase.removeChannel(this.channel); }
+    if (this.channel) {
+      void this.supabase.removeChannel(this.channel);
+    }
   }
 }

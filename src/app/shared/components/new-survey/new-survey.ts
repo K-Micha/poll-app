@@ -1,6 +1,8 @@
 import { Component, inject, Input, output } from '@angular/core';
 import { Router } from '@angular/router';
 
+const SUCCESS_ANIMATION_DELAY = 600;
+
 @Component({
   selector: 'app-new-survey',
   imports: [],
@@ -22,7 +24,7 @@ export class NewSurvey {
   isSuccess = false;
   isAnimating = false;
 
-  /** Plays the success animation before opening the create page. */
+/** Plays the success animation before opening the create page. */
   handleClick(): void {
     if (this.isAnimating) return;
 
@@ -31,6 +33,6 @@ export class NewSurvey {
 
     setTimeout(() => {
       void this.router.navigateByUrl(this.route);
-    }, 600);
+    }, SUCCESS_ANIMATION_DELAY);
   }
 }

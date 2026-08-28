@@ -27,8 +27,13 @@ export class Dropdown {
   @Input() showSelectionBelow = false;
   @Input() label = '';
 
+/**
+* Updates the invalid state.
+* @param value Whether the dropdown is invalid.
+*/
   @Input() set invalid(value: boolean) {
     this._invalid = value;
+
     if (value && !this.hasSelection) {
       this.showError = true;
     }
@@ -44,7 +49,10 @@ export class Dropdown {
   isOpen = false;
   showError = false;
 
-  /** Closes the dropdown when clicking outside. */
+/**
+* Closes the dropdown when clicking outside.
+* @param event Document click event.
+*/
   @HostListener('document:click', ['$event'])
   closeOnOutsideClick(event: Event): void {
     const target = event.target as Node;
@@ -54,12 +62,18 @@ export class Dropdown {
     }
   }
 
-  /** Returns whether the dropdown is currently invalid. */
+/**
+* Returns whether the dropdown is currently invalid.
+* @returns Whether the dropdown is invalid.
+*/
   get invalid(): boolean {
     return this._invalid;
   }
 
-  /** Selects a category and sends it to the parent component. */
+/**
+* Selects a category and sends it to the parent component.
+* @param category Selected survey category.
+*/
   selectCategory(category: SurveyCategory): void {
     this.selectedCategory = category;
     this.hasSelection = true;
@@ -68,7 +82,7 @@ export class Dropdown {
     this.isOpen = false;
   }
 
-  /** Opens or closes the category menu. */
+/** Opens or closes the category menu. */
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
   }

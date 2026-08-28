@@ -80,14 +80,17 @@
     &__letter {
         @include mx.typo(mulish, 700);
 
+        flex: 0 0 fct.px-to-rem(16px);
         color: fct.color(primary-purple);
         font-size: fct.font-size(sm);
         letter-spacing: 0;
     }
 
+
     &__percentage {
         @include mx.typo(mulish, 800);
 
+        flex: 0 0 fct.px-to-rem(40px);
         color: fct.color(result-percentage);
         font-size: fct.font-size(sm);
         letter-spacing: 0;

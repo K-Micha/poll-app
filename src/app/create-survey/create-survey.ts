@@ -1,8 +1,14 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Dropdown, type SurveyCategory } from '../shared/components/dropdown/dropdown';
-import { CreateSurveyService, type Answer, type Question, type SurveyDraft } from './create-survey.service';
+import { CreateSurveyService, type Question, type SurveyDraft } from './create-survey.service';
 import { Header } from '../shared/layout/header/header';
+import { clearOrRemoveAnswer, createEmptyQuestion, getAnswerLetter, getFieldValue } from './create-survey.utils';
+
+const FIRST_QUESTION_INDEX = 0;
+const REMOVE_ITEM_COUNT = 1;
+const PUBLISH_REDIRECT_DELAY = 2000;
+const ERROR_HIGHLIGHT_DELAY = 1000;
 
 @Component({
   selector: 'app-create-survey',
@@ -32,110 +38,99 @@ export class CreateSurvey implements OnInit, OnDestroy {
   surveyDescription = '';
 
   questions: Question[] = [
-    {
-      text: '',
-      multipleAnswers: false,
-      answers: [
-        { text: '' },
-        { text: '' }
-      ]
-    }];
+    createEmptyQuestion()
+  ];
 
-  /** Restores the saved survey draft. */
-  ngOnInit(): void { this.loadDraft(); }
+/** Restores the saved survey draft. */
+  ngOnInit(): void {
+    this.loadDraft();
+  }
 
-  /** Removes the draft when leaving the component. */
-  ngOnDestroy(): void { this.createSurveyService.clearDraft(); }
+/** Removes the draft when leaving the component. */
+  ngOnDestroy(): void {
+    this.createSurveyService.clearDraft();
+  }
 
-  /** Clears the survey name. */
+/** Clears the survey name. */
   clearSurveyName(): void {
     this.surveyName = '';
     this.saveDraft();
   }
 
-  /** Clears the optional end date. */
+/** Clears the optional end date. */
   clearEndDate(): void {
     this.surveyEndDate = '';
     this.saveDraft();
   }
 
-  /** Clears the optional description. */
+/** Clears the optional description. */
   clearDescription(): void {
     this.surveyDescription = '';
     this.saveDraft();
   }
 
-  /** Resets the first question or removes an additional question. */
+/**
+* Deletes or resets a question.
+* @param questionIndex Position of the question.
+* @returns Nothing.
+*/
   deleteQuestion(questionIndex: number): void {
-    if (questionIndex === 0) {
+    if (questionIndex === FIRST_QUESTION_INDEX) {
       this.resetFirstQuestion();
       return;
     }
 
-    this.questions.splice(questionIndex, 1);
+    this.questions.splice(questionIndex, REMOVE_ITEM_COUNT);
+
     this.saveDraft();
   }
 
-  /** Restores the first question to its initial state. */
+/** Restores the first question. */
   private resetFirstQuestion(): void {
-    this.questions[0] = {
-      text: '',
-      multipleAnswers: false,
-      answers: [
-        { text: '' },
-        { text: '' }
-      ]
-    };
+    this.questions[FIRST_QUESTION_INDEX] = createEmptyQuestion();
 
     this.saveDraft();
   }
 
-  /** Clears a required answer or removes an additional answer. */
-  deleteAnswer(questionIndex: number, answerIndex: number): void {
-    const answers = this.questions[questionIndex].answers;
+/**
+* Deletes or clears an answer.
+* @param questionIndex Position of the question.
+* @param answerIndex Position of the answer.
+*/
+  deleteAnswer(
+    questionIndex: number,
+    answerIndex: number): void {
+    clearOrRemoveAnswer(this.questions[questionIndex].answers, answerIndex);
 
-    this.clearOrRemoveAnswer(answers, answerIndex);
     this.saveDraft();
   }
 
-  /**
-   * Keeps the two required answers and removes additional ones.
-   * @param answers Answers belonging to the selected question.
-   * @param answerIndex Position of the selected answer.
-   */
-  private clearOrRemoveAnswer(
-    answers: Answer[],
-    answerIndex: number
-  ): void {
-    if (answerIndex < 2) {
-      answers[answerIndex].text = '';
-      return;
-    }
-
-    answers.splice(answerIndex, 1);
-  }
-
-  /** Stores the selected survey category. */
+/**
+* Stores the selected category.
+* @param category Selected survey category.
+*/
   updateCategory(category: SurveyCategory): void {
     this.selectedCategory = category;
     this.saveDraft();
   }
 
-  /** Discards the draft and returns to the home page. */
+/** Discards the survey and returns home. */
   cancelSurvey(): void {
     this.createSurveyService.clearDraft();
     void this.router.navigateByUrl('/');
   }
 
-  /** Highlights the overlay close button. */
+/** Highlights the overlay close button. */
   highlightCloseButton(): void {
     this.isCloseHighlighted.set(true);
   }
 
-  /** Removes the close button highlight. */
-  resetCloseHighlight(): void { this.isCloseHighlighted.set(false); }
+/** Removes the close button highlight. */
+  resetCloseHighlight(): void {
+    this.isCloseHighlighted.set(false);
+  }
 
-  /** Validates and publishes the current survey. */
+/** Validates and publishes the survey. */
   async publishSurvey(): Promise<void> {
     if (!this.isSurveyValid()) {
       this.showFieldErrors.set(true);
@@ -146,7 +141,10 @@ export class CreateSurvey implements OnInit, OnDestroy {
     await this.savePublishedSurvey();
   }
 
-  /** Checks whether all required survey fields are valid. */
+/**
+* Checks whether the survey is valid.
+* @returns Whether the survey is valid.
+*/
   isSurveyValid(): boolean {
     return this.createSurveyService.isSurveyValid(
       this.getDraft(),
@@ -154,27 +152,28 @@ export class CreateSurvey implements OnInit, OnDestroy {
     );
   }
 
-  /** Publishes the survey when a category is selected. */
+/** Publishes a valid survey. */
   private async savePublishedSurvey(): Promise<void> {
-    if (!this.selectedCategory) {
-      return;
-    }
+    if (!this.selectedCategory) return;
 
-    await this.publishSurveyData(this.selectedCategory);
+    await this.publishSurveyData(
+      this.selectedCategory
+    );
+
     this.redirectAfterPublish();
   }
 
-  /** Redirects to the home page after publishing. */
+/** Redirects home after publishing. */
   private redirectAfterPublish(): void {
-    setTimeout(() => {
-      this.router.navigateByUrl('/');
-    }, 2000);
+    setTimeout(() => { void this.router.navigateByUrl('/'); }, PUBLISH_REDIRECT_DELAY);
   }
 
-  /** Handles errors during the publishing process. */
+/**
+* Publishes the survey data.
+* @param category Selected survey category.
+*/
   private async publishSurveyData(
-    category: SurveyCategory
-  ): Promise<void> {
+    category: SurveyCategory): Promise<void> {
     try {
       await this.storePublishedSurvey(category);
     } catch (error) {
@@ -182,29 +181,33 @@ export class CreateSurvey implements OnInit, OnDestroy {
     }
   }
 
-  /** Stores the survey and opens the confirmation overlay. */
+/**
+* Stores the survey.
+* @param category Selected survey category.
+*/
   private async storePublishedSurvey(
-    category: SurveyCategory
-  ): Promise<void> {
-    this.publishedSurveyId =
-      await this.createSurveyService.publishSurvey(
-        this.getDraft(),
-        category
-      );
+    category: SurveyCategory): Promise<void> {
+    this.publishedSurveyId = await this.createSurveyService.publishSurvey(
+      this.getDraft(),
+      category
+    );
 
     this.isPublishOverlayOpen.set(true);
   }
 
-  /** Reports a failed publishing request. */
+/**
+* Reports a publishing error.
+* @param error Publishing error.
+*/
   private handlePublishError(error: unknown): void {
-    console.error('Could not publish survey:', error);
+    console.error('Could not publish survey:',
+      error
+    );
   }
 
-  /** Closes the overlay and opens the created survey. */
+  /** Opens the created survey. */
   closePublishOverlay(): void {
-    if (this.publishedSurveyId === null) {
-      return;
-    }
+    if (this.publishedSurveyId === null) return;
 
     const surveyId = this.publishedSurveyId;
 
@@ -214,147 +217,110 @@ export class CreateSurvey implements OnInit, OnDestroy {
     void this.router.navigate(['/survey-detail', surveyId]);
   }
 
-  /** Adds a new question with two empty answers. */
+/** Adds a new question. */
   addQuestion(): void {
-    this.questions.push({
-      text: '',
-      multipleAnswers: false,
-      answers: [
-        { text: '' },
-        { text: '' }
-      ]
-    });
+    this.questions.push(createEmptyQuestion());
 
     this.saveDraft();
   }
 
-  /** Adds an empty answer to a question. */
+/**
+* Adds an answer.
+* @param questionIndex Position of the question.
+*/
   addAnswer(questionIndex: number): void {
-    this.questions[questionIndex].answers.push({
-      text: ''
-    });
+    this.questions[questionIndex]
+      .answers.push({ text: '' });
 
     this.saveDraft();
   }
 
-  /** Updates the survey name. */
+/**
+* Updates the survey name.
+* @param event Form field event.
+*/
   updateSurveyName(event: Event): void {
-    this.surveyName = this.getFieldValue(event);
+    this.surveyName = getFieldValue(event);
     this.saveDraft();
   }
 
-  /** Updates the optional survey description. */
+/**
+* Updates the survey description.
+* @param event Form field event.
+*/
   updateDescription(event: Event): void {
-    this.surveyDescription = this.getFieldValue(event);
+    this.surveyDescription = getFieldValue(event);
+
     this.saveDraft();
   }
 
-  /** Updates the text of a question. */
+/**
+* Updates a question.
+* @param questionIndex Position of the question.
+* @param event Form field event.
+*/
   updateQuestion(
     questionIndex: number,
-    event: Event
-  ): void {
-    this.questions[questionIndex].text =
-      this.getFieldValue(event);
+    event: Event): void {
+
+    this.questions[questionIndex].text = getFieldValue(event);
 
     this.saveDraft();
   }
 
-  /** Updates the text of an answer. */
+/**
+* Updates an answer.
+* @param questionIndex Position of the question.
+* @param answerIndex Position of the answer.
+* @param event Form field event.
+*/
   updateAnswer(
     questionIndex: number,
     answerIndex: number,
-    event: Event
-  ): void {
+    event: Event): void {
+
     this.questions[questionIndex]
-      .answers[answerIndex].text =
-      this.getFieldValue(event);
+      .answers[answerIndex].text = getFieldValue(event);
 
     this.saveDraft();
   }
 
-  /** Updates whether a question accepts multiple answers. */
+/**
+* Updates the multiple-answer option.
+* @param questionIndex Position of the question.
+* @param event Checkbox change event.
+*/
   updateMultipleAnswers(
     questionIndex: number,
-    event: Event
-  ): void {
+    event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    this.questions[questionIndex].multipleAnswers =
-      input.checked;
+    this.questions[questionIndex]
+      .multipleAnswers = input.checked;
 
     this.saveDraft();
   }
 
-  /** Converts an answer index into an uppercase letter. */
+/**
+* Returns an answer letter.
+* @param answerIndex Position of the answer.
+* @returns Uppercase answer letter.
+*/
   getAnswerLetter(answerIndex: number): string {
-    return String.fromCharCode(65 + answerIndex);
+    return getAnswerLetter(answerIndex);
   }
 
-  /** Formats the end date while the user is typing. */
-  formatEndDate(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    input.value = this.createSurveyService.formatEndDate(input.value);
-
-    this.surveyEndDate = input.value;
-    this.saveDraft();
-  }
-
-  /** Completes a short year when Enter is pressed. */
-  completeEndDate(event: Event): void {
-    event.preventDefault();
-
-    const input = event.target as HTMLInputElement;
-
-    input.value = this.createSurveyService.completeEndDate(input.value);
-
-    this.validateEndDate(event);
-  }
-
-  /** Validates the end date and highlights invalid values. */
-  validateEndDate(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    input.value = this.getValidatedEndDate(input.value);
-
-    this.surveyEndDate = input.value;
-    this.saveDraft();
-  }
-
-  /** Returns a validated end date and highlights invalid input. */
-  private getValidatedEndDate(value: string): string {
-    const validatedValue = this.createSurveyService.validateEndDate(value);
-
-    if (value && !validatedValue) {
-      this.highlightEndDate();
-    }
-
-    return validatedValue;
-  }
-
-  /** Briefly highlights an invalid end date. */
-  private highlightEndDate(): void {
-    this.isEndDateInvalid.set(true);
-
-    setTimeout(() => {
-      this.isEndDateInvalid.set(false);
-    }, 1000);
-  }
-
-  /** Saves the current form state as a draft. */
+/** Saves the current survey draft. */
   private saveDraft(): void {
-    const draft: SurveyDraft = {
-      surveyName: this.surveyName,
-      surveyEndDate: this.surveyEndDate,
-      surveyDescription: this.surveyDescription,
-      questions: this.questions
-    };
-
-    this.createSurveyService.saveDraft(draft);
+    this.createSurveyService.saveDraft(
+      this.getDraft()
+    );
   }
 
-  /** Returns the current form state. */
+/**
+* Returns the current survey draft.
+* @returns Current survey draft.
+*/
   private getDraft(): SurveyDraft {
     return {
       surveyName: this.surveyName,
@@ -364,25 +330,19 @@ export class CreateSurvey implements OnInit, OnDestroy {
     };
   }
 
-  /** Briefly highlights invalid required fields. */
+/** Highlights invalid required fields. */
   private highlightInvalidFields(): void {
     this.showValidationErrors.set(true);
 
     setTimeout(() => {
       this.showValidationErrors.set(false);
-    }, 1000);
+    }, ERROR_HIGHLIGHT_DELAY);
   }
 
-  /** Reads the current value from a form field event. */
-  private getFieldValue(event: Event): string {
-    const field = event.target as | HTMLInputElement | HTMLTextAreaElement;
-
-    return field.value;
-  }
-
-  /** Restores the saved form state. */
+/** Restores the saved survey draft. */
   private loadDraft(): void {
-    const draft = this.createSurveyService.loadDraft();
+    const draft =
+      this.createSurveyService.loadDraft();
 
     if (!draft) return;
 
@@ -391,15 +351,25 @@ export class CreateSurvey implements OnInit, OnDestroy {
     this.surveyDescription = draft.surveyDescription;
     this.questions = draft.questions;
   }
-  
-  /** Returns today's date for the date picker. */
+
+/**
+* Returns today's date.
+* @returns Today's date for the picker.
+*/
   getTodayDate(): string {
     return this.createSurveyService.getTodayDate();
   }
 
-  /** Updates the selected survey end date. */
+/**
+* Updates the survey end date.
+* @param event Date picker change event.
+*/
   updateEndDate(event: Event): void {
-    this.surveyEndDate = this.getFieldValue(event);
+    const value = getFieldValue(event);
+
+    this.surveyEndDate =
+      this.createSurveyService.validatePickerDate(value);
+
     this.saveDraft();
   }
 }

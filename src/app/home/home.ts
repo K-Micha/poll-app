@@ -17,12 +17,12 @@ import { NewSurvey } from '../shared/components/new-survey/new-survey';
 export class Home implements OnInit, OnDestroy {
     constructor(private renderer: Renderer2) { }
 
-    /** Applies the home page background style. */
+/** Applies the home page background style. */
     ngOnInit(): void {
         this.renderer.addClass(document.body, 'body--home');
     }
 
-    /** Removes the home page background style. */
+/** Removes the home page background style. */
     ngOnDestroy(): void {
         this.renderer.removeClass(document.body, 'body--home');
     }

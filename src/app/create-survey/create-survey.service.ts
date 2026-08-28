@@ -1,12 +1,27 @@
-import { inject, Injectable, } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Supabase } from '../supabase';
 import type { CreateSurvey as CreateSurveyPayload } from '../supabase';
 
-export interface Answer { text: string; }
-export interface Question { text: string; answers: Answer[]; multipleAnswers: boolean; }
-export interface SurveyDraft { surveyName: string; surveyEndDate: string; surveyDescription: string; questions: Question[]; }
+const MIN_ANSWER_COUNT = 2;
 
-/** Handles survey drafts, date formatting, and publishing. */
+export interface Answer {
+    text: string;
+}
+
+export interface Question {
+    text: string;
+    answers: Answer[];
+    multipleAnswers: boolean;
+}
+
+export interface SurveyDraft {
+    surveyName: string;
+    surveyEndDate: string;
+    surveyDescription: string;
+    questions: Question[];
+}
+
+/** Handles survey drafts, validation, and publishing. */
 @Injectable({
     providedIn: 'root',
 })
@@ -15,16 +30,15 @@ export class CreateSurveyService {
     private readonly draftKey = 'create-survey-draft';
     private readonly supabase = inject(Supabase);
 
-    /**
-     * Publishes a completed survey.
-     * @param draft Survey data to publish.
-     * @param category Selected survey category.
-     * @returns ID of the created survey.
-     */
+/**
+* Publishes a completed survey.
+* @param draft Survey data to publish.
+* @param category Selected survey category.
+* @returns ID of the created survey.
+*/
     async publishSurvey(
         draft: SurveyDraft,
-        category: string
-    ): Promise<number> {
+        category: string): Promise<number> {
         const survey = this.createSurveyPayload(
             draft,
             category
@@ -33,100 +47,98 @@ export class CreateSurveyService {
         return this.supabase.createSurvey(survey);
     }
 
-    /** Saves the current survey draft. */
+/**
+* Saves the current survey draft.
+* @param draft Current survey draft.
+*/
     saveDraft(draft: SurveyDraft): void {
-        sessionStorage.setItem(
-            this.draftKey,
-            JSON.stringify(draft)
-        );
+        sessionStorage.setItem(this.draftKey, JSON.stringify(draft));
     }
-
-    /** Loads the saved survey draft. */
+    
+/**
+* Loads the saved survey draft.
+* @returns Saved draft or null.
+*/
     loadDraft(): SurveyDraft | null {
-        const savedDraft =
-            sessionStorage.getItem(this.draftKey);
+        const savedDraft = sessionStorage.getItem(this.draftKey);
 
-        if (!savedDraft) {
-            return null;
-        }
+        if (!savedDraft) return null;
 
         return JSON.parse(savedDraft) as SurveyDraft;
     }
 
-    /** Removes the saved survey draft. */
+/** Removes the saved survey draft. */
     clearDraft(): void {
         sessionStorage.removeItem(this.draftKey);
     }
 
-    /** Formats numeric input as DD.MM.YYYY. */
-    formatEndDate(value: string): string {
-        const digits = value
-            .replace(/\D/g, '')
-            .slice(0, 8);
-
-        return this.addDateDots(digits);
-    }
-
-    /** Completes a date containing a two-digit year. */
-    completeEndDate(value: string): string {
-        const digits = value.replace(/\D/g, '');
-        const completedDigits = this.completeYear(digits);
-
-        return this.addDateDots(completedDigits);
-    }
-
-    /**
-     * Rejects invalid or past dates.
-     * @param value Date in DD.MM.YYYY format.
-     * @returns Valid date value or an empty string.
-     */
-    validateEndDate(value: string): string {
-        if (!value) {
-            return '';
-        }
-
-        const date = this.parseEndDate(value);
-        const today = this.getToday();
-
-        return date && date >= today ? value : '';
-    }
-
-    /** Prepares the complete database payload. */
-    private createSurveyPayload(
+/**
+* Checks whether all required fields are valid.
+* @param draft Current survey draft.
+* @param category Selected survey category.
+* @returns Whether the survey is valid.
+*/
+    isSurveyValid(
         draft: SurveyDraft,
-        category: string
-    ): CreateSurveyPayload {
-        const endDate = this.toDatabaseDate(draft.surveyEndDate);
-        const questions = this.prepareQuestions(draft.questions);
+        category: string | null): boolean {
 
-        return this.buildSurveyPayload(
-            draft,
-            category,
-            endDate,
-            questions
+        return (
+            draft.surveyName.trim().length > 0 &&
+            category !== null &&
+            this.areQuestionsValid(draft.questions)
         );
     }
 
-    /** Builds the final survey payload. */
-    private buildSurveyPayload(
+/**
+* Returns today's date for the date picker.
+* @returns Today's date in YYYY-MM-DD format.
+*/
+    getTodayDate(): string {
+        return new Date()
+            .toISOString()
+            .split('T')[0];
+    }
+    
+/**
+* Validates a date picker value.
+* @param value Selected date.
+* @returns Valid date or an empty string.
+*/
+    validatePickerDate(value: string): string {
+        if (!value) return '';
+
+        return value < this.getTodayDate()
+            ? ''
+            : value;
+    }
+
+/**
+* Prepares the database payload.
+* @param draft Current survey draft.
+* @param category Selected survey category.
+* @returns Prepared survey payload.
+*/
+    private createSurveyPayload(
         draft: SurveyDraft,
-        category: string,
-        endDate: string | null,
-        questions: Question[]
-    ): CreateSurveyPayload {
+        category: string): CreateSurveyPayload {
+
         return {
             title: draft.surveyName.trim(),
             description: draft.surveyDescription.trim(),
             category,
-            endDate,
-            questions,
+            endDate: this.toDatabaseDate(draft.surveyEndDate),
+            questions: this.prepareQuestions(draft.questions),
         };
     }
 
-    /** Trims all question and answer values. */
+/**
+* Trims all questions and answers.
+* @param questions Survey questions.
+* @returns Prepared questions.
+*/
     private prepareQuestions(
-        questions: Question[]
-    ): Question[] {
+        questions: Question[]): Question[] {
+
         return questions.map((question) => ({
             text: question.text.trim(),
             multipleAnswers: question.multipleAnswers,
@@ -136,123 +148,43 @@ export class CreateSurveyService {
         }));
     }
 
-    /** Converts DD.MM.YYYY to YYYY-MM-DD. */
-    private toDatabaseDate(value: string): string | null {
-        if (!value) {
-            return null;
-        }
-
-        const [day, month, year] = value.split('.');
-
-        return `${year}-${month}-${day}`;
+/**
+* Converts the picker value for the database.
+* @param value Date picker value.
+* @returns Database date or null.
+*/
+    private toDatabaseDate(
+        value: string): string | null {
+        return value || null;
     }
 
-    /** Adds 20 to a two-digit year. */
-    private completeYear(digits: string): string {
-        if (digits.length !== 6) {
-            return digits;
-        }
-
-        return `${digits.slice(0, 4)}20${digits.slice(4)}`;
-    }
-
-    /** Returns today's date in YYYY-MM-DD format. */
-    getTodayDate(): string {
-        return new Date().toISOString().split('T')[0];
-    }
-
-    /** Checks whether a selected date is before today. */
-    isPastDate(value: string): boolean {
-        return !!value && value < this.getTodayDate();
-    }
-
-    /** Adds dots to numeric date input. */
-    private addDateDots(digits: string): string {
-        if (digits.length <= 2) {
-            return digits.length === 2 ? `${digits}.` : digits;
-        }
-
-        if (digits.length <= 4) {
-            return `${digits.slice(0, 2)}.${digits.slice(2)}${digits.length === 4 ? '.' : ''}`;
-        }
-
-        return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`;
-    }
-
-    /** Returns today without a time value. */
-    private getToday(): Date {
-        const today = new Date();
-
-        today.setHours(0, 0, 0, 0);
-
-        return today;
-    }
-
-    /** Parses DD.MM.YYYY or returns null. */
-    private parseEndDate(value: string): Date | null {
-        const [day, month, year] =
-            value.split('.').map(Number);
-
-        const date = new Date(year, month - 1, day);
-
-        return this.isValidDate(date, day, month, year)
-            ? date
-            : null;
-    }
-
-    /**
-     * Checks whether a date matches its original values.
-     * @param date Date object to validate.
-     * @param day Expected day.
-     * @param month Expected month.
-     * @param year Expected year.
-     * @returns Whether the date is valid.
-     */
-    private isValidDate(
-        date: Date,
-        day: number,
-        month: number,
-        year: number
-    ): boolean {
-        return (
-            year >= 1000 &&
-            date.getDate() === day &&
-            date.getMonth() === month - 1 &&
-            date.getFullYear() === year
-        );
-    }
-    /** Checks whether all required survey fields are valid. */
-    isSurveyValid(draft: SurveyDraft, category: string | null): boolean {
-        return (
-            draft.surveyName.trim().length > 0 &&
-            category !== null &&
-            this.areQuestionsValid(draft.questions)
-        );
-    }
-
-    /** Checks whether every question is valid. */
-    private areQuestionsValid(questions: Question[]): boolean {
+/**
+* Checks whether every question is valid.
+* @param questions Survey questions.
+* @returns Whether every question is valid.
+*/
+    private areQuestionsValid(
+        questions: Question[]): boolean {
 
         return questions.every((question) =>
             this.isQuestionValid(question)
         );
     }
 
-    /** Checks the text and answers of one question. */
-    private isQuestionValid(question: Question): boolean {
+/**
+* Checks one survey question.
+* @param question Survey question.
+* @returns Whether the question is valid.
+*/
+    private isQuestionValid(
+        question: Question): boolean {
+
         return (
             question.text.trim().length > 0 &&
-            question.answers.length >= 2 &&
+            question.answers.length >= MIN_ANSWER_COUNT &&
             question.answers.every((answer) =>
                 answer.text.trim().length > 0
-            ));
-    }
-    /** Validates a date picker value and clears past dates. */
-    validatePickerDate(value: string): string {
-        if (!value) return '';
-
-        return value < this.getTodayDate()
-            ? ''
-            : value;
+            )
+        );
     }
 }

@@ -214,6 +214,18 @@
     border-radius: fct.px-to-rem(3px);
     box-sizing: border-box;
 
+    &:has(.survey-answer__input:disabled) {
+        cursor: default;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        .survey-answer__content {
+            cursor: default;
+        }
+    }
+
     &__input {
         margin-top: 4px;
         flex: 0 0 fct.px-to-rem(15px);
@@ -254,6 +266,25 @@
         line-height: 1;
         margin-top: 2px;
         letter-spacing: 0;
+    }
+}
+
+.survey-answer {
+    &:hover {
+        background-color: rgba(255, 207, 161, 0.4);
+    }
+
+    &--disabled {
+        pointer-events: none;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        .survey-answer__content,
+        .survey-answer__input {
+            cursor: default;
+        }
     }
 }
 
