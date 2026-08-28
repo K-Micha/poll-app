@@ -12,7 +12,7 @@
         : '/app-icons/drop_down_white.svg'" alt="" aria-hidden="true">
   </button>
 
-  @if (showSelectionBelow && hasSelection) {
+  @if ( showSelectionBelow && hasSelection && selectedCategory !== 'All Surveys' ) {
   <span class="dropdown__selection">
     {{ selectedCategory }}
   </span>
@@ -29,14 +29,14 @@
     <div class="dropdown__options">
 
       @for (category of surveyCategories; track category) {
+      @if (variant !== 'create' || category !== 'All Surveys') {
       <div class="dropdown__option-wrapper">
-
         <button class="dropdown__option" [class.dropdown__option--active]="selectedCategory === category" type="button"
           (click)="selectCategory(category)">
           {{ category }}
-
         </button>
       </div>
+      }
       }
     </div>
   </div>

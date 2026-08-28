@@ -324,8 +324,7 @@ export class CreateSurvey implements OnInit, OnDestroy {
 
   /** Returns a validated end date and highlights invalid input. */
   private getValidatedEndDate(value: string): string {
-    const validatedValue =
-      this.createSurveyService.validateEndDate(value);
+    const validatedValue = this.createSurveyService.validateEndDate(value);
 
     if (value && !validatedValue) {
       this.highlightEndDate();
@@ -376,8 +375,7 @@ export class CreateSurvey implements OnInit, OnDestroy {
 
   /** Reads the current value from a form field event. */
   private getFieldValue(event: Event): string {
-    const field =
-      event.target as | HTMLInputElement | HTMLTextAreaElement;
+    const field = event.target as | HTMLInputElement | HTMLTextAreaElement;
 
     return field.value;
   }
@@ -392,5 +390,16 @@ export class CreateSurvey implements OnInit, OnDestroy {
     this.surveyEndDate = draft.surveyEndDate;
     this.surveyDescription = draft.surveyDescription;
     this.questions = draft.questions;
+  }
+  
+  /** Returns today's date for the date picker. */
+  getTodayDate(): string {
+    return this.createSurveyService.getTodayDate();
+  }
+
+  /** Updates the selected survey end date. */
+  updateEndDate(event: Event): void {
+    this.surveyEndDate = this.getFieldValue(event);
+    this.saveDraft();
   }
 }

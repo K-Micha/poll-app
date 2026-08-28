@@ -49,10 +49,8 @@
 
                   <div class="form-field__wrapper form-field--end-date">
                     <input class="input-inline form-field__input form-field__input--end-date" id="survey-end-date"
-                      name="surveyEndDate" type="text" inputmode="numeric" maxlength="10" autocomplete="off"
-                      [value]="surveyEndDate" [class.input-inline--invalid]="isEndDateInvalid()"
-                      (input)="formatEndDate($event)" (keydown.enter)="completeEndDate($event)"
-                      (blur)="validateEndDate($event)">
+                      name="surveyEndDate" type="date" [value]="surveyEndDate" [min]="getTodayDate()"
+                      (change)="updateEndDate($event)" [class.input-inline--invalid]="isEndDateInvalid()">
 
                     <button class="btn-delete form-field__delete" type="button" tabindex="-1"
                       aria-label="Clear end date" (click)="clearEndDate()">

@@ -5,7 +5,7 @@
 @media (min-width: fct.breakpoint(widescreen)) {
     .survey-detail {
         @include mx.flex(column, center, stretch);
-        min-height: 100vh;
+        min-height: 80vh;
     }
 }
 
@@ -40,6 +40,10 @@
     .survey-detail {
         &__results {
             display: block;
+            opacity: 1;
+            visibility: visible;
+            filter: none;
+            transform: none;
         }
 
         &__results-toggle {
@@ -83,23 +87,44 @@
     }
 
     .survey-detail {
+        &__results-toggle{
+            margin-bottom: 30px;
+        }
+        
         &__results {
+            width: auto;
+            max-height: 0;
+            margin-top: 0;
+            overflow: hidden;
+
             opacity: 0;
             visibility: hidden;
             filter: blur(14px);
             transform: scale(0.96);
 
             transition:
+                max-height 800ms ease,
+                margin-top 800ms ease,
                 opacity 800ms ease,
                 filter 800ms ease,
                 transform 800ms ease,
-                visibility 0s;
+                visibility 0s 800ms;
 
             &--open {
+                max-height: fct.px-to-rem(100vh);
+
                 opacity: 1;
                 visibility: visible;
                 filter: blur(0);
                 transform: scale(1);
+
+                transition:
+                    max-height 800ms ease,
+                    margin-top 800ms ease,
+                    opacity 800ms ease,
+                    filter 800ms ease,
+                    transform 800ms ease,
+                    visibility 0s;
             }
         }
     }

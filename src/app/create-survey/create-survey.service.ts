@@ -156,6 +156,16 @@ export class CreateSurveyService {
         return `${digits.slice(0, 4)}20${digits.slice(4)}`;
     }
 
+    /** Returns today's date in YYYY-MM-DD format. */
+    getTodayDate(): string {
+        return new Date().toISOString().split('T')[0];
+    }
+
+    /** Checks whether a selected date is before today. */
+    isPastDate(value: string): boolean {
+        return !!value && value < this.getTodayDate();
+    }
+
     /** Adds dots to numeric date input. */
     private addDateDots(digits: string): string {
         if (digits.length <= 2) {
@@ -237,5 +247,12 @@ export class CreateSurveyService {
                 answer.text.trim().length > 0
             ));
     }
-}
+    /** Validates a date picker value and clears past dates. */
+    validatePickerDate(value: string): string {
+        if (!value) return '';
 
+        return value < this.getTodayDate()
+            ? ''
+            : value;
+    }
+}

@@ -5,7 +5,8 @@
 @media (min-width: fct.breakpoint(widescreen)) {
     .create-survey {
         @include mx.flex(column, center, stretch);
-        min-height: 100vh;
+        min-height: 80dvh;
+        overflow: hidden;
     }
 }
 
@@ -313,6 +314,10 @@
     .form-field {
         &__label {
             padding-top: unset !important;
+
+            &--top {
+                margin-top: fct.px-to-rem(15px);
+            }
         }
     }
 }
@@ -347,4 +352,3 @@
         }
     }
 }
-

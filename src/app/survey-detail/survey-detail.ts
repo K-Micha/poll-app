@@ -21,6 +21,7 @@ export class SurveyDetail implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
+  
   showResults = false;
   survey = signal<any | null>(null);
   selectedAnswers = signal<Record<number, number[]>>({});

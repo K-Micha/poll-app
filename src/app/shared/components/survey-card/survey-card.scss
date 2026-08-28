@@ -99,6 +99,13 @@
     margin-bottom: fct.px-to-rem(100px);
     height: auto;
 
+    &__ending {
+        font-family: Mulish;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 100%;
+    }
+
     &__list {
         display: grid;
         align-content: start;

@@ -4,8 +4,6 @@
 
 .new-survey {
     @include mx.flex(row, flex-start, center);
-
-    width: fct.px-to-rem(138px);
     height: fct.size(xxxl);
     gap: 0;
     padding: fct.size(sm) fct.size(md);
@@ -14,6 +12,7 @@
     background-color: fct.color(secondary-orange);
     border: none;
     border-radius: fct.px-to-rem(10px);
+    cursor: pointer;
 
     transition:
         width 300ms ease-out,

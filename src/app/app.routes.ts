@@ -18,4 +18,8 @@ export const routes: Routes = [
             import('./create-survey/create-survey')
                 .then((m) => m.CreateSurvey),
     },
+    {
+        path: '**',
+        redirectTo: '',
+    },
 ];

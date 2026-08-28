@@ -6,6 +6,10 @@
     padding-inline: 0;
 }
 
+.btn:disabled {
+    cursor: default !important;
+}
+
 .survey-detail {
     @include mx.flex(row, space-between, center);
     color: fct.color(primary-purple);
@@ -39,7 +43,6 @@
         gap: fct.size(xxl);
 
         width: fct.px-to-rem(702px);
-        min-height: fct.px-to-rem(855px);
         padding-block: fct.size(md);
         padding-inline: fct.px-to-rem(40px);
 
@@ -164,7 +167,6 @@
 
     &__results {
         width: fct.px-to-rem(315px);
-        height: fct.px-to-rem(713px);
         margin-top: fct.px-to-rem(142px);
     }
 
@@ -195,6 +197,12 @@
             line-height: 100%;
             letter-spacing: 0;
         }
+    }
+
+    &__date {
+        @include mx.typo(mulish, 500);
+        font-size: fct.font-size(sm);
+        line-height: 1;
     }
 }
 

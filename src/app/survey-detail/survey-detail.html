@@ -118,7 +118,6 @@
         </footer>
       </div>
 
-      <div class="results-toggle-wrapper">
 
         <button class="survey-detail__results-toggle" [class.survey-detail__results-toggle--open]="showResults"
           type="button" (click)="toggleResults()">
@@ -130,7 +129,7 @@
           <app-survey-results [surveyId]="currentSurvey.id" [selectedAnswers]="selectedAnswers()">
           </app-survey-results>
         </aside>
-      </div>
+
 
     </form>
   </div>
