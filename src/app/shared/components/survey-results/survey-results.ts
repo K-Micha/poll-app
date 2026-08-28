@@ -47,12 +47,12 @@ export class SurveyResults implements OnInit {
     containsVotes(this.results()) || this.hasSelectedAnswers()
   );
 
-/** Loads the survey results when the component starts. */
+  /** Loads the survey results when the component starts. */
   async ngOnInit(): Promise<void> {
     await this.loadResults();
   }
 
-/** Fetches and stores the current survey results. */
+  /** Fetches and stores the current survey results. */
   private async loadResults(): Promise<void> {
     const { data, error } = await this.getResults();
 
@@ -66,13 +66,13 @@ export class SurveyResults implements OnInit {
     );
   }
 
-/**
-* Returns database votes including the current local selection.
-* @param questionId ID of the question.
-* @param answerId ID of the answer.
-* @param votes Stored vote count.
-* @returns Live vote count.
-*/
+  /**
+  * Returns database votes including the current local selection.
+  * @param questionId ID of the question.
+  * @param answerId ID of the answer.
+  * @param votes Stored vote count.
+  * @returns Live vote count.
+  */
   getLiveVotes(
     questionId: number,
     answerId: number,
@@ -85,27 +85,27 @@ export class SurveyResults implements OnInit {
       : votes;
   }
 
-/**
-* Reports an error while loading results.
-* @param error Result loading error.
-*/
+  /**
+  * Reports an error while loading results.
+  * @param error Result loading error.
+  */
   private handleResultsError(error: unknown): void {
     console.error('Could not load results:', error);
   }
 
-/**
-* Checks whether the current user selected an answer.
-* @returns Whether an answer is selected.
-*/
+  /**
+  * Checks whether the current user selected an answer.
+  * @returns Whether an answer is selected.
+  */
   private hasSelectedAnswers(): boolean {
     return Object.values(this.selectedAnswers())
       .some((answers) => answers.length > 0);
   }
 
-/**
-* Creates the database query for the current survey.
-* @returns Database query for survey results.
-*/
+  /**
+  * Creates the database query for the current survey.
+  * @returns Database query for survey results.
+  */
   private getResults() {
     return this.supabaseService.supabase
       .from('questions')
@@ -114,11 +114,11 @@ export class SurveyResults implements OnInit {
       .order('id', { ascending: true });
   }
 
-/**
-* Maps database questions to result questions.
-* @param questions Database question rows.
-* @returns Mapped result questions.
-*/
+  /**
+  * Maps database questions to result questions.
+  * @param questions Database question rows.
+  * @returns Mapped result questions.
+  */
   private mapResults(
     questions: QuestionRow[]): ResultQuestion[] {
 
@@ -129,11 +129,11 @@ export class SurveyResults implements OnInit {
     }));
   }
 
-/**
-* Maps and sorts database answers for the view.
-* @param answers Database answer rows.
-* @returns Mapped result answers.
-*/
+  /**
+  * Maps and sorts database answers for the view.
+  * @param answers Database answer rows.
+  * @returns Mapped result answers.
+  */
   private mapAnswers(
     answers: AnswerRow[]): ResultAnswer[] {
 
@@ -144,12 +144,12 @@ export class SurveyResults implements OnInit {
       .map((answer) => this.mapAnswer(answer));
   }
 
-/**
-* Sorts answers by their database ID.
-* @param first First answer.
-* @param second Second answer.
-* @returns Sort order.
-*/
+  /**
+  * Sorts answers by their database ID.
+  * @param first First answer.
+  * @param second Second answer.
+  * @returns Sort order.
+  */
   private sortAnswers(
     first: AnswerRow,
     second: AnswerRow): number {
@@ -157,11 +157,11 @@ export class SurveyResults implements OnInit {
     return first.id - second.id;
   }
 
-/**
-* Maps a database answer to a result answer.
-* @param answer Database answer row.
-* @returns Mapped result answer.
-*/
+  /**
+  * Maps a database answer to a result answer.
+  * @param answer Database answer row.
+  * @returns Mapped result answer.
+  */
   private mapAnswer(answer: AnswerRow): ResultAnswer {
     return {
       id: answer.id,
@@ -170,55 +170,81 @@ export class SurveyResults implements OnInit {
     };
   }
 
-/**
-* Returns the display letter for an answer.
-* @param index Index of the answer.
-* @returns Display letter.
-*/
+  /**
+  * Returns the display letter for an answer.
+  * @param index Index of the answer.
+  * @returns Display letter.
+  */
   getAnswerLetter(index: number): string {
     return String.fromCharCode(
       FIRST_ANSWER_LETTER_CODE + index
     );
   }
 
-/**
-* Calculates an answer's live percentage.
-* @param questionId ID of the question.
-* @param answers Answers belonging to the question.
-* @param answer Answer to calculate.
-* @returns Live percentage.
-*/
+  /**
+  * Calculates an answer's live percentage.
+  * @param questionId ID of the question.
+  * @param answers Answers belonging to the question.
+  * @param answer Answer to calculate.
+  * @returns Live percentage.
+  */
   getPercentage(
     questionId: number,
     answers: ResultAnswer[],
-    answer: ResultAnswer): number {
-    const votes = this.getLiveVotes(questionId, answer.id, answer.votes);
-    const total = this.getTotalVotes(questionId, answers);
+    answer: ResultAnswer
+  ): number {
+    const percentages = this.getPercentages(questionId, answers);
+    const index = answers.findIndex((item) => item.id === answer.id);
 
-    return this.calculatePercentage(votes, total);
+    return percentages[index] ?? 0;
   }
 
 /**
-* Calculates the rounded percentage of votes.
-* @param votes Number of votes.
-* @param total Total number of votes.
-* @returns Rounded percentage.
-*/
-  private calculatePercentage(
-    votes: number,
-    total: number): number {
-
-    return total
-      ? Math.round((votes / total) * PERCENTAGE_FACTOR)
-      : 0;
-  }
-
-/**
-* Calculates the total votes including the current selection.
+* Calculates all answer percentages for a question.
 * @param questionId ID of the question.
 * @param answers Answers belonging to the question.
-* @returns Total vote count.
+* @returns Percentages for all answers.
 */
+  private getPercentages(
+    questionId: number,
+    answers: ResultAnswer[]
+  ): number[] {
+    const votes = answers.map(a =>
+      this.getLiveVotes(questionId, a.id, a.votes)
+    );
+
+    const total = votes.reduce((sum, vote) => sum + vote, 0);
+    if (!total) return votes.map(() => 0);
+
+    return this.adjustPercentages(votes, total);
+  }
+
+/**
+* Adjusts rounded percentages to total exactly 100.
+* @param votes Vote counts.
+* @param total Total number of votes.
+* @returns Adjusted percentages.
+*/
+  private adjustPercentages(votes: number[], total: number): number[] {
+    const raw = votes.map(vote => vote / total * PERCENTAGE_FACTOR);
+    const result = raw.map(Math.floor);
+    let rest = PERCENTAGE_FACTOR - result.reduce((sum, value) => sum + value, 0);
+
+    raw
+      .map((value, index) => ({ index, rest: value % 1 }))
+      .sort((a, b) => b.rest - a.rest)
+      .slice(0, rest)
+      .forEach(item => result[item.index]++);
+
+    return result;
+  }
+
+  /**
+  * Calculates the total votes including the current selection.
+  * @param questionId ID of the question.
+  * @param answers Answers belonging to the question.
+  * @returns Total vote count.
+  */
   private getTotalVotes(
     questionId: number,
     answers: ResultAnswer[]): number {

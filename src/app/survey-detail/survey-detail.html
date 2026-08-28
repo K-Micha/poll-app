@@ -74,7 +74,7 @@
               @let answerLines = answer.answer_text.split('\n');
 
               <label class="survey-answer" [class.survey-answer--disabled]="isSurveyExpired() || hasAlreadyVoted()">
-                
+
                 <input class="input survey-answer__input" [type]="question.allow_multiple ? 'checkbox' : 'radio'"
                   [name]="'question-' + question.id" [value]="answer.id"
                   [disabled]="isSurveyExpired() || hasAlreadyVoted()"
@@ -136,5 +136,13 @@
     </form>
   </div>
 
+  @if (isVoteSuccessOpen()) {
+  <div class="overlay-filter" aria-hidden="true"></div>
+  <div class="overlay-blocker" aria-hidden="true"></div>
+
+  <div class="overlay">
+    <span class="overlay__text">Your vote was submitted successfully</span>
+  </div>
+  }
 </main>
 }

@@ -28,12 +28,11 @@
         }
 
         &__content {
-            padding-bottom: 48px;
+            padding-bottom: fct.px-to-rem(48px);
         }
     }
 
     .question-result {
-
         &__number,
         &__text {
             margin-top: fct.px-to-rem(16px);
@@ -43,13 +42,11 @@
 
 @media (max-width: fct.breakpoint(tablet)) {
     .survey-results {
-        &__heading {
-            margin-top: 100px;
-        }
-    }
-
-    .survey-results {
         justify-self: center;
+
+        &__heading {
+            margin-top: fct.px-to-rem(100px);
+        }
     }
 
     .question-result {
@@ -57,27 +54,22 @@
             justify-content: unset;
         }
     }
-    
 }
 
 @media (max-width: fct.breakpoint(cards-mobile)) {
     .survey-results {
-        width: 100%;
+        width: fct.content-width(20px);
         max-width: 100%;
         min-width: 0;
-    }
 
-    .survey-results__content {
-        width: 100%;
-        min-width: 0;
+        &__content {
+            width: 100%;
+            min-width: 0;
+        }
     }
 
     .question-result {
         width: 100%;
         min-width: 0;
-    }
-
-    .survey-results {
-        width: fct.content-width(20px);
     }
 }

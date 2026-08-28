@@ -23,7 +23,6 @@ export function createEmptyQuestion(): Question {
 * Clears a required answer or removes an additional one.
 * @param answers Answers of the selected question.
 * @param answerIndex Position of the selected answer.
-* @returns Nothing.
 */
 export function clearOrRemoveAnswer(
     answers: Answer[],

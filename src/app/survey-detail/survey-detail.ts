@@ -26,6 +26,7 @@ export class SurveyDetail implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly surveyDetailService = inject(SurveyDetailService);
+  readonly isVoteSuccessOpen = signal(false);
 
   showResults = false;
   survey = signal<Survey | null>(null);
@@ -196,10 +197,14 @@ export class SurveyDetail implements OnInit, OnDestroy {
   }
 
 /** Finishes the survey submission. */
-  private async finishSurveySubmission(): Promise<void> {
-    this.rememberVote();
-    await this.router.navigateByUrl('/');
-  }
+private async finishSurveySubmission(): Promise<void> {
+  this.rememberVote();
+  this.isVoteSuccessOpen.set(true);
+
+  setTimeout(() => {
+    void this.router.navigateByUrl('/');
+  }, 2000);
+}
 
 /**
 * Saves the current survey answers.
@@ -312,7 +317,9 @@ export class SurveyDetail implements OnInit, OnDestroy {
 
     if (!surveyId) return false;
 
-    return localStorage.getItem('voted-survey-${surveyId}') === 'true';
+    return localStorage.getItem(
+      `voted-survey-${surveyId}`
+    ) === 'true';
   }
 
 /** Removes the detail page class when leaving. */

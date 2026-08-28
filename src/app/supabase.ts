@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy, signal } from '@angular/core';
 import { createClient, RealtimeChannel } from '@supabase/supabase-js';
+import { environment } from '../environments/environment';
 
 const POSITION_OFFSET = 1;
 
@@ -39,15 +40,9 @@ type Survey = {
 
 /** Handles survey data and realtime database updates. */
 export class Supabase implements OnDestroy {
-  private readonly supabaseUrl =
-    'https://rnwpzflsvaqgzoznhshb.supabase.co';
-
-  private readonly supabaseKey =
-    'sb_publishable_YRXsZrOvr6dAMaKGOYdXkg_TFenbD8L';
-
   readonly supabase = createClient(
-    this.supabaseUrl,
-    this.supabaseKey
+    environment.supabaseUrl,
+    environment.supabaseKey
   );
 
   readonly surveys = signal<Survey[]>([]);
@@ -89,7 +84,9 @@ export class Supabase implements OnDestroy {
     if (error) throw error;
 
     return data.id;
-  }/**
+  }
+
+/**
 * Creates the database row for a survey.
 * @param survey Prepared survey data.
 * @returns Database row for the survey.
@@ -105,7 +102,9 @@ export class Supabase implements OnDestroy {
       status: 'published',
       is_demo: false,
     };
-  }/**
+  }
+
+/**
 * Inserts all questions belonging to a survey.
 * @param surveyId ID of the survey.
 * @param questions Questions to insert.
@@ -122,7 +121,9 @@ export class Supabase implements OnDestroy {
         index
       );
     }
-  }/**
+  }
+
+/**
 * Inserts one question and its answers.
 * @param surveyId ID of the survey.
 * @param question Question to insert.
@@ -144,7 +145,9 @@ export class Supabase implements OnDestroy {
       questionId,
       question.answers
     );
-  }/**
+  }
+
+  /**
 * Creates one question.
 * @param surveyId ID of the survey.
 * @param question Question to create.
@@ -169,7 +172,9 @@ export class Supabase implements OnDestroy {
     if (error) throw error;
 
     return data.id;
-  }/**
+  }
+
+/**
 * Creates the database row for a question.
 * @param surveyId ID of the survey.
 * @param question Question data.
@@ -187,7 +192,9 @@ export class Supabase implements OnDestroy {
       allow_multiple: question.multipleAnswers,
       position: index + POSITION_OFFSET,
     };
-  }/**
+  }
+
+/**
 * Inserts all answers belonging to a question.
 * @param questionId ID of the question.
 * @param answers Answers to insert.
@@ -210,7 +217,9 @@ export class Supabase implements OnDestroy {
       .insert(answerRows);
 
     if (error) throw error;
-  }/**
+  }
+
+/**
 * Loads all surveys from the database.
 * @returns Promise that resolves when surveys are loaded.
 */
@@ -233,7 +242,6 @@ export class Supabase implements OnDestroy {
 
 /**
 * Starts listening for survey database changes.
-* @returns Nothing.
 */
   subscribeToSurveys(): void {
     if (this.channel) return;
@@ -262,7 +270,6 @@ export class Supabase implements OnDestroy {
 
 /**
 * Removes the realtime channel when the service is destroyed.
-* @returns Nothing.
 */
   ngOnDestroy(): void {
     if (this.channel) {

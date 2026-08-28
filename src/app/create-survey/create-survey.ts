@@ -72,7 +72,6 @@ export class CreateSurvey implements OnInit, OnDestroy {
 /**
 * Deletes or resets a question.
 * @param questionIndex Position of the question.
-* @returns Nothing.
 */
   deleteQuestion(questionIndex: number): void {
     if (questionIndex === FIRST_QUESTION_INDEX) {
